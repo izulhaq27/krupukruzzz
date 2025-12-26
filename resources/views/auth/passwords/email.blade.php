@@ -14,6 +14,11 @@
                         </div>
                     @endif
 
+                    <div class="alert alert-info border-0 shadow-sm mb-4" style="border-radius: 8px;">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Jika Anda tidak menerima email, harap tunggu <strong>30 detik</strong> sebelum mengirim ulang link reset.
+                    </div>
+
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
 
