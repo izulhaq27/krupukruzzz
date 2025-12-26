@@ -134,49 +134,59 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX (ULTIMATE PHYSICAL SYNC)
+    // TEMPORARY: STORAGE LINK FIX (SAFE SHIELDS VERSION)
     Route::get('/fix-storage', function () {
         $storagePublic = '/home/krupukru/repositories/krupukruzzz/storage/app/public';
         $publicHtmlStorage = '/home/krupukru/public_html/storage';
         
-        echo "<h2>Ultimate Image Fixer</h2>";
+        echo "<h2>Safe Image Sync</h2>";
         
         try {
-            // 1. Pastikan folder tujuan ada
-            if (!is_dir($publicHtmlStorage)) {
-                mkdir($publicHtmlStorage, 0755, true);
-                echo "📁 Created storage folder in public_html.<br>";
+            // 1. Bersihkan link lama yang bikin loop
+            if (file_exists($publicHtmlStorage)) {
+                if (is_link($publicHtmlStorage)) {
+                    unlink($publicHtmlStorage);
+                    echo "🗑️ Symlink lama dihapus.<br>";
+                } else {
+                    // Jika folder asli, jangan hapus, biarkan saja atau rename
+                    // Tapi biasanya masalah loop karena link.
+                }
             }
 
-            // 2. Fungsi untuk Copy Folder secara Rekursif
-            $copyFolder = function($src, $dst) use (&$copyFolder) {
+            // 2. Buat folder asli jika belum ada
+            if (!file_exists($publicHtmlStorage)) {
+                mkdir($publicHtmlStorage, 0755, true);
+                echo "📁 Folder storage dibuat di public_html.<br>";
+            }
+
+            // 3. Fungsi Copy aman (Skip Symlinks)
+            $safeCopy = function($src, $dst) use (&$safeCopy) {
+                if (is_link($src)) return; // JANGAN COPY LINK (biar gak loop)
+                
                 $dir = opendir($src);
                 @mkdir($dst);
                 while(false !== ( $file = readdir($dir)) ) {
                     if (( $file != '.' ) && ( $file != '..' )) {
                         if ( is_dir($src . '/' . $file) ) {
-                            $copyFolder($src . '/' . $file,$dst . '/' . $file);
-                        }
-                        else {
-                            copy($src . '/' . $file,$dst . '/' . $file);
+                            $safeCopy($src . '/' . $file, $dst . '/' . $file);
+                        } else {
+                            copy($src . '/' . $file, $dst . '/' . $file);
                         }
                     }
                 }
                 closedir($dir);
             };
 
-            // 3. Eksekusi Copy (Physical Sync)
-            echo "⏳ Syncing files from Repository to public_html... ";
-            $copyFolder($storagePublic, $publicHtmlStorage);
-            echo "<b>DONE!</b><br>";
+            // 4. Sinkronisasi folder products
+            if (is_dir($storagePublic . '/products')) {
+                echo "⏳ Menyalin foto produk... ";
+                $safeCopy($storagePublic . '/products', $publicHtmlStorage . '/products');
+                echo "<b>BERHASIL!</b><br>";
+            } else {
+                echo "❌ Folder products tidak ditemukan di storage asli.<br>";
+            }
 
-            // 4. Test File
-            file_put_contents("$publicHtmlStorage/test_direct.txt", "Physical Sync OK - " . date('Y-m-d H:i:s'));
-            $url = asset('storage/test_direct.txt');
-            
-            echo "<br>✅ <b>SEMUA FILES TELAH DI-COPY FISIK.</b><br>";
-            echo "Harusnya gambar sudah muncul sekarang tanpa perlu 'Link'.<br>";
-            echo "Cek link ini: <a href='$url' target='_blank'>$url</a>";
+            echo "<br>✅ <b>SELESAI.</b> Sekarang silakan cek gambar di website bung.";
 
         } catch (\Exception $e) {
             echo "❌ Error: " . $e->getMessage();
