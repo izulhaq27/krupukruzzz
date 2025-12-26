@@ -63,19 +63,21 @@
                 
                 <!-- Position Relative for Badge -->
                 <div class="position-relative">
-                    <!-- FOTO -->
-                    <div style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8f9fa;">
-                        @if($product->image && file_exists(public_path('storage/'.$product->image)))
-                            <img src="{{ asset('storage/' . $product->image) }}"
-                                 class="w-100 h-100"
-                                 style="object-fit: cover;"
-                                 alt="{{ $product->name }}">
-                        @else
-                            <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
-                                <i class="bi bi-image fs-1 opacity-25"></i>
-                            </div>
-                        @endif
-                    </div>
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
+                        <!-- FOTO -->
+                        <div style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8f9fa;">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}"
+                                     class="w-100 h-100"
+                                     style="object-fit: cover; transition: transform 0.3s;"
+                                     alt="{{ $product->name }}">
+                            @else
+                                <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
+                                    <i class="bi bi-image fs-1 opacity-25"></i>
+                                </div>
+                            @endif
+                        </div>
+                    </a>
                 </div>
 
                 <!-- CARD BODY -->
@@ -87,9 +89,11 @@
                         @endforeach
                     </div>
 
-                    <h6 class="card-title fw-semibold text-dark mb-1 text-truncate">{{ $product->name }}</h6>
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
+                        <h6 class="card-title fw-semibold text-dark mb-1 text-truncate">{{ $product->name }}</h6>
+                    </a>
                     
-                    <div class="d-flex align-items-baseline mb-2">
+                    <div class="d-flex align-items-baseline mb-3">
                         <span class="fw-bold" style="color: var(--primary-green); font-size: 1.1rem;">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </span>
@@ -100,10 +104,11 @@
                         @endif
                     </div>
 
-
-
                     <!-- BUTTONS -->
                     <div class="mt-auto d-grid gap-2">
+                        <a href="{{ route('products.show', $product->slug) }}" class="btn btn-outline-secondary btn-sm w-100 fw-medium">
+                            Selengkapnya
+                        </a>
                         @if($product->stock > 0)
                             <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                 @csrf
