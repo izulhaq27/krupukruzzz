@@ -26,7 +26,10 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $categoryData) {
-            Category::create($categoryData);
+            Category::updateOrCreate(
+                ['slug' => $categoryData['slug']],
+                $categoryData
+            );
         }
 
         $this->command->info('✅ Categories seeded successfully!');

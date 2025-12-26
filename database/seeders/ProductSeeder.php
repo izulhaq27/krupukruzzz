@@ -16,17 +16,49 @@ class ProductSeeder extends Seeder
                 'description' => 'Kerupuk Gurung berkualitas tinggi dengan rasa gurih dan renyah.',
                 'price' => 2500,
                 'stock' => 100,
-                'image' => 'Krupuk_Gurung',
+                'image' => 'products/kerupuk-gurung-1766400991.png',
+                'category_id' => 1,
             ],
-            // Tambahkan produk lainnya...
+            [
+                'name' => 'Kerupuk Amplang',
+                'slug' => 'kerupuk-amplang',
+                'description' => 'Kerupuk Amplang rasa ikan tenggiri asli.',
+                'price' => 5000,
+                'stock' => 50,
+                'image' => 'products/kerupuk-amplang-1766396513.png',
+                'category_id' => 1,
+            ],
+            [
+                'name' => 'Kerupuk Bawang Pedas',
+                'slug' => 'kerupuk-bawang-pedas',
+                'description' => 'Kerupuk Bawang dengan sensasi pedas nendang.',
+                'price' => 3000,
+                'stock' => 80,
+                'image' => 'products/kerupuk-bawang-pedas-1766396653.png',
+                'category_id' => 2,
+            ],
+            [
+                'name' => 'Kerupuk Rujak',
+                'slug' => 'kerupuk-rujak',
+                'description' => 'Kerupuk Rujak dengan bumbu tradisional.',
+                'price' => 2000,
+                'stock' => 150,
+                'image' => 'products/kerupuk-rujak-1766467092.png',
+                'category_id' => 2,
+            ],
         ];
 
-        foreach ($products as $product) {
-            // ✅ Cek dulu apakah sudah ada, kalau belum baru insert
-            Product::firstOrCreate(
-                ['slug' => $product['slug']], // Cek berdasarkan slug
-                $product // Data yang diinsert kalau bZelum ada
+        foreach ($products as $pData) {
+            $catId = $pData['category_id'];
+            unset($pData['category_id']);
+
+            $product = Product::updateOrCreate(
+                ['slug' => $pData['slug']],
+                $pData
             );
+
+            // Hubungkan ke kategori
+            $product->categories()->sync([$catId]);
         }
     }
 }

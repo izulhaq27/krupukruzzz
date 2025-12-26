@@ -18,7 +18,7 @@
                         <div id="snap-container"></div>
                         
                         <script type="text/javascript"
-                            src="https://app.sandbox.midtrans.com/snap/snap.js"
+                            src="https://app.{{ config('services.midtrans.is_production') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
                             data-client-key="{{ config('services.midtrans.client_key') }}">
                         </script>
                         
