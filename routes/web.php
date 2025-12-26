@@ -133,4 +133,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::get('/settings', function () {
         return view('admin.settings');
     })->name('settings');
+
+    // TEMPORARY: STORAGE LINK FIX
+    Route::get('/fix-storage', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('storage:link');
+            return "✅ Storage link created successfully!";
+        } catch (\Exception $e) {
+            return "❌ Error: " . $e->getMessage();
+        }
+    });
 });
