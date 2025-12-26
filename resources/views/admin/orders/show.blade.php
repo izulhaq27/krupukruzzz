@@ -125,6 +125,58 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">📦 Daftar Produk</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Kategori</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th class="text-end">Harga</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($order->items as $item)
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold">{{ $item->product_name }}</div>
+                                        </td>
+                                        <td>
+                                            @if($item->product && $item->product->categories->isNotEmpty())
+                                                @foreach($item->product->categories as $category)
+                                                    <span class="badge bg-secondary">{{ $category->name }}</span>
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted small">-</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">{{ $item->quantity }}</td>
+                                        <td class="text-end">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                                        <td class="text-end fw-bold">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" class="text-end">Total Pembayaran:</th>
+                                        <th class="text-end text-primary h5 fw-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- FORM UPDATE RESI -->
         <div class="card">

@@ -72,11 +72,16 @@
                                 </div>
                             </td>
                             
-                            <!-- Kolom 5 - Total -->
+                            <!-- Kolom 5 - Total & Produk -->
                             <td style="padding: 12px;">
-                                <span class="fw-bold" style="color: #28a745;">
+                                <div class="fw-bold text-success mb-1">
                                     Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                                </span>
+                                </div>
+                                <div class="small text-muted text-truncate" style="max-width: 150px;">
+                                    @foreach($order->items as $item)
+                                        {{ $item->product_name }}{{ !$loop->last ? ',' : '' }}
+                                    @endforeach
+                                </div>
                             </td>
                             
                             <!-- Kolom 6 - Status -->
