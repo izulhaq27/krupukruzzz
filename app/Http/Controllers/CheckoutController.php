@@ -152,6 +152,40 @@ class CheckoutController extends Controller
                 ->with('error', 'Error: ' . $e->getMessage());
         }
 
+        // MIDTRANS
+        $snapToken = null;
+        $midtransError = null;
+        
+        if (config('services.midtrans.server_key')) {
+            try {
+                \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+                \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
+                \Midtrans\Config::$isSanitized = true;
+                \Midtrans\Config::$is3ds = true;
+                
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->order_number,
+                        'gross_amount' => $total,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $request->name,
+                        'email' => $request->email,
+                        'phone' => $request->phone,
+                    ]
+                ];
+                
+                $snapToken = \Midtrans\Snap::getSnapToken($params);
+                
+                // Update order dengan snap token
+                $order->update(['snap_token' => $snapToken]);
+                
+            } catch (\Exception $e) {
+                $midtransError = $e->getMessage();
+                \Log::error('Midtrans error: ' . $midtransError);
+            }
+        }
+        
         // SIMPAN ORDER ID DI SESSION UNTUK PAYMENT PAGE
         session()->put('current_order_id', $order->id);
         
@@ -159,32 +193,31 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Upload Payment Proof
+     * Midtrans Callback
      */
-    public function uploadProof(Request $request, $id)
+    public function callback(Request $request)
     {
-        $request->validate([
-            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'bank_name' => 'required|string|max:50'
-        ]);
-
-        $order = Order::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
-
-        if ($request->hasFile('payment_proof')) {
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+        $serverKey = config('services.midtrans.server_key');
+        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        
+        if ($hashed == $request->signature_key) {
+            $order = Order::where('order_number', $request->order_id)->first();
             
-            $order->update([
-                'payment_proof' => $path,
-                'bank_name' => $request->bank_name,
-                'status' => 'pending' // Tetap pending sampai dikonfirmasi admin
-            ]);
-
-            return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah! Mohon tunggu konfirmasi admin.');
+            if ($order) {
+                if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
+                    $order->update([
+                        'status' => 'paid',
+                        'paid_at' => now(),
+                        'payment_type' => $request->payment_type,
+                        'transaction_id' => $request->transaction_id
+                    ]);
+                } elseif ($request->transaction_status == 'pending') {
+                    $order->update(['status' => 'pending']);
+                } elseif ($request->transaction_status == 'deny' || $request->transaction_status == 'expire' || $request->transaction_status == 'cancel') {
+                    $order->update(['status' => 'cancelled']);
+                }
+            }
         }
-
-        return redirect()->back()->with('error', 'Gagal mengunggah bukti pembayaran.');
     }
 
 
@@ -196,13 +229,10 @@ class CheckoutController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
         
-        // Daftar rekening bank (bisa dipindah ke config nanti)
-        $banks = [
-            ['name' => 'DANA', 'number' => '081615500168', 'holder' => 'Achmad Machrus Ali'],
-            ['name' => 'Bank Jago', 'number' => '100641390135', 'holder' => 'Achmad Machrus Ali']
-        ];
+        // Ambil snap token dari order
+        $snapToken = $order->snap_token;
         
-        return view('checkout.payment', compact('order', 'banks'));
+        return view('checkout.payment', compact('snapToken', 'order'));
     }
 
     // =============== ADMIN ORDERS ===============

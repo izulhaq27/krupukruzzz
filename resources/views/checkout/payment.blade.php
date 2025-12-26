@@ -14,51 +14,45 @@
                     <h5 class="mb-3">Order #{{ $order->order_number }}</h5>
                     <p class="text-muted">Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                     
-                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-start mb-4">
-                        <h6 class="fw-bold"><i class="bi bi-info-circle me-2"></i> Instruksi Pembayaran:</h6>
-                        <p class="small mb-0">Silakan transfer total pembayaran ke salah satu rekening di bawah ini, kemudian unggah bukti transfer Anda.</p>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        @foreach($banks as $bank)
-                        <div class="col-md-6">
-                            <div class="p-3 border rounded-4 bg-light text-start shadow-sm h-100">
-                                <div class="small text-muted fw-bold mb-1">{{ $bank['name'] }}</div>
-                                <div class="h5 fw-bold text-primary mb-1">{{ $bank['number'] }}</div>
-                                <div class="small fw-semibold text-dark">a/n {{ $bank['holder'] }}</div>
-                            </div>
+                    @if($snapToken)
+                        <div id="snap-container"></div>
+                        
+                        <script type="text/javascript"
+                            src="https://app.{{ config('services.midtrans.is_production') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
+                            data-client-key="{{ config('services.midtrans.client_key') }}">
+                        </script>
+                        
+                        <script type="text/javascript">
+                            window.snap.pay('{{ $snapToken }}', {
+                                onSuccess: function(result){
+                                    console.log(result);
+                                    window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
+                                },
+                                onPending: function(result){
+                                    console.log(result);
+                                    window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
+                                },
+                                onError: function(result){
+                                    console.log(result);
+                                    alert("Pembayaran gagal atau dibatalkan!");
+                                    window.location.href = "{{ route('products.index') }}";
+                                },
+                                onClose: function(){
+                                    /* Pergi ke halaman dashboard pesanan jika user menutup popup */
+                                    window.location.href = "{{ route('orders.index') }}";
+                                }
+                            });
+                        </script>
+                    @else
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Token pembayaran tidak tersedia. Silakan hubungi admin.
                         </div>
-                        @endforeach
-                    </div>
-
-                    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
-                        <div class="card-body p-4 text-start">
-                            <h6 class="fw-bold mb-3"><i class="bi bi-cloud-upload me-2"></i> Unggah Bukti Transfer</h6>
-                            
-                            <form action="{{ route('checkout.upload-proof', $order->id) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label class="form-label small fw-semibold">Gunakan Bank:</label>
-                                    <select name="bank_name" class="form-select rounded-3" required>
-                                        <option value="">-- Pilih Bank --</option>
-                                        @foreach($banks as $bank)
-                                            <option value="{{ $bank['name'] }}">{{ $bank['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label small fw-semibold">Pilih File Bukti (Foto/Screenshot):</label>
-                                    <input type="file" name="payment_proof" class="form-control rounded-3" accept="image/*" required>
-                                    <small class="text-muted">Format: JPG, PNG • Maksimal 2MB</small>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold py-2 shadow-sm">
-                                    <i class="bi bi-send-check me-2"></i> Konfirmasi Pembayaran
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                        <a href="{{ route('checkout.success') }}?order_id={{ $order->order_number }}" 
+                           class="btn btn-primary">
+                            Lanjutkan Tanpa Pembayaran (Testing)
+                        </a>
+                    @endif
                     
                     <div class="mt-4">
                         <a href="{{ route('checkout.index') }}" class="btn btn-outline-secondary">
