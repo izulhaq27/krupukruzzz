@@ -140,40 +140,55 @@ class OrderController extends Controller
     }
 
     /**
- * Process payment for an order
- */
-public function pay(Request $request, $orderNumber)
-{
-    try {
-        $user = Auth::user();
-        
-        $order = Order::where('order_number', $orderNumber)
-            ->where('user_id', $user->id)
-            ->firstOrFail();
-        
-        // Cek jika order sudah dibayar
-        if ($order->status !== 'pending') {
-            return redirect()->back()
-                ->with('error', 'Pesanan sudah diproses atau dibayar.');
-        }
-        
-        // TODO: Integrasi dengan payment gateway (Midtrans)
-        // Untuk sekarang, langsung update status menjadi paid
-        
-        $order->update([
-            'status' => 'paid',
-            'paid_at' => now(),
-            'payment_type' => 'manual_transfer', // atau dari request
-        ]);
-        
-        return redirect()->route('orders.show', $order->order_number)
-            ->with('success', 'Pembayaran berhasil diproses! Pesanan akan segera diproses.');
+     * Process payment for an order
+     */
+    public function pay(Request $request, $orderNumber)
+    {
+        try {
+            $user = Auth::user();
             
-    } catch (\Exception $e) {
-        return redirect()->back()
-            ->with('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
+            $order = Order::where('order_number', $orderNumber)
+                ->where('user_id', $user->id)
+                ->firstOrFail();
+            
+            // Cek jika order sudah dibayar
+            if ($order->status !== 'pending') {
+                return redirect()->back()
+                    ->with('error', 'Pesanan sudah diproses atau dibayar.');
+            }
+            
+            // Generate Snap Token jika belum ada
+            if (!$order->snap_token) {
+                if (config('services.midtrans.server_key')) {
+                    \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+                    \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
+                    \Midtrans\Config::$isSanitized = true;
+                    \Midtrans\Config::$is3ds = true;
+                    
+                    $params = [
+                        'transaction_details' => [
+                            'order_id' => $order->order_number,
+                            'gross_amount' => $order->total_amount,
+                        ],
+                        'customer_details' => [
+                            'first_name' => $user->name,
+                            'email' => $user->email,
+                            'phone' => $order->phone,
+                        ]
+                    ];
+                    
+                    $snapToken = \Midtrans\Snap::getSnapToken($params);
+                    $order->update(['snap_token' => $snapToken]);
+                }
+            }
+            
+            return redirect()->route('checkout.payment', ['order_id' => $order->id]);
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal memproses pembayaran: ' . $e->getMessage());
+        }
     }
-}
 
 /**
  * Cancel an order

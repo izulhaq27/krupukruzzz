@@ -229,8 +229,34 @@ class CheckoutController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
         
-        // Ambil snap token dari order
+        // Ambil snap token dari order atau generate baru jika belum ada
         $snapToken = $order->snap_token;
+        
+        if (!$snapToken && config('services.midtrans.server_key')) {
+            try {
+                \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+                \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
+                \Midtrans\Config::$isSanitized = true;
+                \Midtrans\Config::$is3ds = true;
+                
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->order_number,
+                        'gross_amount' => $order->total_amount,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $order->name,
+                        'email' => $order->email,
+                        'phone' => $order->phone,
+                    ]
+                ];
+                
+                $snapToken = \Midtrans\Snap::getSnapToken($params);
+                $order->update(['snap_token' => $snapToken]);
+            } catch (\Exception $e) {
+                \Log::error('Midtrans error in payment view: ' . $e->getMessage());
+            }
+        }
         
         return view('checkout.payment', compact('snapToken', 'order'));
     }
