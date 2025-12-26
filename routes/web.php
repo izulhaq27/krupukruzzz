@@ -134,33 +134,55 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX (ROBUST VERSION)
+    // TEMPORARY: STORAGE LINK FIX (DEEP DIAGNOSTIC VERSION)
     Route::get('/fix-storage', function () {
         $storagePath = storage_path('app/public');
         $publicPath = public_path('storage');
         
-        echo "Source: $storagePath <br>";
-        echo "Target: $publicPath <br>";
+        echo "<h2>Diagnostic Storage Link</h2>";
+        echo "Real Storage Path: <code>$storagePath</code> (" . (is_dir($storagePath) ? '✅ Exists' : '❌ NOT FOUND') . ")<br>";
+        echo "Public Path: <code>$publicPath</code> (" . (file_exists($publicPath) ? '✅ Exists' : '❌ NOT FOUND') . ")<br>";
+        
+        if (file_exists($publicPath)) {
+            echo "Public Storage Type: " . (is_link($publicPath) ? '🔗 Symbolic Link' : '📁 Real Directory') . "<br>";
+            if (is_link($publicPath)) {
+                echo "Link Target: <code>" . readlink($publicPath) . "</code><br>";
+            }
+        }
+
+        echo "<h3>Attempting Re-link...</h3>";
 
         try {
+            // Clean up existing
             if (file_exists($publicPath)) {
                 if (is_link($publicPath)) {
                     unlink($publicPath);
-                    echo "🗑️ Old symlink removed.<br>";
+                    echo "🗑️ Existing link removed.<br>";
                 } else {
-                    // It's a real directory, move its content first? No, safer to just rename.
-                    rename($publicPath, $publicPath . '_backup_' . time());
-                    echo "📦 Old storage folder backed up.<br>";
+                    rename($publicPath, $publicPath . '_bak_' . time());
+                    echo "📦 Existing directory moved to backup.<br>";
                 }
             }
 
+            // Create new link
             if (symlink($storagePath, $publicPath)) {
-                return "✅ <b>Success!</b> Symbolic link created using absolute paths. Please re-upload a product image to test.";
+                echo "🚀 <b>Success!</b> New link created.<br>";
             } else {
-                return "❌ Failed to create symlink.";
+                echo "❌ Failed to create symlink via PHP.<br>";
+                echo "<i>Suggestion: Try running 'php artisan storage:link' via cPanel Terminal manually.</i><br>";
             }
+            
+            // Testing write
+            $testFile = $storagePath . '/test_connection.txt';
+            file_put_contents($testFile, 'Laravel Connection OK - ' . date('Y-m-d H:i:s'));
+            echo "📝 Test file created in storage.<br>";
+            
+            $testUrl = asset('storage/test_connection.txt');
+            echo "🌐 Try opening this URL: <a href='$testUrl' target='_blank'>$testUrl</a><br>";
+            echo "If you can see 'Laravel Connection OK', then images should work.";
+
         } catch (\Exception $e) {
-            return "❌ Error: " . $e->getMessage();
+            echo "❌ Fatal Error: " . $e->getMessage();
         }
     });
 });
