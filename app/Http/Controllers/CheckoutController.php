@@ -198,8 +198,8 @@ class CheckoutController extends Controller
         
         // Daftar rekening bank (bisa dipindah ke config nanti)
         $banks = [
-            ['name' => 'BRI', 'number' => '1234-01-000000-50-1', 'holder' => 'UMKM Krupuk KrupuKruzzz'],
-            ['name' => 'DANA', 'number' => '081234567890', 'holder' => 'KrupuKruzzz Official']
+            ['name' => 'DANA', 'number' => '081615500168', 'holder' => 'Achmad Machrus Ali'],
+            ['name' => 'Bank Jago', 'number' => '100641390135', 'holder' => 'Achmad Machrus Ali']
         ];
         
         return view('checkout.payment', compact('order', 'banks'));
