@@ -105,20 +105,18 @@
                     </div>
 
                     <!-- BUTTONS -->
-                    <div class="mt-auto d-grid gap-2">
-                        <a href="{{ route('products.show', $product->slug) }}" class="btn btn-outline-secondary btn-sm w-100 fw-medium">
-                            Selengkapnya
+                    <div class="mt-auto d-flex gap-1">
+                        <a href="{{ route('products.show', $product->slug) }}" class="btn btn-outline-secondary btn-sm flex-grow-0 px-2" title="Detail">
+                            <i class="bi bi-eye"></i>
                         </a>
                         @if($product->stock > 0)
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
                                 <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium">
-                                    <i class="bi bi-cart-plus me-1"></i> + Keranjang
+                                    <i class="bi bi-cart-plus d-none d-sm-inline"></i> + <span class="d-none d-sm-inline">Keranjang</span><i class="bi bi-cart-plus d-sm-none"></i>
                                 </button>
                             </form>
-                        @else
-                            <button class="btn btn-light btn-sm w-100 text-muted" disabled>Stok Habis</button>
                         @endif
                     </div>
                 </div>

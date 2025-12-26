@@ -39,6 +39,14 @@ class Product extends Model
     }
     
     /**
+     * Use slug for route model binding
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
      * Relasi ke kategori (many to many)
      */
     public function categories()
