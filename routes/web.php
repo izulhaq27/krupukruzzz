@@ -134,34 +134,52 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX (FINAL CPANEL VERSION)
+    // TEMPORARY: STORAGE LINK FIX (DEEP DEEP DIAGNOSTIC)
     Route::get('/fix-storage', function () {
-        $storagePath = '/home/krupukru/repositories/krupukruzzz/storage/app/public';
-        $publicPath = '/home/krupukru/public_html/storage';
+        $storagePublic = '/home/krupukru/repositories/krupukruzzz/storage/app/public';
+        $storageLocal = '/home/krupukru/repositories/krupukruzzz/storage/app';
+        $publicHtml = '/home/krupukru/public_html/storage';
         
-        echo "<h2>Final Fix: Storage Link to public_html</h2>";
-        echo "Source: <code>$storagePath</code><br>";
-        echo "Target: <code>$publicPath</code><br>";
-
-        try {
-            // Hapus link/folder lama di public_html
-            if (file_exists($publicPath)) {
-                if (is_link($publicPath)) {
-                    unlink($publicPath);
-                    echo "🗑️ Old Link removed from public_html.<br>";
-                } else {
-                    rename($publicPath, $publicPath . '_bak_' . time());
-                    echo "📦 Old Folder in public_html backed up.<br>";
+        echo "<h2>Deep Diagnostic Image Fix</h2>";
+        
+        // Cek Folder Products
+        echo "<h3>Checking File Locations:</h3>";
+        $folders = [
+            'Public Product Folder' => "$storagePublic/products",
+            'Local Product Folder' => "$storageLocal/products",
+        ];
+        
+        foreach ($folders as $name => $path) {
+            if (is_dir($path)) {
+                $files = array_diff(scandir($path), ['.', '..']);
+                echo "✅ $name: " . count($files) . " files found.<br>";
+                if (count($files) > 0) {
+                    echo "--- Sample: " . reset($files) . "<br>";
                 }
-            }
-
-            // Buat symbolic link ke public_html
-            if (symlink($storagePath, $publicPath)) {
-                echo "🚀 <b>BERHASIL!</b> Link menuju public_html telah dibuat.<br>";
-                echo "Silakan cek website Anda sekarang.";
             } else {
-                echo "❌ Gagal membuat link. Coba hubungi support hosting atau gunakan Terminal cPanel.";
+                echo "❌ $name: Folder NOT FOUND.<br>";
             }
+        }
+
+        echo "<h3>Applying Fix:</h3>";
+        try {
+            // Hapus link lama
+            if (file_exists($publicHtml)) {
+                is_link($publicHtml) ? unlink($publicHtml) : rename($publicHtml, $publicHtml . '_bak_' . time());
+                echo "🗑️ Old target cleaned.<br>";
+            }
+            
+            // Buat link ke Public Storage
+            if (symlink($storagePublic, $publicHtml)) {
+                echo "🚀 <b>LINK CREATED!</b> <br>";
+                echo "Target: <code>$publicHtml</code> -> <code>$storagePublic</code><br>";
+            }
+            
+            // Write test file
+            file_put_contents("$storagePublic/debug.txt", "Connected at " . date('Y-m-d H:i:s'));
+            $url = asset('storage/debug.txt');
+            echo "<br><b>Buka Link Tes Ini:</b> <a href='$url' target='_blank'>$url</a><br>";
+            echo "Jika muncul tulisan 'Connected...', berarti masalah Link SUDAH BERES.";
 
         } catch (\Exception $e) {
             echo "❌ Error: " . $e->getMessage();
