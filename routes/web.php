@@ -134,11 +134,31 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX
+    // TEMPORARY: STORAGE LINK FIX (ROBUST VERSION)
     Route::get('/fix-storage', function () {
+        $storagePath = storage_path('app/public');
+        $publicPath = public_path('storage');
+        
+        echo "Source: $storagePath <br>";
+        echo "Target: $publicPath <br>";
+
         try {
-            \Illuminate\Support\Facades\Artisan::call('storage:link');
-            return "✅ Storage link created successfully!";
+            if (file_exists($publicPath)) {
+                if (is_link($publicPath)) {
+                    unlink($publicPath);
+                    echo "🗑️ Old symlink removed.<br>";
+                } else {
+                    // It's a real directory, move its content first? No, safer to just rename.
+                    rename($publicPath, $publicPath . '_backup_' . time());
+                    echo "📦 Old storage folder backed up.<br>";
+                }
+            }
+
+            if (symlink($storagePath, $publicPath)) {
+                return "✅ <b>Success!</b> Symbolic link created using absolute paths. Please re-upload a product image to test.";
+            } else {
+                return "❌ Failed to create symlink.";
+            }
         } catch (\Exception $e) {
             return "❌ Error: " . $e->getMessage();
         }
