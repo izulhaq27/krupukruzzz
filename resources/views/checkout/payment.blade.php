@@ -25,18 +25,21 @@
                         <script type="text/javascript">
                             window.snap.pay('{{ $snapToken }}', {
                                 onSuccess: function(result){
+                                    console.log(result);
                                     window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
                                 },
                                 onPending: function(result){
-                                    alert("Menunggu pembayaran!");
+                                    console.log(result);
                                     window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
                                 },
                                 onError: function(result){
-                                    alert("Pembayaran gagal!");
-                                    window.location.href = "{{ route('checkout.index') }}";
+                                    console.log(result);
+                                    alert("Pembayaran gagal atau dibatalkan!");
+                                    window.location.href = "{{ route('products.index') }}";
                                 },
                                 onClose: function(){
-                                    alert("Popup ditutup tanpa menyelesaikan pembayaran!");
+                                    /* Pergi ke halaman dashboard pesanan jika user menutup popup */
+                                    window.location.href = "{{ route('orders.index') }}";
                                 }
                             });
                         </script>
