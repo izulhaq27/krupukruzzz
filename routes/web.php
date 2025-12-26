@@ -134,52 +134,49 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX (DEEP DEEP DIAGNOSTIC)
+    // TEMPORARY: STORAGE LINK FIX (ULTIMATE PHYSICAL SYNC)
     Route::get('/fix-storage', function () {
         $storagePublic = '/home/krupukru/repositories/krupukruzzz/storage/app/public';
-        $storageLocal = '/home/krupukru/repositories/krupukruzzz/storage/app';
-        $publicHtml = '/home/krupukru/public_html/storage';
+        $publicHtmlStorage = '/home/krupukru/public_html/storage';
         
-        echo "<h2>Deep Diagnostic Image Fix</h2>";
+        echo "<h2>Ultimate Image Fixer</h2>";
         
-        // Cek Folder Products
-        echo "<h3>Checking File Locations:</h3>";
-        $folders = [
-            'Public Product Folder' => "$storagePublic/products",
-            'Local Product Folder' => "$storageLocal/products",
-        ];
-        
-        foreach ($folders as $name => $path) {
-            if (is_dir($path)) {
-                $files = array_diff(scandir($path), ['.', '..']);
-                echo "✅ $name: " . count($files) . " files found.<br>";
-                if (count($files) > 0) {
-                    echo "--- Sample: " . reset($files) . "<br>";
-                }
-            } else {
-                echo "❌ $name: Folder NOT FOUND.<br>";
-            }
-        }
-
-        echo "<h3>Applying Fix:</h3>";
         try {
-            // Hapus link lama
-            if (file_exists($publicHtml)) {
-                is_link($publicHtml) ? unlink($publicHtml) : rename($publicHtml, $publicHtml . '_bak_' . time());
-                echo "🗑️ Old target cleaned.<br>";
+            // 1. Pastikan folder tujuan ada
+            if (!is_dir($publicHtmlStorage)) {
+                mkdir($publicHtmlStorage, 0755, true);
+                echo "📁 Created storage folder in public_html.<br>";
             }
+
+            // 2. Fungsi untuk Copy Folder secara Rekursif
+            $copyFolder = function($src, $dst) use (&$copyFolder) {
+                $dir = opendir($src);
+                @mkdir($dst);
+                while(false !== ( $file = readdir($dir)) ) {
+                    if (( $file != '.' ) && ( $file != '..' )) {
+                        if ( is_dir($src . '/' . $file) ) {
+                            $copyFolder($src . '/' . $file,$dst . '/' . $file);
+                        }
+                        else {
+                            copy($src . '/' . $file,$dst . '/' . $file);
+                        }
+                    }
+                }
+                closedir($dir);
+            };
+
+            // 3. Eksekusi Copy (Physical Sync)
+            echo "⏳ Syncing files from Repository to public_html... ";
+            $copyFolder($storagePublic, $publicHtmlStorage);
+            echo "<b>DONE!</b><br>";
+
+            // 4. Test File
+            file_put_contents("$publicHtmlStorage/test_direct.txt", "Physical Sync OK - " . date('Y-m-d H:i:s'));
+            $url = asset('storage/test_direct.txt');
             
-            // Buat link ke Public Storage
-            if (symlink($storagePublic, $publicHtml)) {
-                echo "🚀 <b>LINK CREATED!</b> <br>";
-                echo "Target: <code>$publicHtml</code> -> <code>$storagePublic</code><br>";
-            }
-            
-            // Write test file
-            file_put_contents("$storagePublic/debug.txt", "Connected at " . date('Y-m-d H:i:s'));
-            $url = asset('storage/debug.txt');
-            echo "<br><b>Buka Link Tes Ini:</b> <a href='$url' target='_blank'>$url</a><br>";
-            echo "Jika muncul tulisan 'Connected...', berarti masalah Link SUDAH BERES.";
+            echo "<br>✅ <b>SEMUA FILES TELAH DI-COPY FISIK.</b><br>";
+            echo "Harusnya gambar sudah muncul sekarang tanpa perlu 'Link'.<br>";
+            echo "Cek link ini: <a href='$url' target='_blank'>$url</a>";
 
         } catch (\Exception $e) {
             echo "❌ Error: " . $e->getMessage();
