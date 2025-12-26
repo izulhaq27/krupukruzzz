@@ -22,6 +22,8 @@ class Order extends Model
         'payment_type',
         'transaction_id',
         'status',
+        'payment_proof',
+        'bank_name',
         'paid_at',
         'email',
         //couriers

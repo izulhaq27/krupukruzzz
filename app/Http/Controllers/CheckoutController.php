@@ -152,138 +152,57 @@ class CheckoutController extends Controller
                 ->with('error', 'Error: ' . $e->getMessage());
         }
 
-        // MIDTRANS
-        $snapToken = null;
-        $midtransError = null;
+        // SIMPAN ORDER ID DI SESSION UNTUK PAYMENT PAGE
+        session()->put('current_order_id', $order->id);
         
-        if (config('services.midtrans.server_key')) {
-            try {
-                \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
-                \Midtrans\Config::$isProduction = config('services.midtrans.is_production', false);
-                \Midtrans\Config::$isSanitized = true;
-                \Midtrans\Config::$is3ds = true;
-                
-                $params = [
-                    'transaction_details' => [
-                        'order_id' => $order->order_number,
-                        'gross_amount' => $total,
-                    ],
-                    'customer_details' => [
-                        'first_name' => $request->name,
-                        'email' => $request->email, // <=== PAKAI EMAIL DARI INPUTAN
-                        'phone' => $request->phone,
-                    ]
-                ];
-                
-                $snapToken = \Midtrans\Snap::getSnapToken($params);
-                
-                // Update order dengan snap token
-                $order->update(['snap_token' => $snapToken]);
-                
-            } catch (\Exception $e) {
-                $midtransError = $e->getMessage();
-                \Log::error('Midtrans error: ' . $midtransError);
-            }
-        }
-        
-        if ($snapToken) {
-            // SIMPAN ORDER ID DI SESSION UNTUK PAYMENT PAGE
-            session()->put('current_order_id', $order->id);
-            
-            return view('checkout.payment', compact('snapToken', 'order'));
-        } else {
-            // FALLBACK: Order berhasil tanpa payment
-            $order->update([
-                'status' => 'paid',
-                'paid_at' => now(),
-                'payment_type' => 'manual'
-            ]);
-            
-            return view('checkout.success', compact('order'))
-                ->with('info', $midtransError ? 'Payment gateway error, order tetap dibuat.' : 'Order berhasil!');
-        }
+        return redirect()->route('checkout.payment', ['order_id' => $order->id]);
     }
 
-    // =============== CALLBACK MIDTRANS ===============
-    public function callback(Request $request)
+    /**
+     * Upload Payment Proof
+     */
+    public function uploadProof(Request $request, $id)
     {
-        $serverKey = config('services.midtrans.server_key');
-        
-        // Generate signature
-        $hashed = hash("sha512", 
-            $request->order_id . 
-            $request->status_code . 
-            $request->gross_amount . 
-            $serverKey
-        );
-        
-        if ($hashed != $request->signature_key) {
-            Log::error('Midtrans callback: Invalid signature');
-            return response()->json(['message' => 'Invalid signature'], 403);
-        }
-        
-        $order = Order::where('order_number', $request->order_id)->first();
-        
-        if (!$order) {
-            Log::error('Midtrans callback: Order not found - ' . $request->order_id);
-            return response()->json(['message' => 'Order not found'], 404);
-        }
-        
-        $transaction_status = $request->transaction_status;
-        $fraud_status = $request->fraud_status;
-        
-        Log::info('Midtrans Callback: ' . $order->order_number . ' - Status: ' . $transaction_status);
-        
-        // Update status order berdasarkan callback
-        if ($transaction_status == 'capture') {
-            if ($fraud_status == 'accept') {
-                $order->update([
-                    'status' => 'paid',
-                    'payment_method' => $request->payment_type,
-                    'paid_at' => now(),
-                    'transaction_id' => $request->transaction_id
-                ]);
-            }
-        } elseif ($transaction_status == 'settlement') {
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'bank_name' => 'required|string|max:50'
+        ]);
+
+        $order = Order::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        if ($request->hasFile('payment_proof')) {
+            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+            
             $order->update([
-                'status' => 'paid',
-                'payment_method' => $request->payment_type,
-                'paid_at' => now(),
-                'transaction_id' => $request->transaction_id
+                'payment_proof' => $path,
+                'bank_name' => $request->bank_name,
+                'status' => 'pending' // Tetap pending sampai dikonfirmasi admin
             ]);
-        } elseif ($transaction_status == 'pending') {
-            $order->update(['status' => 'pending']);
-        } elseif ($transaction_status == 'deny' || 
-                 $transaction_status == 'expire' || 
-                 $transaction_status == 'cancel') {
-            $order->update(['status' => 'failed']);
-            // Kembalikan stok jika perlu
+
+            return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah! Mohon tunggu konfirmasi admin.');
         }
-        
-        return response()->json(['status' => 'success']);
+
+        return redirect()->back()->with('error', 'Gagal mengunggah bukti pembayaran.');
     }
+
 
     public function payment(Request $request)
     {
-        // Get order from session atau parameter
-        $orderId = $request->session()->get('current_order_id');
+        $orderId = $request->query('order_id') ?? $request->session()->get('current_order_id');
         
-        // Atau ambil dari URL parameter jika ada
-        if (!$orderId && $request->has('order_id')) {
-            $orderId = $request->order_id;
-        }
+        $order = Order::where('id', $orderId)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
         
-        $order = Order::find($orderId);
+        // Daftar rekening bank (bisa dipindah ke config nanti)
+        $banks = [
+            ['name' => 'BRI', 'number' => '1234-01-000000-50-1', 'holder' => 'UMKM Krupuk KrupuKruzzz'],
+            ['name' => 'DANA', 'number' => '081234567890', 'holder' => 'KrupuKruzzz Official']
+        ];
         
-        if (!$order) {
-            return redirect()->route('checkout.index')
-                ->with('error', 'Order tidak ditemukan!');
-        }
-        
-        // Ambil snap token dari order
-        $snapToken = $order->snap_token;
-        
-        return view('checkout.payment', compact('snapToken', 'order'));
+        return view('checkout.payment', compact('order', 'banks'));
     }
 
     // =============== ADMIN ORDERS ===============
@@ -367,27 +286,41 @@ class CheckoutController extends Controller
         return view('admin.orders.print', compact('order'));
     }
 
-    //Travking Update
-   public function updateTracking(Request $request, $id)
-{
-    $request->validate([
-        'tracking_number' => 'required|string|max:180',
-        'shipping_courier' => 'required|string|max:50',
-        'shipping_service' => 'nullable|string|max:50',
-    ]);
-    
-    $order = Order::findOrFail($id);
-    
-    $order->update([
-        'tracking_number' => $request->tracking_number,
-        'shipping_courier' => $request->shipping_courier,
-        'shipping_service' => $request->shipping_service ?? 'REG',
-        'status' => 'processed', // <- INI YANG DIPERBAIKI
-        'shipped_at' => now(),
-    ]);
-    
-    return redirect()->back()
-        ->with('success', 'Nomor resi berhasil diperbarui. Status pesanan: Diproses');
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
+        ]);
+
+        $order = Order::findOrFail($id);
+        $order->update([
+            'status' => $request->status,
+            'paid_at' => ($request->status == 'processing' && !$order->paid_at) ? now() : $order->paid_at
+        ]);
+
+        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
+    }
+
+    public function updateTracking(Request $request, $id)
+    {
+        $request->validate([
+            'tracking_number' => 'required|string|max:180',
+            'shipping_courier' => 'required|string|max:50',
+            'shipping_service' => 'nullable|string|max:50',
+        ]);
+        
+        $order = Order::findOrFail($id);
+        
+        $order->update([
+            'tracking_number' => $request->tracking_number,
+            'shipping_courier' => $request->shipping_courier,
+            'shipping_service' => $request->shipping_service ?? 'REG',
+            'status' => 'shipped', // Jika resi diinput, status jadi dikirim
+            'shipped_at' => now(),
+        ]);
+        
+        return redirect()->back()
+            ->with('success', 'Nomor resi berhasil diperbarui.');
     }
 
     //ORDER DETAIL FOR USERS 

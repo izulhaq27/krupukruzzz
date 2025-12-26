@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/payment', [CheckoutController::class, 'payment'])->name('checkout.payment');
+    Route::post('/checkout/upload-proof/{id}', [CheckoutController::class, 'uploadProof'])->name('checkout.upload-proof');
     Route::get('/checkout/success', function (\Illuminate\Http\Request $request) {
         $orderId = $request->query('order_id');
         $order = $orderId ? Order::where('order_number', $orderId)->first() : Order::where('user_id', auth()->id())->latest()->first();

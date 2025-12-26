@@ -73,6 +73,18 @@
                                 <th>Tanggal:</th>
                                 <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                             </tr>
+                            @if($order->payment_proof)
+                            <tr>
+                                <th>Bukti Bayar:</th>
+                                <td>
+                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank">
+                                        <img src="{{ asset('storage/' . $order->payment_proof) }}" style="max-width: 150px; border-radius: 8px;" class="border">
+                                    </a>
+                                    <br>
+                                    <small class="text-muted">Bank: {{ $order->bank_name }}</small>
+                                </td>
+                            </tr>
+                            @endif
                             @if($order->tracking_number)
                             <tr>
                                 <th>Resi:</th>
@@ -87,6 +99,28 @@
                             </tr>
                             @endif
                         </table>
+                    </div>
+                </div>
+
+                {{-- FORM UPDATE STATUS --}}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Update Status Pesanan</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST">
+                            @csrf
+                            <div class="d-flex gap-2">
+                                <select name="status" class="form-select">
+                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Diproses (Sudah Bayar)</option>
+                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Dikirim</option>
+                                    <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                                </select>
+                                <button type="submit" class="btn btn-dark">Simpan Status</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
