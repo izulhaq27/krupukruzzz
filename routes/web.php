@@ -134,55 +134,37 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         return view('admin.settings');
     })->name('settings');
 
-    // TEMPORARY: STORAGE LINK FIX (DEEP DIAGNOSTIC VERSION)
+    // TEMPORARY: STORAGE LINK FIX (FINAL CPANEL VERSION)
     Route::get('/fix-storage', function () {
-        $storagePath = storage_path('app/public');
-        $publicPath = public_path('storage');
+        $storagePath = '/home/krupukru/repositories/krupukruzzz/storage/app/public';
+        $publicPath = '/home/krupukru/public_html/storage';
         
-        echo "<h2>Diagnostic Storage Link</h2>";
-        echo "Real Storage Path: <code>$storagePath</code> (" . (is_dir($storagePath) ? '✅ Exists' : '❌ NOT FOUND') . ")<br>";
-        echo "Public Path: <code>$publicPath</code> (" . (file_exists($publicPath) ? '✅ Exists' : '❌ NOT FOUND') . ")<br>";
-        
-        if (file_exists($publicPath)) {
-            echo "Public Storage Type: " . (is_link($publicPath) ? '🔗 Symbolic Link' : '📁 Real Directory') . "<br>";
-            if (is_link($publicPath)) {
-                echo "Link Target: <code>" . readlink($publicPath) . "</code><br>";
-            }
-        }
-
-        echo "<h3>Attempting Re-link...</h3>";
+        echo "<h2>Final Fix: Storage Link to public_html</h2>";
+        echo "Source: <code>$storagePath</code><br>";
+        echo "Target: <code>$publicPath</code><br>";
 
         try {
-            // Clean up existing
+            // Hapus link/folder lama di public_html
             if (file_exists($publicPath)) {
                 if (is_link($publicPath)) {
                     unlink($publicPath);
-                    echo "🗑️ Existing link removed.<br>";
+                    echo "🗑️ Old Link removed from public_html.<br>";
                 } else {
                     rename($publicPath, $publicPath . '_bak_' . time());
-                    echo "📦 Existing directory moved to backup.<br>";
+                    echo "📦 Old Folder in public_html backed up.<br>";
                 }
             }
 
-            // Create new link
+            // Buat symbolic link ke public_html
             if (symlink($storagePath, $publicPath)) {
-                echo "🚀 <b>Success!</b> New link created.<br>";
+                echo "🚀 <b>BERHASIL!</b> Link menuju public_html telah dibuat.<br>";
+                echo "Silakan cek website Anda sekarang.";
             } else {
-                echo "❌ Failed to create symlink via PHP.<br>";
-                echo "<i>Suggestion: Try running 'php artisan storage:link' via cPanel Terminal manually.</i><br>";
+                echo "❌ Gagal membuat link. Coba hubungi support hosting atau gunakan Terminal cPanel.";
             }
-            
-            // Testing write
-            $testFile = $storagePath . '/test_connection.txt';
-            file_put_contents($testFile, 'Laravel Connection OK - ' . date('Y-m-d H:i:s'));
-            echo "📝 Test file created in storage.<br>";
-            
-            $testUrl = asset('storage/test_connection.txt');
-            echo "🌐 Try opening this URL: <a href='$testUrl' target='_blank'>$testUrl</a><br>";
-            echo "If you can see 'Laravel Connection OK', then images should work.";
 
         } catch (\Exception $e) {
-            echo "❌ Fatal Error: " . $e->getMessage();
+            echo "❌ Error: " . $e->getMessage();
         }
     });
 });
