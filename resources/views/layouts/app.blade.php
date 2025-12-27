@@ -52,8 +52,21 @@
         
         .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
             color: var(--primary-green) !important;
-            background: rgba(56, 142, 60, 0.05);
-            border-radius: 6px;
+        }
+        
+        @media (hover: hover) {
+            .navbar-nav .nav-link:hover {
+                background: rgba(56, 142, 60, 0.05);
+                border-radius: 6px;
+            }
+            .btn-success:hover {
+                background: var(--primary-green-dark);
+                border-color: var(--primary-green-dark);
+            }
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(40, 167, 69, 0.15);
+            }
         }
         
         .cart-badge {
@@ -69,23 +82,13 @@
             font-weight: 600;
         }
         
-        .btn-success:hover {
-            background: var(--primary-green-dark);
-            border-color: var(--primary-green-dark);
-        }
-        
         /*Product Card*/
         .product-card {
             border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.15);
         }
         
         .product-card .price {
@@ -196,7 +199,7 @@
             overflow: hidden;
         }
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.95) !important;
         }
         .btn-loading {
             pointer-events: none;

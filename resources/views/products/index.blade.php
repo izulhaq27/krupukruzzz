@@ -41,8 +41,11 @@
 </div>
 
 <style>
-    .transition-hover { transition: transform 0.2s; }
-    .transition-hover:hover { transform: translateY(-3px); }
+    .transition-hover { transition: all 0.2s ease; }
+    @media (hover: hover) {
+        .transition-hover:hover { transform: translateY(-3px); }
+    }
+    .transition-hover:active { transform: scale(0.95); }
 </style>
 
 <div class="container-fluid px-lg-5 my-4" id="produk-list"> <!-- FULL WIDTH -->
@@ -142,22 +145,28 @@
         animation: skeleton-loading 1s linear infinite alternate;
     }
 
-    /* Hero Hover Effect */
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
-    }
-    
-    .product-card:hover img {
-        transform: scale(1.05);
+    /* Hero Hover Effect - Desktop Only */
+    @media (hover: hover) {
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
     }
 
+    /* Mobile Specifics */
     @media (max-width: 576px) {
         .product-card {
             border-radius: 8px;
         }
         .card-title {
             font-size: 0.8rem !important;
+        }
+        .product-card:active {
+            background-color: #f8f9fa !important;
         }
     }
 </style>
