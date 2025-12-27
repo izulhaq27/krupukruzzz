@@ -201,6 +201,25 @@
         .btn:active {
             transform: scale(0.95) !important;
         }
+        
+        /* Sticky Hover Fix for Mobile */
+        @media (hover: none) {
+            .btn:hover {
+                background-color: initial !important;
+                color: initial !important;
+                border-color: initial !important;
+                box-shadow: none !important;
+            }
+            /* Keep background for primary/success if they are standard */
+            .btn-success:hover, .btn-primary:hover {
+                background-color: var(--primary-green) !important;
+                color: #fff !important;
+            }
+            .btn-light:hover {
+                background-color: #fff !important;
+            }
+        }
+
         .btn-loading {
             pointer-events: none;
             opacity: 0.8;
