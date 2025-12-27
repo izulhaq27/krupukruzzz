@@ -64,59 +64,57 @@
 
     <!-- List Produk -->
     @if($category->products->count() > 0)
-        <div class="row">
+        <div class="row g-2 g-md-3">
             @foreach($category->products as $product)
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card product-card h-100 border-0 shadow-sm">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" 
-                             class="card-img-top" 
-                             alt="{{ $product->name }}"
-                             style="height: 200px; object-fit: cover;">
-                    @else
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
-                             style="height: 200px;">
-                            <i class="bi bi-egg-fried text-muted display-4"></i>
-                        </div>
-                    @endif
+            <div class="col-xl-2 col-lg-3 col-md-4 col-4"> 
+                <div class="card product-card h-100 bg-white" style="border: 1px solid #f0f0f0;">
                     
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ $product->name }}</h5>
+                    <!-- Position Relative for Badge -->
+                    <div class="position-relative">
+                        <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
+                            <!-- FOTO -->
+                            <div class="skeleton-loader" style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #eee;">
+                                @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                         class="w-100 h-100"
+                                         style="object-fit: cover; transition: transform 0.3s;"
+                                         alt="{{ $product->name }}"
+                                         loading="lazy">
+                                @else
+                                    <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
+                                        <i class="bi bi-image fs-1 opacity-25"></i>
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- CARD BODY -->
+                    <div class="card-body p-2 p-md-3 d-flex flex-column">
+                        <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
+                            <h6 class="card-title fw-semibold text-dark mb-1 text-truncate" style="font-size: 0.9rem;">{{ $product->name }}</h6>
+                        </a>
                         
-                        @if($product->description)
-                            <p class="card-text text-muted small mb-2">
-                                {{ Str::limit($product->description, 80) }}
-                            </p>
-                        @endif
-                        
-                        <div class="mb-3">
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-box"></i> Stok: {{ $product->stock }}
+                        <div class="d-flex align-items-baseline mb-2 mb-md-3 flex-wrap">
+                            <span class="fw-bold" style="color: var(--primary-green); font-size: 1rem;">
+                                Rp{{ number_format($product->price, 0, ',', '.') }}
                             </span>
                         </div>
-                        
-                        <h4 class="text-success fw-bold mb-3">
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                        </h4>
-                        
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('products.show', $product->id) }}" 
-                               class="btn btn-outline-success">
-                                <i class="bi bi-eye"></i> Detail
+
+                        <!-- BUTTONS -->
+                        <div class="mt-auto d-flex gap-1">
+                            <a href="{{ route('products.show', $product->slug) }}" class="btn btn-outline-secondary btn-sm flex-grow-0 px-2" title="Detail">
+                                <i class="bi bi-eye"></i>
                             </a>
-                            
-                            @auth
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-success w-100">
-                                    <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
-                                </button>
-                            </form>
-                            @else
-                            <a href="{{ route('login') }}" class="btn btn-success">
-                                <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
-                            </a>
-                            @endauth
+                            @if($product->stock > 0)
+                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
+                                    @csrf
+                                    <input type="hidden" name="redirect_to" value="cart">
+                                    <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium py-1">
+                                        <i class="bi bi-cart-plus"></i> <span class="d-none d-md-inline">Beli</span>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -169,25 +167,43 @@
 </div>
 
 <style>
-    .product-card {
-        transition: all 0.3s ease;
-        border: 1px solid #e9ecef;
+    /* Skeleton Animation */
+    @keyframes skeleton-loading {
+        0% { background-color: #f0f0f0; }
+        100% { background-color: #e0e0e0; }
     }
-    
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.15) !important;
-        border-color: #28a745;
+    .skeleton-loader {
+        animation: skeleton-loading 1s linear infinite alternate;
     }
-    
+
+    /* Hero Hover Effect - Desktop Only */
+    @media (hover: hover) {
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Mobile Interaction - NO STICKY HOVER */
+    @media (max-width: 576px) {
+        .product-card {
+            border-radius: 8px;
+        }
+        .card-title {
+            font-size: 0.8rem !important;
+        }
+        .product-card:active {
+            background-color: #f8f9fa !important;
+        }
+    }
+
     .breadcrumb-item a {
-        color: #28a745;
+        color: var(--primary-green);
         text-decoration: none;
-    }
-    
-    .btn-outline-success.active {
-        background-color: #28a745;
-        color: white;
     }
 </style>
 @endsection

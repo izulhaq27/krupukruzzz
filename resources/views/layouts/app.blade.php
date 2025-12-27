@@ -26,6 +26,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--light-bg);
+            -webkit-tap-highlight-color: transparent;
         }
         
         /*Navbar*/
@@ -75,17 +76,26 @@
         
         /* Button Interaction Feedback */
         .btn {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             position: relative;
             overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            outline: none !important;
+            box-shadow: none !important;
         }
 
         .btn:active {
-            transform: scale(0.95) !important;
-            opacity: 0.9;
+            transform: scale(0.92) !important;
+            opacity: 0.8;
+            filter: brightness(90%);
+        }
+
+        /* Prevent tap blue overlay on specific elements */
+        .btn, .product-card, .nav-link {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .cart-badge {
@@ -471,11 +481,16 @@
             });
 
             // Global Focus Reset for Mobile (Kill Sticky Hover/Focus)
-            document.addEventListener('click', function() {
-                if (document.activeElement && document.activeElement.blur) {
-                    document.activeElement.blur();
-                }
-            }, true);
+            document.addEventListener('touchstart', function() {}, {passive: true}); // Enable active states on iOS
+
+            document.addEventListener('touchend', function(e) {
+                // Delay blur slightly so the click event still fires correctly
+                setTimeout(() => {
+                    if (document.activeElement && (document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'A')) {
+                        document.activeElement.blur();
+                    }
+                }, 100);
+            }, {passive: true});
         });
     </script>
 </body>
