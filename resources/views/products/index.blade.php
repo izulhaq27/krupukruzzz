@@ -17,7 +17,7 @@
                 
                 <p class="lead mb-4 opacity-90 fs-6 fs-lg-5">Solusi camilan kerupuk berkualitas, gurih, dan harga bersahabat.</p>
                 
-                <a href="#produk-list" class="btn btn-light text-success fw-bold px-4 py-2 px-md-5 py-md-3 rounded-pill shadow-sm transition-hover">
+                <a href="#produk-list" class="btn btn-white-premium text-success fw-bold px-4 py-2 px-md-5 py-md-3 rounded-pill shadow-sm transition-hover">
                     Belanja Sekarang <i class="bi bi-arrow-right ms-2"></i>
                 </a>
             </div>

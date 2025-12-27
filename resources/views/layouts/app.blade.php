@@ -73,6 +73,23 @@
                 box-shadow: 0 10px 25px rgba(40, 167, 69, 0.15);
             }
         }
+
+        /* Mobile Reset: Kill ANY hover/focus background change */
+        @media (hover: none) {
+            .btn:hover, .btn:focus {
+                background-color: inherit !important;
+                color: inherit !important;
+                filter: none !important;
+            }
+            .btn-light:hover, .btn-light:focus, .btn-white-premium:hover, .btn-white-premium:focus {
+                background-color: #ffffff !important;
+                color: var(--primary-green) !important;
+            }
+            .btn-success:hover, .btn-success:focus {
+                background-color: var(--primary-green) !important;
+                color: #ffffff !important;
+            }
+        }
         
         /* Button Interaction Feedback */
         .btn {
@@ -93,10 +110,18 @@
             background-color: inherit; /* Fallback */
         }
 
-        /* Fix for btn-light staying grey on mobile */
-        .btn-light:focus, .btn-light:active, .btn-light.active {
-            background-color: #fff !important;
-            color: #198754 !important; /* Bootstrap success color */
+        /* Fix for btn-light and custom buttons staying grey on mobile */
+        .btn-light:hover, .btn-light:focus, .btn-light:active,
+        .btn-white-premium:hover, .btn-white-premium:focus, .btn-white-premium:active {
+            background-color: #ffffff !important;
+            color: var(--primary-green) !important;
+        }
+
+        .btn-white-premium {
+            background-color: #ffffff !important;
+            color: var(--primary-green) !important;
+            border: none !important;
+            font-weight: 700 !important;
         }
 
         .btn:active {
