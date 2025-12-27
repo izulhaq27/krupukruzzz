@@ -41,11 +41,11 @@
 </div>
 
 <style>
-    .transition-hover { transition: all 0.2s ease; }
+    .transition-hover { transition: all 0.2s ease-in-out !important; }
     @media (hover: hover) {
-        .transition-hover:hover { transform: translateY(-3px); }
+        .transition-hover:hover { transform: translateY(-3px) !important; }
     }
-    .transition-hover:active { transform: scale(0.95); }
+    .transition-hover:active { transform: scale(0.95) !important; }
 </style>
 
 <div class="container-fluid px-lg-5 my-4" id="produk-list"> <!-- FULL WIDTH -->
@@ -156,24 +156,12 @@
             transform: scale(1.05);
         }
         .btn-light:hover {
-            background-color: #f8f9fa;
-            color: #198754 !important;
+            background-color: #f8f9fa !important;
+            color: #2e7d32 !important;
         }
     }
 
-    /* Fix Sticky Hover for Outline Buttons */
-    @media (hover: none) {
-        .btn-outline-success:hover, .btn-light:hover {
-            background-color: transparent !important;
-            color: inherit !important;
-        }
-        .btn-light:hover {
-            background-color: #fff !important;
-            color: #198754 !important;
-        }
-    }
-
-    /* Mobile Specifics */
+    /* Mobile Interaction - NO STICKY HOVER */
     @media (max-width: 576px) {
         .product-card {
             border-radius: 8px;

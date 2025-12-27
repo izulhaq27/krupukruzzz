@@ -58,6 +58,10 @@
             .navbar-nav .nav-link:hover {
                 background: rgba(56, 142, 60, 0.05);
                 border-radius: 6px;
+                color: var(--primary-green) !important;
+            }
+            .btn:hover {
+                filter: brightness(95%);
             }
             .btn-success:hover {
                 background: var(--primary-green-dark);
@@ -69,6 +73,21 @@
             }
         }
         
+        /* Button Interaction Feedback */
+        .btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:active {
+            transform: scale(0.95) !important;
+            opacity: 0.9;
+        }
+
         .cart-badge {
             background: #ffc107 !important;
             color: #333;
@@ -190,34 +209,6 @@
         .preloader-hidden {
             opacity: 0 !important;
             visibility: hidden !important;
-        }
-
-        /* Button Interaction Feedback */
-        .btn {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn:active {
-            transform: scale(0.95) !important;
-        }
-        
-        /* Sticky Hover Fix for Mobile */
-        @media (hover: none) {
-            .btn:hover {
-                background-color: initial !important;
-                color: initial !important;
-                border-color: initial !important;
-                box-shadow: none !important;
-            }
-            /* Keep background for primary/success if they are standard */
-            .btn-success:hover, .btn-primary:hover {
-                background-color: var(--primary-green) !important;
-                color: #fff !important;
-            }
-            .btn-light:hover {
-                background-color: #fff !important;
-            }
         }
 
         .btn-loading {
@@ -478,6 +469,13 @@
                     }
                 });
             });
+
+            // Global Focus Reset for Mobile (Kill Sticky Hover/Focus)
+            document.addEventListener('click', function() {
+                if (document.activeElement && document.activeElement.blur) {
+                    document.activeElement.blur();
+                }
+            }, true);
         });
     </script>
 </body>
