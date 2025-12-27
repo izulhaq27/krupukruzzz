@@ -140,9 +140,92 @@
         .dropdown-item.active, .dropdown-item:active {
             background-color: var(--primary-green);
         }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .loader-logo {
+            width: 80px;
+            animation: pulse 1.5s infinite;
+            margin-bottom: 20px;
+        }
+        .loader-bar {
+            width: 150px;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-green);
+            animation: loading 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .preloader-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        /* Button Interaction Feedback */
+        .btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .btn-loading .bi {
+            display: none !important;
+        }
+        .btn-loading::after {
+            content: "";
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: text-bottom;
+            animation: spinner-border .75s linear infinite;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
+    <div id="preloader">
+        <img src="{{ asset('images/logo.png') }}" class="loader-logo" alt="Loading...">
+        <div class="loader-bar"></div>
+        <p class="mt-3 text-muted small fw-medium">Menyiapkan kelezatan...</p>
+    </div>
+
     <div id="app">
         {{-- NAVBAR --}}
         <nav class="navbar navbar-expand-lg">
@@ -339,6 +422,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Preloader Logic
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('preloader-hidden');
+                }, 300);
+            }
+        });
+
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
@@ -348,6 +441,21 @@
                     bsAlert.close();
                 });
             }, 5000);
+
+            // Button Loading State Logic
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const btn = this.querySelector('button[type="submit"]');
+                    if (btn && !btn.classList.contains('no-loader')) {
+                        btn.classList.add('btn-loading');
+                        // Prevent multiple clicks
+                        setTimeout(() => {
+                            if (btn) btn.disabled = true;
+                        }, 50);
+                    }
+                });
+            });
         });
     </script>
 </body>

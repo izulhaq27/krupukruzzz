@@ -65,12 +65,13 @@
                 <div class="position-relative">
                     <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
                         <!-- FOTO -->
-                        <div style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8f9fa;">
+                        <div class="skeleton-loader" style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #eee;">
                             @if($product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}"
                                      class="w-100 h-100"
                                      style="object-fit: cover; transition: transform 0.3s;"
-                                     alt="{{ $product->name }}">
+                                     alt="{{ $product->name }}"
+                                     loading="lazy">
                             @else
                                 <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
                                     <i class="bi bi-image fs-1 opacity-25"></i>
@@ -81,27 +82,22 @@
                 </div>
 
                 <!-- CARD BODY -->
-                <div class="card-body p-3 d-flex flex-column">
+                <div class="card-body p-2 p-md-3 d-flex flex-column">
                     <!-- Categories -->
-                    <div class="mb-2">
+                    <div class="mb-1 mb-md-2">
                         @foreach($product->categories->take(1) as $cat)
-                            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.7rem;">{{ $cat->name }}</span>
+                            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">{{ $cat->name }}</span>
                         @endforeach
                     </div>
 
                     <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
-                        <h6 class="card-title fw-semibold text-dark mb-1 text-truncate">{{ $product->name }}</h6>
+                        <h6 class="card-title fw-semibold text-dark mb-1 text-truncate" style="font-size: 0.9rem;">{{ $product->name }}</h6>
                     </a>
                     
-                    <div class="d-flex align-items-baseline mb-3">
-                        <span class="fw-bold" style="color: var(--primary-green); font-size: 1.1rem;">
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                    <div class="d-flex align-items-baseline mb-2 mb-md-3 flex-wrap">
+                        <span class="fw-bold" style="color: var(--primary-green); font-size: 1rem;">
+                            Rp{{ number_format($product->price, 0, ',', '.') }}
                         </span>
-                        @if($product->discount_price)
-                            <small class="text-decoration-line-through text-muted ms-2" style="font-size: 0.8rem;">
-                                Rp {{ number_format($product->discount_price, 0, ',', '.') }}
-                            </small>
-                        @endif
                     </div>
 
                     <!-- BUTTONS -->
@@ -113,8 +109,8 @@
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium">
-                                    <i class="bi bi-cart-plus d-none d-sm-inline"></i> + <span class="d-none d-sm-inline">Keranjang</span><i class="bi bi-cart-plus d-sm-none"></i>
+                                <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium py-1">
+                                    <i class="bi bi-cart-plus"></i> <span class="d-none d-md-inline">Beli</span>
                                 </button>
                             </form>
                         @endif
@@ -137,25 +133,32 @@
 </div>
 
 <style>
+    /* Skeleton Animation */
+    @keyframes skeleton-loading {
+        0% { background-color: #f0f0f0; }
+        100% { background-color: #e0e0e0; }
+    }
+    .skeleton-loader {
+        animation: skeleton-loading 1s linear infinite alternate;
+    }
+
     /* Hero Hover Effect */
     .product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
-        border-color: transparent !important;
     }
     
     .product-card:hover img {
         transform: scale(1.05);
     }
-    
-    .btn-outline-success {
-        color: var(--primary-green);
-        border-color: var(--primary-green);
-    }
-    
-    .btn-outline-success:hover {
-        background-color: var(--primary-green);
-        color: white;
+
+    @media (max-width: 576px) {
+        .product-card {
+            border-radius: 8px;
+        }
+        .card-title {
+            font-size: 0.8rem !important;
+        }
     }
 </style>
 @endsection

@@ -54,10 +54,11 @@
                             <div class="d-flex align-items-center">
                                 <div class="flex-shrink-0 me-3">
                                     @if($p->image)
-                                    <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden;">
+                                    <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; background: #eee;">
                                         <img src="{{ asset('storage/' . $p->image) }}" 
                                              alt="{{ $p->name }}"
-                                             style="width: 100%; height: 100%; object-fit: cover;">
+                                             style="width: 100%; height: 100%; object-fit: cover;"
+                                             loading="lazy">
                                     </div>
                                     @else
                                     <div style="width: 40px; height: 40px; border-radius: 6px; background: #f1f5f9; 
