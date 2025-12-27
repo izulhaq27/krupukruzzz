@@ -86,10 +86,23 @@
             box-shadow: none !important;
         }
 
+        /* Prevent Bootstrap Sticky States */
+        .btn:focus, .btn:active, .btn.active, .btn:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+            background-color: inherit; /* Fallback */
+        }
+
+        /* Fix for btn-light staying grey on mobile */
+        .btn-light:focus, .btn-light:active, .btn-light.active {
+            background-color: #fff !important;
+            color: #198754 !important; /* Bootstrap success color */
+        }
+
         .btn:active {
             transform: scale(0.92) !important;
-            opacity: 0.8;
-            filter: brightness(90%);
+            opacity: 0.85;
+            filter: brightness(95%);
         }
 
         /* Prevent tap blue overlay on specific elements */
@@ -481,16 +494,17 @@
             });
 
             // Global Focus Reset for Mobile (Kill Sticky Hover/Focus)
-            document.addEventListener('touchstart', function() {}, {passive: true}); // Enable active states on iOS
+            document.addEventListener('touchstart', function() {}, {passive: true}); 
 
-            document.addEventListener('touchend', function(e) {
-                // Delay blur slightly so the click event still fires correctly
-                setTimeout(() => {
-                    if (document.activeElement && (document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'A')) {
-                        document.activeElement.blur();
-                    }
-                }, 100);
-            }, {passive: true});
+            // More aggressive reset on click and touch
+            const resetFocus = () => {
+                if (document.activeElement && (document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'A')) {
+                    document.activeElement.blur();
+                }
+            };
+
+            document.addEventListener('mouseup', resetFocus);
+            document.addEventListener('touchend', () => setTimeout(resetFocus, 100), {passive: true});
         });
     </script>
 </body>

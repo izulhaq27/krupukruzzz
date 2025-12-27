@@ -41,11 +41,11 @@
 </div>
 
 <style>
-    .transition-hover { transition: all 0.2s ease-in-out !important; }
+    .transition-hover { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; }
     @media (hover: hover) {
         .transition-hover:hover { transform: translateY(-3px) !important; }
     }
-    .transition-hover:active { transform: scale(0.95) !important; }
+    .transition-hover:active { transform: scale(0.92) !important; }
 </style>
 
 <div class="container-fluid px-lg-5 my-4" id="produk-list"> <!-- FULL WIDTH -->
