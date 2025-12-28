@@ -462,7 +462,7 @@
                     <div class="col-md-6">
                         <h5 class="mb-3">KrupuKruzzz</h5>
                         <p class="footer-alamat">
-                            <i class="bi bi-geo-alt"></i> Dusun Garas RT 0001 RW 0001 Desa Palembon<br>
+                            <i class="bi bi-geo-alt"></i> Dusun Garas RT 001 RW 001 Desa Palembon<br>
                             Kecamatan Kanor, Kabupaten Bojonegoro, Jawa Timur, Indonesia
                         </p>
                     </div>
