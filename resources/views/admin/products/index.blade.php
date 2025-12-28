@@ -20,7 +20,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h4 class="fw-bold mb-0" style="color: #1e293b;">Kelola Produk</h4>
-        <p class="text-muted mb-0 small">Total {{ $products->count() }} produk</p>
+        <p class="text-muted mb-0 small">Total {{ $products->total() }} produk</p>
     </div>
     <a href="{{ route('admin.products.create') }}" class="btn fw-bold" 
        style="background: #10b981; color: white; border: none; border-radius: 8px; padding: 8px 16px;">
@@ -131,6 +131,11 @@
             </table>
         </div>
     </div>
+</div>
+
+{{-- Pagination Links --}}
+<div class="mt-4 d-flex justify-content-center">
+    {{ $products->links('pagination::bootstrap-5') }}
 </div>
 
 @if($products->isEmpty())
