@@ -305,7 +305,7 @@
                                         @csrf
                                         <div class="mb-3 text-start">
                                             <label class="form-label">Nama Bank Pengirim</label>
-                                            <input type="text" name="bank_name" class="form-control" placeholder="Contoh: BRI, BCA, Mandiri" value="{{ old('bank_name', $order->bank_name) }}" required>
+                                            <input type="text" name="bank_name" class="form-control" placeholder="BRI, BCA, Mandiri" value="{{ old('bank_name', $order->bank_name) }}" required>
                                         </div>
                                         <div class="mb-3 text-start">
                                             <label class="form-label">Foto Bukti Transfer</label>
@@ -319,9 +319,9 @@
                                     
                                     <div class="mt-4 bg-light p-3 rounded text-start border-start border-warning border-4">
                                         <h6 class="fw-bold small mb-2 text-uppercase text-warning"><i class="bi bi-bank"></i> Rekening Tujuan:</h6>
-                                        <p class="mb-1 small"><strong>Bank BRI</strong></p>
-                                        <p class="mb-1 small">No. Rek: <strong class="text-dark">1234-5678-9012-345</strong></p>
-                                        <p class="mb-0 small">A.N: KrupuKruzzz UMKM</p>
+                                        <p class="mb-1 small"><strong>Bank Jago</strong></p>
+                                        <p class="mb-1 small">No. Rek: <strong class="text-dark">100641390135</strong></p>
+                                        <p class="mb-0 small">Atas nama : Achmad Machrus Ali</p>
                                     </div>
                                 </div>
                             </div>
