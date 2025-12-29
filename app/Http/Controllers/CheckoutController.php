@@ -345,13 +345,13 @@ class CheckoutController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
+            'status' => 'required|in:pending,processed,shipped,completed,cancelled'
         ]);
 
         $order = Order::findOrFail($id);
         $order->update([
             'status' => $request->status,
-            'paid_at' => ($request->status == 'processing' && !$order->paid_at) ? now() : $order->paid_at
+            'paid_at' => ($request->status == 'processed' && !$order->paid_at) ? now() : $order->paid_at
         ]);
 
         return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');

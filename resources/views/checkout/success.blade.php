@@ -65,6 +65,19 @@
                         </div>
                     </div>
                     
+                    @if($order->payment_type == 'manual_transfer')
+                    <div class="alert alert-info border-info shadow-sm mb-4 text-start">
+                        <h6 class="fw-bold"><i class="bi bi-bank"></i> Instruksi Pembayaran Manual:</h6>
+                        <p class="mb-2 small">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda:</p>
+                        <div class="bg-white p-3 rounded mb-2 border">
+                            <p class="mb-1"><strong>Bank BRI</strong></p>
+                            <p class="mb-1">Nomor Rekening: <strong class="text-primary h5">1234-5678-9012-345</strong></p>
+                            <p class="mb-0">Atas Nama: <strong>KrupuKruzzz UMKM</strong></p>
+                        </div>
+                        <p class="mb-0 small text-muted">* Setelah transfer, silakan unggah bukti pembayaran di menu <strong>"Pesanan Saya"</strong>.</p>
+                    </div>
+                    @endif
+
                     <!-- Customer Info -->
                     <div class="card mb-4" style="background: #f8f9fa;">
                         <div class="card-body">

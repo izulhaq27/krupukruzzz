@@ -91,7 +91,7 @@
             </div>
             
             <!-- Progress Tracking (Opsional) -->
-            @if(in_array($order->status, ['shipped', 'delivered']))
+            @if(in_array($order->status, ['shipped', 'completed']))
             <div class="mt-5">
                 <h5>Progress Pengiriman</h5>
                 <div class="progress-tracking mt-3">
@@ -99,9 +99,9 @@
                         $steps = [
                             'pending' => ['Pending', 'Menunggu pembayaran'],
                             'paid' => ['Paid', 'Pembayaran diterima'],
-                            'processing' => ['Processing', 'Pesanan diproses'],
+                            'processed' => ['Processed', 'Pesanan diproses'],
                             'shipped' => ['Shipped', 'Pesanan dikirim'],
-                            'delivered' => ['Delivered', 'Pesanan diterima']
+                            'completed' => ['Completed', 'Pesanan diterima']
                         ];
                     @endphp
                     

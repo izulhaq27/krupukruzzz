@@ -89,14 +89,13 @@
                                 @php
                                     $badgeClass = match($order->status) {
                                         'pending' => 'bg-warning text-dark',
-                                        'processing' => 'bg-info text-white',
+                                        'processed' => 'bg-info text-white',
                                         'completed' => 'bg-success text-white',
                                         'cancelled' => 'bg-danger text-white',
-                                        'Quadro' => 'bg-primary text-white',
                                         default => 'bg-secondary text-white'
                                     };
                                     
-                                    $statusText = $order->status == 'Quadro' ? 'Quadro' : ucfirst($order->status);
+                                    $statusText = $order->status_label;
                                 @endphp
                                 <span class="badge {{ $badgeClass }} px-2 py-1 rounded-pill d-inline-block" style="font-size: 0.75rem;">
                                     {{ $statusText }}

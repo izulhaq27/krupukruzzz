@@ -422,7 +422,7 @@ class OrderController extends Controller
                 'status' => 'pending'
             ]);
 
-            return redirect()->route('orders.show', $order->order_number)
+            return redirect()->route('checkout.success', ['order_id' => $order->order_number])
                 ->with('success', 'Metode pembayaran diubah ke Transfer Bank Manual. Silakan lakukan pembayaran dan unggah bukti.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengubah metode pembayaran.');

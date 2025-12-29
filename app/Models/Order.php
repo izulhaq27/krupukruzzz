@@ -59,9 +59,9 @@ class Order extends Model
      */
     public const STATUS_PENDING = 'pending';
     public const STATUS_PAID = 'paid';
-    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_PROCESSING = 'processed';
     public const STATUS_SHIPPED = 'shipped';
-    public const STATUS_DELIVERED = 'delivered';
+    public const STATUS_DELIVERED = 'completed';
     public const STATUS_CANCELLED = 'cancelled';
 
     /**

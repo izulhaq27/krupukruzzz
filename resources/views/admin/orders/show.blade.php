@@ -60,8 +60,8 @@
                             <tr>
                                 <th width="120">Status:</th>
                                 <td>
-                                    <span class="badge bg-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'processing' ? 'info' : 'success') }}">
-                                        {{ ucfirst($order->status) }}
+                                    <span class="badge bg-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'processed' ? 'info' : 'success') }}">
+                                        {{ $order->status_label }}
                                     </span>
                                 </td>
                             </tr>
@@ -118,9 +118,9 @@
                             <div class="d-flex gap-2">
                                 <select name="status" class="form-select">
                                     <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Diproses (Sudah Bayar)</option>
+                                    <option value="processed" {{ $order->status == 'processed' ? 'selected' : '' }}>Diproses (Sudah Bayar)</option>
                                     <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Dikirim</option>
-                                    <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Selesai</option>
                                     <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                 </select>
                                 <button type="submit" class="btn btn-dark">Simpan Status</button>
