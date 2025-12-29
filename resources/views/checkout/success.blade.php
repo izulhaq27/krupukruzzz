@@ -76,9 +76,9 @@
                         <h6 class="fw-bold"><i class="bi bi-bank"></i> Instruksi Pembayaran Manual:</h6>
                         <p class="mb-2 small">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda:</p>
                         <div class="bg-white p-3 rounded mb-2 border">
-                            <p class="mb-1"><strong>Bank BRI</strong></p>
-                            <p class="mb-1">Nomor Rekening: <strong class="text-primary h5">1234-5678-9012-345</strong></p>
-                            <p class="mb-0">Atas Nama: <strong>KrupuKruzzz UMKM</strong></p>
+                            <p class="mb-1"><strong>Bank Jago</strong></p>
+                            <p class="mb-1">Nomor Rekening: <strong class="text-primary h5">100641390135</strong></p>
+                            <p class="mb-0">Atas Nama: <strong>Acmad Machrus Ali</strong></p>
                         </div>
                         <p class="mb-0 small text-muted">* Setelah transfer, silakan unggah bukti pembayaran di menu <strong>"Pesanan Saya"</strong>.</p>
                     </div>

@@ -74,9 +74,9 @@
                             <p class="text-start mb-2">Silakan transfer ke rekening berikut:</p>
                             <div class="bg-light p-3 rounded mb-3 text-start border-start border-primary border-4">
                                 <p class="mb-1 text-primary fw-bold"><i class="fas fa-university"></i> Rekening Tujuan:</p>
-                                <p class="mb-1"><strong>Bank BRI</strong></p>
-                                <p class="mb-1">Nomor Rekening: <strong class="fs-5 text-dark">1234-5678-9012-345</strong></p>
-                                <p class="mb-0">Atas Nama: <strong>KrupuKruzzz UMKM</strong></p>
+                                <p class="mb-1"><strong>Bank Jago</strong></p>
+                                <p class="mb-1">Nomor Rekening: <strong class="fs-5 text-dark">100641390135</strong></p>
+                                <p class="mb-0">Atas Nama: <strong>Acmad Machrus Ali</strong></p>
                             </div>
                             
                             <form action="{{ route('orders.set-manual', $order->order_number) }}" method="POST">
