@@ -366,15 +366,49 @@ class OrderController extends Controller
                 ->with('items')
                 ->firstOrFail();
             
-            // TODO: Implement reorder logic
-            // Add items to cart
+            $cart = session()->get('cart', []);
+            $addedCount = 0;
+            $skippedCount = 0;
+
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+
+                // Skip if product missing or out of stock
+                if (!$product || $product->stock <= 0) {
+                    $skippedCount++;
+                    continue;
+                }
+
+                // Decide quantity (use order quantity but cap at current stock)
+                $qtyToAdd = min($item->quantity, $product->stock);
+
+                if (isset($cart[$product->id])) {
+                    $cart[$product->id]['quantity'] += $qtyToAdd;
+                } else {
+                    $cart[$product->id] = [
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'quantity' => $qtyToAdd,
+                        'image' => $product->image
+                    ];
+                }
+                $addedCount++;
+            }
+
+            session()->put('cart', $cart);
             
-            return redirect()->route('cart.index')
-                ->with('success', 'Item dari pesanan telah ditambahkan ke keranjang.');
+            if ($addedCount > 0) {
+                $msg = $addedCount . ' produk dari pesanan lama telah ditambahkan ke keranjang.';
+                if ($skippedCount > 0) {
+                    $msg .= ' (' . $skippedCount . ' produk dilewati karena stok habis)';
+                }
+                return redirect()->route('cart.index')->with('success', $msg);
+            } else {
+                return redirect()->back()->with('error', 'Gagal memproses reorder: Produk mungkin sudah tidak tersedia atau stok habis.');
+            }
                 
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal melakukan reorder: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal melakukan reorder: ' . $e->getMessage());
         }
     }
 

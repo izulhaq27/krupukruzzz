@@ -365,9 +365,12 @@
                             <i class="bi bi-check2-circle me-2"></i>
                             Pesanan ini sudah selesai. Terima kasih telah berbelanja di KrupuKruzzz!
                         </div>
-                        <a href="{{ route('orders.reorder', $order->order_number) }}" class="btn btn-outline-primary w-100">
-                            <i class="bi bi-arrow-repeat me-2"></i> Pesan Lagi
-                        </a>
+                        <form action="{{ route('orders.reorder', $order->order_number) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-arrow-repeat me-2"></i> Pesan Lagi
+                            </button>
+                        </form>
                     </div>
                     @endif
                     
