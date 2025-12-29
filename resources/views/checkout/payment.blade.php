@@ -15,37 +15,54 @@
                     <p class="text-muted">Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                     
                     @if($snapToken)
-                        <!-- Midtrans Snap -->
-                        <div id="snap-container"></div>
-                        
+                        <!-- Midtrans Option -->
+                        <div class="card border-success mb-4 shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="fas fa-credit-card"></i> Pembayaran Otomatis (Midtrans)</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small mb-3">Dukung berbagai metode: Virtual Account, E-Wallet (GoPay, ShopeePay), QRIS, dll.</p>
+                                <button id="pay-button" class="btn btn-success w-100 py-2 fw-bold">
+                                    <i class="fas fa-bolt"></i> Bayar Sekarang (Otomatis)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-4">
+                            <hr class="flex-grow-1">
+                            <span class="mx-3 text-muted fw-bold">ATAU</span>
+                            <hr class="flex-grow-1">
+                        </div>
+
                         <script type="text/javascript"
                             src="https://app.{{ config('services.midtrans.is_production') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
                             data-client-key="{{ config('services.midtrans.client_key') }}">
                         </script>
                         
                         <script type="text/javascript">
-                            window.snap.pay('{{ $snapToken }}', {
-                                onSuccess: function(result){
-                                    console.log(result);
-                                    window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
-                                },
-                                onPending: function(result){
-                                    console.log(result);
-                                    window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
-                                },
-                                onError: function(result){
-                                    console.log(result);
-                                    alert("Pembayaran gagal atau dibatalkan!");
-                                    window.location.href = "{{ route('products.index') }}";
-                                },
-                                onClose: function(){
-                                    /* Pergi ke halaman dashboard pesanan jika user menutup popup */
-                                    window.location.href = "{{ route('orders.index') }}";
-                                }
+                            const payButton = document.getElementById('pay-button');
+                            payButton.addEventListener('click', function () {
+                                window.snap.pay('{{ $snapToken }}', {
+                                    onSuccess: function(result){
+                                        console.log(result);
+                                        window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
+                                    },
+                                    onPending: function(result){
+                                        console.log(result);
+                                        window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
+                                    },
+                                    onError: function(result){
+                                        console.log(result);
+                                        alert("Pembayaran gagal atau dibatalkan!");
+                                        window.location.href = "{{ route('products.index') }}";
+                                    },
+                                    onClose: function(){
+                                        /* Pergi ke halaman dashboard pesanan jika user menutup popup */
+                                        window.location.href = "{{ route('orders.index') }}";
+                                    }
+                                });
                             });
                         </script>
-
-                        <div class="hr-text my-4">ATAU</div>
                     @endif
 
                     <!-- Manual Bank Transfer Section -->
