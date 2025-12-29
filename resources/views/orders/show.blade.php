@@ -171,28 +171,30 @@
                                 <i class="bi bi-info-circle text-success me-2"></i> Info Pesanan
                             </h5>
                             
-                            <div class="mb-3">
-                                <small class="text-muted d-block">Tanggal Pesanan</small>
-                                <strong>{{ $order->created_at->format('d F Y, H:i') }}</strong>
+                            <div class="row g-3">
+                                <div class="col-6 col-lg-12">
+                                    <small class="text-muted d-block">Tanggal Pesanan</small>
+                                    <strong>{{ $order->created_at->format('d F Y') }}</strong>
+                                    <small class="text-muted d-block small">{{ $order->created_at->format('H:i') }}</small>
+                                </div>
+                                
+                                <div class="col-6 col-lg-12">
+                                    <small class="text-muted d-block">Status</small>
+                                    @php
+                                        $statusConfig = [
+                                            'pending' => ['color' => 'warning', 'label' => 'Menunggu Pembayaran'],
+                                            'paid' => ['color' => 'info', 'label' => 'Dibayar'],
+                                            'processed' => ['color' => 'primary', 'label' => 'Diproses'],
+                                            'shipped' => ['color' => 'success', 'label' => 'Dikirim'],
+                                            'completed' => ['color' => 'dark', 'label' => 'Selesai'],
+                                        ];
+                                        $config = $statusConfig[$order->status] ?? ['color' => 'secondary', 'label' => $order->status];
+                                    @endphp
+                                    <span class="badge bg-{{ $config['color'] }} px-3 py-2">
+                                        {{ $config['label'] }}
+                                    </span>
+                                </div>
                             </div>
-                            
-                            <div class="mb-3">
-                                <small class="text-muted d-block">Status</small>
-                                @php
-                                    $statusConfig = [
-                                        'pending' => ['color' => 'warning', 'label' => 'Menunggu Pembayaran'],
-                                        'paid' => ['color' => 'info', 'label' => 'Dibayar'],
-                                        'processed' => ['color' => 'primary', 'label' => 'Diproses'],
-                                        'shipped' => ['color' => 'success', 'label' => 'Dikirim'],
-                                        'completed' => ['color' => 'dark', 'label' => 'Selesai'],
-                                    ];
-                                    $config = $statusConfig[$order->status] ?? ['color' => 'secondary', 'label' => $order->status];
-                                @endphp
-                                <span class="badge bg-{{ $config['color'] }} px-3 py-2">
-                                    {{ $config['label'] }}
-                                </span>
-                            </div>
-                            
                             @if($order->notes)
                             <div class="mb-3">
                                 <small class="text-muted d-block">Catatan</small>

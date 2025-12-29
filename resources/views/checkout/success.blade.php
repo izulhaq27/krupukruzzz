@@ -34,86 +34,89 @@
                     </p>
                     
                     <!-- Order Summary -->
-                    <div class="card mb-4" style="background: #f8f9fa;">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">📋 Detail Pesanan</h5>
+                    <div class="card mb-4 border-0 shadow-sm" style="background: #f8f9fa;">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-4 fw-bold">📋 Detail Pesanan</h5>
                             
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th width="120">Nomor Order</th>
-                                    <td><strong>{{ $order->order_number }}</strong></td>
-                                </tr>
-                                <tr>
-                                    <th>Tanggal</th>
-                                    <td>{{ $order->created_at->format('d F Y H:i') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Total</th>
-                                    <td class="fw-bold" style="color: #28a745;">
+                            <div class="row g-3 text-start">
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Nomor Order</small>
+                                    <strong class="text-break">{{ $order->order_number }}</strong>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Tanggal</small>
+                                    <strong>{{ $order->created_at->format('d F Y H:i') }}</strong>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Total</small>
+                                    <h5 class="fw-bold mb-0" style="color: #28a745;">
                                         Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td>
-                                        <span class="badge bg-{{ $order->status == 'pending' ? 'warning' : 'success' }}">
-                                            {{ $order->status_label }}
-                                        </span>
-                                    </td>
-                                </tr>
+                                    </h5>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Status</small>
+                                    <span class="badge bg-{{ $order->status == 'pending' ? 'warning' : 'success' }} px-3 py-2">
+                                        {{ $order->status_label }}
+                                    </span>
+                                </div>
                                 @if($order->payment_type)
-                                <tr>
-                                    <th>Metode Pembayaran</th>
-                                    <td class="fw-bold">{{ $order->payment_type_label }}</td>
-                                </tr>
+                                <div class="col-12 mt-3 pt-3 border-top">
+                                    <small class="text-muted d-block">Metode Pembayaran</small>
+                                    <strong class="fs-5">{{ $order->payment_type_label }}</strong>
+                                </div>
                                 @endif
-                            </table>
+                            </div>
                         </div>
                     </div>
                     
                     @if($order->payment_type == 'manual_transfer')
-                    <div class="alert alert-info border-info shadow-sm mb-4 text-start">
+                    <div class="alert alert-info border-0 shadow-sm mb-4 text-start p-4">
                         <h6 class="fw-bold"><i class="bi bi-bank"></i> Instruksi Pembayaran Manual:</h6>
-                        <p class="mb-2 small">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda:</p>
-                        <div class="bg-white p-3 rounded mb-2 border">
-                            <p class="mb-1"><strong>Bank Jago</strong></p>
-                            <p class="mb-1">Nomor Rekening: <strong class="text-primary h5">100641390135</strong></p>
-                            <p class="mb-0">Atas Nama: <strong>Acmad Machrus Ali</strong></p>
+                        <p class="mb-3 small">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda:</p>
+                        <div class="bg-white p-3 rounded mb-3 border shadow-sm">
+                            <p class="mb-1 text-muted small">Nama Bank</p>
+                            <p class="mb-2 fw-bold">Bank Jago</p>
+                            <p class="mb-1 text-muted small">Nomor Rekening</p>
+                            <p class="mb-2 fw-bold text-success h4">{{ '100641390135' }}</p>
+                            <p class="mb-1 text-muted small">Atas Nama</p>
+                            <p class="mb-0 fw-bold">Acmad Machrus Ali</p>
                         </div>
-                        <p class="mb-0 small text-muted">* Setelah transfer, silakan unggah bukti pembayaran di menu <strong>"Pesanan Saya"</strong>.</p>
+                        <p class="mb-0 small text-muted">
+                            <i class="bi bi-info-circle me-1"></i> Setelah transfer, silakan unggah bukti pembayaran di menu <strong>"Pesanan Saya"</strong>.
+                        </p>
                     </div>
                     @endif
 
                     <!-- Customer Info -->
-                    <div class="card mb-4" style="background: #f8f9fa;">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">👤 Informasi Pengiriman</h5>
+                    <div class="card mb-4 border-0 shadow-sm" style="background: #f8f9fa;">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-4 fw-bold">👤 Informasi Pengiriman</h5>
                             
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th width="120">Nama</th>
-                                    <td>{{ $order->name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Telepon</th>
-                                    <td>{{ $order->phone }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Alamat</th>
-                                    <td>{{ $order->address }}, {{ $order->city }}, {{ $order->province }}</td>
-                                </tr>
-                            </table>
+                            <div class="row g-3 text-start">
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Nama</small>
+                                    <strong>{{ $order->name }}</strong>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted d-block">Telepon</small>
+                                    <strong>{{ $order->phone }}</strong>
+                                </div>
+                                <div class="col-12">
+                                    <small class="text-muted d-block">Alamat</small>
+                                    <p class="mb-0">{{ $order->address }}, {{ $order->city }}, {{ $order->province }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
-                    <div class="d-flex gap-3 justify-content-center">
-                        <a href="{{ route('products.index') }}" class="btn btn-outline-primary px-4">
-                            <i class="bi bi-shop"></i> Lanjut Belanja
+                    <div class="d-grid d-md-flex gap-3 justify-content-md-center">
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-success px-4 py-3">
+                            <i class="bi bi-shop me-2"></i>Lanjut Belanja
                         </a>
                         
-                        <a href="{{ route('orders.index') }}" class="btn btn-primary px-4">
-                            <i class="bi bi-list-check"></i> Lihat Pesanan Saya
+                        <a href="{{ route('orders.index') }}" class="btn btn-success px-4 py-3 shadow">
+                            <i class="bi bi-list-check me-2"></i>Lihat Pesanan Saya
                         </a>
                     </div>
                     
