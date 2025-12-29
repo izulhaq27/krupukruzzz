@@ -85,6 +85,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/status/pending', [OrderController::class, 'pending'])->name('pending');
         Route::get('/status/active', [OrderController::class, 'active'])->name('active');
         Route::get('/status/completed', [OrderController::class, 'completed'])->name('completed');
+
+        // Manual Payment Proof Upload
+        Route::post('/{order_number}/payment-proof', [OrderController::class, 'uploadPaymentProof'])->name('upload-payment-proof');
+        Route::post('/{order_number}/set-manual', [OrderController::class, 'setManualPayment'])->name('set-manual');
     });
     
     Route::get('/home', [HomeController::class, 'index'])->name('home');

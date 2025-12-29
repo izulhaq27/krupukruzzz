@@ -406,4 +406,62 @@ class OrderController extends Controller
                 ->with('error', 'Gagal menghapus riwayat pesanan: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Set payment method to manual transfer
+     */
+    public function setManualPayment($orderNumber)
+    {
+        try {
+            $order = Order::where('order_number', $orderNumber)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+            $order->update([
+                'payment_type' => 'manual_transfer',
+                'status' => 'pending'
+            ]);
+
+            return redirect()->route('orders.show', $order->order_number)
+                ->with('success', 'Metode pembayaran diubah ke Transfer Bank Manual. Silakan lakukan pembayaran dan unggah bukti.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah metode pembayaran.');
+        }
+    }
+
+    /**
+     * Upload payment proof
+     */
+    public function uploadPaymentProof(Request $request, $orderNumber)
+    {
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bank_name' => 'required|string|max:100',
+        ]);
+
+        try {
+            $order = Order::where('order_number', $orderNumber)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+            if ($request->hasFile('payment_proof')) {
+                $file = $request->file('payment_proof');
+                $filename = 'proof_' . $order->order_number . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('payment_proofs', $filename, 'public');
+
+                $order->update([
+                    'payment_proof' => $path,
+                    'bank_name' => $request->bank_name,
+                    'payment_type' => 'manual_transfer'
+                ]);
+
+                return redirect()->route('orders.show', $order->order_number)
+                    ->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu verifikasi admin.');
+            }
+
+            return redirect()->back()->with('error', 'Berkas tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengunggah bukti: ' . $e->getMessage());
+        }
+    }
 }

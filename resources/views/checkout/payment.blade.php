@@ -15,6 +15,7 @@
                     <p class="text-muted">Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                     
                     @if($snapToken)
+                        <!-- Midtrans Snap -->
                         <div id="snap-container"></div>
                         
                         <script type="text/javascript"
@@ -43,15 +44,38 @@
                                 }
                             });
                         </script>
-                    @else
+
+                        <div class="hr-text my-4">ATAU</div>
+                    @endif
+
+                    <!-- Manual Bank Transfer Section -->
+                    <div class="card border-primary mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="fas fa-university"></i> Transfer Bank Manual</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-start mb-2">Silakan transfer ke rekening berikut:</p>
+                            <div class="bg-light p-3 rounded mb-3 text-start border-start border-primary border-4">
+                                <p class="mb-1 text-primary fw-bold"><i class="fas fa-university"></i> Rekening Tujuan:</p>
+                                <p class="mb-1"><strong>Bank BRI</strong></p>
+                                <p class="mb-1">Nomor Rekening: <strong class="fs-5 text-dark">1234-5678-9012-345</strong></p>
+                                <p class="mb-0">Atas Nama: <strong>KrupuKruzzz UMKM</strong></p>
+                            </div>
+                            
+                            <form action="{{ route('orders.set-manual', $order->order_number) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Pilih Transfer Manual & Upload Bukti
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    @if(!$snapToken)
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle"></i>
-                            Token pembayaran tidak tersedia. Silakan hubungi admin.
+                            Layanan pembayaran otomatis (Midtrans) sedang tidak tersedia.
                         </div>
-                        <a href="{{ route('checkout.success') }}?order_id={{ $order->order_number }}" 
-                           class="btn btn-primary">
-                            Lanjutkan Tanpa Pembayaran (Testing)
-                        </a>
                     @endif
                     
                     <div class="mt-4">

@@ -285,12 +285,54 @@
                     <!-- ========== AKSI TOMBOL YANG BERFUNGSI ========== -->
                     @if($order->status == 'pending')
                     <div class="mt-4">
-                        <!-- TOMBOL BAYAR SEKARANG -->
+                        @if($order->payment_type == 'manual_transfer')
+                            <div class="card border-warning mb-4 shadow-sm">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0"><i class="bi bi-upload"></i> Unggah Bukti Pembayaran</h6>
+                                </div>
+                                <div class="card-body">
+                                    @if($order->payment_proof)
+                                        <div class="alert alert-success mb-3">
+                                            <i class="bi bi-info-circle"></i> Bukti pembayaran telah diunggah. Menunggu konfirmasi admin.
+                                        </div>
+                                        <div class="mb-3">
+                                            <small class="text-muted d-block mb-1">Bukti Anda:</small>
+                                            <img src="{{ asset('storage/' . $order->payment_proof) }}" class="img-fluid rounded border" style="max-height: 200px;" alt="Bukti Pembayaran">
+                                        </div>
+                                    @endif
+
+                                    <form action="{{ route('orders.upload-payment-proof', $order->order_number) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-3 text-start">
+                                            <label class="form-label">Nama Bank Pengirim</label>
+                                            <input type="text" name="bank_name" class="form-control" placeholder="Contoh: BRI, BCA, Mandiri" value="{{ old('bank_name', $order->bank_name) }}" required>
+                                        </div>
+                                        <div class="mb-3 text-start">
+                                            <label class="form-label">Foto Bukti Transfer</label>
+                                            <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
+                                            <small class="text-muted">Format: JPG, PNG, Max 2MB</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning w-100 fw-bold">
+                                            {{ $order->payment_proof ? 'Ganti Bukti Transfer' : 'Unggah Bukti Sekarang' }}
+                                        </button>
+                                    </form>
+                                    
+                                    <div class="mt-4 bg-light p-3 rounded text-start border-start border-warning border-4">
+                                        <h6 class="fw-bold small mb-2 text-uppercase text-warning"><i class="bi bi-bank"></i> Rekening Tujuan:</h6>
+                                        <p class="mb-1 small"><strong>Bank BRI</strong></p>
+                                        <p class="mb-1 small">No. Rek: <strong class="text-dark">1234-5678-9012-345</strong></p>
+                                        <p class="mb-0 small">A.N: KrupuKruzzz UMKM</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- TOMBOL BAYAR SEKARANG (Midtrans) -->
                         <form action="{{ route('orders.pay', $order->order_number) }}" method="POST" class="mb-3">
                             @csrf
                             <button type="submit" class="btn btn-success w-100 py-3" 
-                                    onclick="return confirm('Lanjutkan pembayaran untuk pesanan {{ $order->order_number }}?')">
-                                <i class="bi bi-credit-card me-2"></i> Bayar Sekarang
+                                    onclick="return confirm('Lanjutkan pembayaran otomatis via Midtrans?')">
+                                <i class="bi bi-credit-card me-2"></i> {{ $order->payment_type == 'manual_transfer' ? 'Ganti ke Pembayaran Otomatis' : 'Bayar Sekarang (Otomatis)' }}
                             </button>
                         </form>
                         

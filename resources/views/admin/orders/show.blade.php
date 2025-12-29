@@ -81,8 +81,13 @@
                                         <img src="{{ asset('storage/' . $order->payment_proof) }}" style="max-width: 150px; border-radius: 8px;" class="border">
                                     </a>
                                     <br>
-                                    <small class="text-muted">Bank: {{ $order->bank_name }}</small>
+                                    <small class="text-muted">Bank Pengirim: {{ $order->bank_name }}</small>
                                 </td>
+                            </tr>
+                            @elseif($order->payment_type == 'manual_transfer')
+                            <tr>
+                                <th>Metode:</th>
+                                <td><span class="badge bg-secondary">Transfer Manual</span> <br> <small class="text-danger">Belum upload bukti</small></td>
                             </tr>
                             @endif
                             @if($order->tracking_number)
