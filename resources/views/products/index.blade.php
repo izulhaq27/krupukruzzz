@@ -4,7 +4,7 @@
 <!-- Hero Section (Static Visual Only) -->
 <div class="container-fluid px-lg-5 mb-4"> <!-- FULL WIDTH with Padding -->
     <div class="rounded-4 p-4 p-lg-5 text-white position-relative overflow-hidden" 
-         style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); min-height: 250px; display: flex; align-items: center;"> 
+         style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); min-height: 280px; display: flex; align-items: center;"> 
         
         <!-- Background Pattern/Image (Optional) -->
         <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1; background-image: url('https://www.transparenttextures.com/patterns/food.png');"></div>
@@ -12,8 +12,8 @@
         <div class="row align-items-center position-relative z-1 w-100">
             <div class="col-lg-7 col-12 text-start">
                 <!-- Responsive Typography: Display-4 for desktop, smaller for mobile -->
-                <h1 class="fw-bold display-4 d-none d-lg-block mb-2">Selamat Datang di KrupuKruzzz</h1>
-                <h1 class="fw-bold fs-2 d-lg-none mb-2">Selamat Datang di KrupuKruzzz</h1>
+                <h1 class="fw-bold display-3 d-none d-lg-block mb-3">Selamat Datang di KrupuKruzzz</h1>
+                <h1 class="fw-bold fs-1 d-lg-none mb-3">Selamat Datang di KrupuKruzzz</h1>
                 
                 <p class="lead mb-4 opacity-90 fs-6 fs-lg-5">Solusi camilan kerupuk berkualitas, gurih, dan harga bersahabat.</p>
                 
@@ -138,8 +138,8 @@
 <style>
     /* Skeleton Animation */
     @keyframes skeleton-loading {
-        0% { background-color: #f0f0f0; }
-        100% { background-color: #e0e0e0; }
+        0% { background-color: rgba(240, 240, 240, 0.5); }
+        100% { background-color: rgba(224, 224, 224, 0.5); }
     }
     .skeleton-loader {
         animation: skeleton-loading 1s linear infinite alternate;

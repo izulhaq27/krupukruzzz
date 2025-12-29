@@ -17,10 +17,10 @@
     
     <style>
         :root {
-            --primary-green: #388e3c;  /* Forest Green - Muted/Dimmer */
-            --primary-green-dark: #1b5e20;
-            --light-bg: #f5f7f6;
-            --text-dark: #2c3e50;
+            --primary-green: #28a745; 
+            --primary-green-dark: #1e7e34;
+            --light-bg: #f8f9fa;
+            --text-dark: #212529;
         }
         
         body {
@@ -45,10 +45,13 @@
         }
         
         .navbar-nav .nav-link {
-            color: #555 !important;
+            color: #333 !important;
             font-weight: 500;
             padding: 0.5rem 1rem !important;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
