@@ -276,7 +276,7 @@
                             @if($order->payment_type)
                             <div class="mt-3 pt-3 border-top">
                                 <small class="text-muted d-block">Metode Pembayaran</small>
-                                <strong>{{ strtoupper($order->payment_type) }}</strong>
+                                <strong>{{ $order->payment_type_label }}</strong>
                             </div>
                             @endif
                         </div>

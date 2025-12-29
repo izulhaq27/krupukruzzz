@@ -50,6 +50,7 @@ class Order extends Model
     protected $appends = [
         'tracking_link',
         'status_color',
+        'payment_type_label',
         'formatted_total_amount',
         'formatted_shipping_cost'
     ];
@@ -139,6 +140,28 @@ class Order extends Model
         ];
         
         return $labels[$this->status] ?? $this->status;
+    }
+
+    /**
+     * Payment type label helper
+     */
+    public function getPaymentTypeLabelAttribute(): string
+    {
+        if (!$this->payment_type) {
+            return 'Belum Pilih';
+        }
+
+        $types = [
+            'manual_transfer' => 'Transfer Bank Manual',
+            'credit_card' => 'Kartu Kredit',
+            'gopay' => 'GoPay',
+            'shopeepay' => 'ShopeePay',
+            'bank_transfer' => 'Virtual Account',
+            'qris' => 'QRIS',
+            'cstore' => 'Gerai Retail'
+        ];
+
+        return $types[$this->payment_type] ?? strtoupper(str_replace('_', ' ', $this->payment_type));
     }
 
     /**

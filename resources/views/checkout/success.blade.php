@@ -57,10 +57,16 @@
                                     <th>Status</th>
                                     <td>
                                         <span class="badge bg-{{ $order->status == 'pending' ? 'warning' : 'success' }}">
-                                            {{ strtoupper($order->status) }}
+                                            {{ $order->status_label }}
                                         </span>
                                     </td>
                                 </tr>
+                                @if($order->payment_type)
+                                <tr>
+                                    <th>Metode Pembayaran</th>
+                                    <td class="fw-bold">{{ $order->payment_type_label }}</td>
+                                </tr>
+                                @endif
                             </table>
                         </div>
                     </div>
