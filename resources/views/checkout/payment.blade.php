@@ -49,16 +49,16 @@
                                     },
                                     onPending: function(result){
                                         console.log(result);
-                                        window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
+                                        // Tetap di halaman agar user bisa lihat instruksi atau pilih metode lain
                                     },
                                     onError: function(result){
                                         console.log(result);
-                                        alert("Pembayaran gagal atau dibatalkan!");
-                                        window.location.href = "{{ route('products.index') }}";
+                                        alert("Pembayaran gagal atau terjadi kesalahan.");
+                                        // Tetap di halaman
                                     },
                                     onClose: function(){
-                                        /* Pergi ke halaman dashboard pesanan jika user menutup popup */
-                                        window.location.href = "{{ route('orders.index') }}";
+                                        console.log('customer closed the popup without finishing the payment');
+                                        // Tetap di halaman sesuai permintaan user
                                     }
                                 });
                             });
