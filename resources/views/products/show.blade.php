@@ -16,7 +16,7 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-light h-100 d-flex align-items-center justify-content-center" style="min-height: 400px;">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" 
+                    <img loading="lazy" src="{{ asset('storage/' . $product->image) }}" 
                          class="img-fluid w-100 h-100" 
                          style="object-fit: contain; max-height: 600px;" 
                          alt="{{ $product->name }}">
