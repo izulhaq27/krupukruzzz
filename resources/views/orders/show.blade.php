@@ -317,8 +317,7 @@
                                         <button type="submit" class="btn btn-warning w-100 fw-bold">
                                             {{ $order->payment_proof ? 'Ganti Bukti Transfer' : 'Unggah Bukti Sekarang' }}
                                         </button>
-                                    </form>
-                                    
+                                    </form> 
                                     <div class="mt-4 bg-light p-3 rounded text-start border-start border-warning border-4">
                                         <h6 class="fw-bold small mb-2 text-uppercase text-warning"><i class="bi bi-bank"></i> Rekening Tujuan:</h6>
                                         <p class="mb-1 small"><strong>Bank Jago</strong></p>
@@ -333,7 +332,7 @@
                         <form action="{{ route('orders.pay', $order->order_number) }}" method="POST" class="mb-3">
                             @csrf
                             <button type="submit" class="btn btn-success w-100 py-3" 
-                                    onclick="return confirm('Lanjutkan pembayaran otomatis via Midtrans?')">
+                                    onclick="return confirm('Lanjutkan pembayaran otomatis via Midtrans/Manual Transfer?')">
                                 <i class="bi bi-credit-card me-2"></i> {{ $order->payment_type == 'manual_transfer' ? 'Ganti ke Pembayaran Otomatis' : 'Bayar Sekarang (Otomatis)' }}
                             </button>
                         </form>
