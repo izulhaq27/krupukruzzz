@@ -13,9 +13,17 @@
                     <p class="text-muted mb-0 small">Kelola dan lacak semua pesanan Anda</p>
                 </div>
                 <div>
-                    <a href="{{ route('products.index') }}" class="btn btn-success text-nowrap">
-                        <i class="bi bi-plus-circle me-2"></i>Belanja Lagi
-                    </a>
+                    <div class="d-flex gap-2">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger text-nowrap">
+                                <i class="bi bi-box-arrow-right me-2"></i>Keluar
+                            </button>
+                        </form>
+                        <a href="{{ route('products.index') }}" class="btn btn-success text-nowrap">
+                            <i class="bi bi-plus-circle me-2"></i>Belanja Lagi
+                        </a>
+                    </div>
                 </div>
             </div>
 
