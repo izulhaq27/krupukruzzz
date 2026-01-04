@@ -309,6 +309,13 @@
             flex: 1;
             height: 100%;
             transition: all 0.3s ease;
+            border-radius: 12px; /* Smooth corners for active bg */
+        }
+        .bottom-nav-item.active {
+            color: white !important;
+            background-color: var(--primary-green);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Soft shadow for depth */
+            transform: translateY(-5px); /* Lift effect */
         }
 
         .bottom-nav-item i {
@@ -317,14 +324,6 @@
             transition: transform 0.2s;
         }
 
-        .bottom-nav-item.active {
-            color: var(--primary-green);
-        }
-
-        .bottom-nav-item.active i {
-            font-weight: bold;
-        }
-        
         /* Floating Center Button & Curve */
         .nav-center-wrapper {
             position: relative;
@@ -345,8 +344,9 @@
             align-items: center;
             justify-content: center;
             color: white;
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-            border: 5px solid #f8f9fa; /* Matches body bg to fake the separation */
+            /* Stronger glowing shadow as requested */
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6), 0 5px 15px rgba(0,0,0,0.2);
+            border: 5px solid #f8f9fa; 
             transition: transform 0.2s;
         }
         

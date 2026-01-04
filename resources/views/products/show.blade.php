@@ -41,11 +41,11 @@
                     @endforeach
                     @if($product->stock > 0)
                         <span class="badge bg-light text-success border px-2 py-1 rounded small">
-                            <i class="bi bi-check-circle-fill me-1"></i> Stok Tersedia
+                            <i class="bi bi-check-circle-fill me-2"></i>Stok Tersedia
                         </span>
                     @else
                         <span class="badge bg-light text-danger border px-2 py-1 rounded small">
-                            <i class="bi bi-x-circle-fill me-1"></i> Stok Habis
+                            <i class="bi bi-x-circle-fill me-2"></i>Stok Habis
                         </span>
                     @endif
                 </div>
@@ -68,7 +68,7 @@
                         <span class="h2 fw-bold text-success">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                     @endif
                     <p class="text-muted small mt-2">
-                        <i class="bi bi-box-seam me-1"></i> Stok sisa: <strong>{{ $product->stock }} unit</strong>
+                        <i class="bi bi-box-seam me-2"></i>Stok sisa: <strong>{{ $product->stock }} unit</strong>
                     </p>
                 </div>
 
@@ -93,7 +93,7 @@
                     </div>
                     <div class="col-sm-4">
                         <button class="btn btn-outline-success btn-lg w-100 py-3 rounded-pill" onclick="window.history.back()">
-                             Kembali
+                             <i class="bi bi-arrow-left me-2"></i>Kembali
                         </button>
                     </div>
                 </div>

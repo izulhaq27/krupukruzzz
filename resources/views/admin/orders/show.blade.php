@@ -229,9 +229,9 @@
                     
                     <button type="submit" class="btn btn-primary">
                         @if($order->tracking_number)
-                            <i class="bi bi-pencil"></i> Update Resi
+                            <i class="bi bi-pencil me-2"></i>Update Resi
                         @else
-                            <i class="bi bi-check"></i> Simpan Resi
+                            <i class="bi bi-check me-2"></i>Simpan Resi
                         @endif
                     </button>
                 </form>
@@ -240,11 +240,11 @@
         
         <div class="d-flex justify-content-between mt-4 mb-5">
             <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-secondary">
-                ← Kembali ke Daftar Order
+                <i class="bi bi-arrow-left me-2"></i>Kembali ke Daftar Order
             </a>
             
             <a href="{{ route('admin.orders.print', $order->id) }}" target="_blank" class="btn btn-dark">
-                <i class="bi bi-printer"></i> Cetak Invoice
+                <i class="bi bi-printer me-2"></i>Cetak Invoice
             </a>
         </div>
     </div>

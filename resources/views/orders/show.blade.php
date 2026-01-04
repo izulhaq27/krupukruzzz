@@ -16,16 +16,16 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 class="h3 fw-bold text-success mb-2">
-                        <i class="bi bi-receipt"></i> Detail Pesanan
+                        <i class="bi bi-receipt me-2"></i>Detail Pesanan
                     </h1>
                     <p class="text-muted mb-0">No. Pesanan: <strong>{{ $order->order_number }}</strong></p>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left"></i> Kembali
+                        <i class="bi bi-arrow-left me-2"></i>Kembali
                     </a>
                     <a href="{{ route('orders.invoice', $order->order_number) }}" class="btn btn-success">
-                        <i class="bi bi-printer"></i> Invoice
+                        <i class="bi bi-printer me-2"></i>Invoice
                     </a>
                 </div>
             </div>
@@ -230,7 +230,7 @@
                                         @if($order->tracking_link)
                                         <a href="{{ $order->tracking_link }}" target="_blank" 
                                            class="btn btn-sm btn-success">
-                                            <i class="bi bi-box-arrow-up-right"></i> Lacak
+                                            <i class="bi bi-box-arrow-up-right me-2"></i>Lacak
                                         </a>
                                         @endif
                                     </div>
@@ -290,12 +290,12 @@
                         @if($order->payment_type == 'manual_transfer')
                             <div class="card border-warning mb-4 shadow-sm">
                                 <div class="card-header bg-warning text-dark">
-                                    <h6 class="mb-0"><i class="bi bi-upload"></i> Unggah Bukti Pembayaran</h6>
+                                    <h6 class="mb-0"><i class="bi bi-upload me-2"></i>Unggah Bukti Pembayaran</h6>
                                 </div>
                                 <div class="card-body">
                                     @if($order->payment_proof)
                                         <div class="alert alert-success mb-3">
-                                            <i class="bi bi-info-circle"></i> Bukti pembayaran telah diunggah. Menunggu konfirmasi admin.
+                                            <i class="bi bi-info-circle me-2"></i>Bukti pembayaran telah diunggah. Menunggu konfirmasi admin.
                                         </div>
                                         <div class="mb-3">
                                             <small class="text-muted d-block mb-1">Bukti Anda:</small>
@@ -319,7 +319,7 @@
                                         </button>
                                     </form> 
                                     <div class="mt-4 bg-light p-3 rounded text-start border-start border-warning border-4">
-                                        <h6 class="fw-bold small mb-2 text-uppercase text-warning"><i class="bi bi-bank"></i> Rekening Tujuan:</h6>
+                                        <h6 class="fw-bold small mb-2 text-uppercase text-warning"><i class="bi bi-bank me-2"></i>Rekening Tujuan:</h6>
                                         <p class="mb-1 small"><strong>Bank Jago</strong></p>
                                         <p class="mb-1 small">No. Rek: <strong class="text-dark">100641390135</strong></p>
                                         <p class="mb-0 small">Atas nama : Achmad Machrus Ali</p>
