@@ -17,7 +17,7 @@
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-outline-danger text-nowrap">
-                                <i class="bi bi-box-arrow-right me-2"></i>Keluar
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
                             </button>
                         </form>
                         <a href="{{ route('products.index') }}" class="btn btn-success text-nowrap">
