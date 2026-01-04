@@ -312,8 +312,9 @@
         }
 
         .bottom-nav-item i {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 2px;
+            transition: transform 0.2s;
         }
 
         .bottom-nav-item.active {
@@ -600,9 +601,9 @@
             <i class="bi bi-house{{ Request::is('/') ? '-fill' : '' }}"></i>
         </a>
         
-        {{-- 2. Kategori (Search in concept) --}}
+        {{-- 2. Kategori (Matches Desktop 'Kategori') --}}
         <a href="{{ route('categories.index') }}" class="bottom-nav-item {{ Request::routeIs('categories.*') ? 'active' : '' }}">
-            <i class="bi bi-search"></i>
+            <i class="bi bi-tags{{ Request::routeIs('categories.*') ? '-fill' : '' }}"></i>
         </a>
         
         {{-- 3. Center FAB (Produk) --}}
@@ -617,10 +618,10 @@
             </a>
         </div>
         
-        {{-- 4. Cart --}}
+        {{-- 4. Cart (Matches Desktop 'Keranjang') --}}
         <a href="{{ route('cart.index') }}" class="bottom-nav-item {{ Request::routeIs('cart.*') ? 'active' : '' }}">
             <div class="position-relative">
-                <i class="bi bi-cart{{ Request::routeIs('cart.*') ? '-fill' : '' }}"></i>
+                <i class="bi bi-cart3"></i>
                 @if(session('cart') && count(session('cart')) > 0)
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem; padding: 2px 4px;">
                         {{ count(session('cart')) }}
