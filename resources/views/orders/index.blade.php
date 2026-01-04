@@ -10,35 +10,37 @@
                     <h1 class="h3 fw-bold text-success mb-2">
                         <i class="bi bi-box-seam"></i> Pesanan Saya
                     </h1>
-                    <p class="text-muted mb-0">Kelola dan lacak semua pesanan Anda di sini</p>
+                    <p class="text-muted mb-0 small">Kelola dan lacak semua pesanan Anda</p>
                 </div>
-                <a href="{{ route('products.index') }}" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> Belanja Lagi
-                </a>
+                <div class="ms-2">
+                    <a href="{{ route('products.index') }}" class="btn btn-success btn-sm text-nowrap">
+                        <i class="bi bi-plus-circle"></i> Belanja Lagi
+                    </a>
+                </div>
             </div>
 
             <!-- FILTER STATUS -->
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="d-flex flex-nowrap gap-2 overflow-auto pb-2" style="scrollbar-width: none;">
                         <a href="{{ route('orders.index') }}" 
-                           class="btn btn-outline-secondary {{ !request('status') ? 'active' : '' }}">
+                           class="btn btn-outline-secondary btn-sm text-nowrap {{ !request('status') ? 'active' : '' }}">
                             Semua ({{ auth()->user()->orders()->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'pending']) }}" 
-                           class="btn btn-outline-warning {{ request('status') == 'pending' ? 'active' : '' }}">
+                           class="btn btn-outline-warning btn-sm text-nowrap {{ request('status') == 'pending' ? 'active' : '' }}">
                             Menunggu Bayar ({{ auth()->user()->pendingOrders()->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'processed']) }}" 
-                           class="btn btn-outline-primary {{ request('status') == 'processed' ? 'active' : '' }}">
+                           class="btn btn-outline-primary btn-sm text-nowrap {{ request('status') == 'processed' ? 'active' : '' }}">
                             Diproses ({{ auth()->user()->orders()->where('status', 'processed')->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'shipped']) }}" 
-                           class="btn btn-outline-info {{ request('status') == 'shipped' ? 'active' : '' }}">
+                           class="btn btn-outline-info btn-sm text-nowrap {{ request('status') == 'shipped' ? 'active' : '' }}">
                             Dikirim ({{ auth()->user()->orders()->where('status', 'shipped')->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'completed']) }}" 
-                           class="btn btn-outline-success {{ request('status') == 'completed' ? 'active' : '' }}">
+                           class="btn btn-outline-success btn-sm text-nowrap {{ request('status') == 'completed' ? 'active' : '' }}">
                             Selesai ({{ auth()->user()->completedOrders()->count() }})
                         </a>
                     </div>
@@ -154,27 +156,28 @@
                                                 Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                                             </h4>
                                         </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('orders.show', $order->order_number) }}" 
-                                               class="btn btn-outline-primary btn-sm">
-                                                <i class="bi bi-eye"></i> Detail
+                                    </div>
+                                    <div class="d-flex gap-2 mt-2 mt-sm-0">
+                                        <a href="{{ route('orders.show', $order->order_number) }}" 
+                                           class="btn btn-outline-primary btn-sm px-3">
+                                            <i class="bi bi-eye"></i> Detail
+                                        </a>
+                                        @if($order->status == 'shipped')
+                                            <a href="{{ $order->tracking_link ?? '#' }}" target="_blank"
+                                               class="btn btn-success btn-sm px-3">
+                                                <i class="bi bi-truck"></i> Lacak
                                             </a>
-                                            @if($order->status == 'shipped')
-                                                <a href="{{ $order->tracking_link ?? '#' }}" target="_blank"
-                                                   class="btn btn-success btn-sm">
-                                                    <i class="bi bi-truck"></i> Lacak
-                                                </a>
-                                            @endif
-                                            @if(in_array($order->status, ['cancelled', 'failed']))
-                                                <form action="{{ route('orders.destroy', $order->order_number) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus riwayat pesanan ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                        <i class="bi bi-trash"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
+                                        @endif
+                                        @if(in_array($order->status, ['cancelled', 'failed']))
+                                            <form action="{{ route('orders.destroy', $order->order_number) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus riwayat pesanan ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                                    <i class="bi bi-trash"></i> Hapus
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                     </div>
                                 </div>
                             </div>
