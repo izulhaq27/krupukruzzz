@@ -596,9 +596,16 @@
 
     {{-- BOTTOM NAVIGATION (Mobile) --}}
     <div class="bottom-nav">
-        {{-- 1. Home --}}
-        <a href="{{ url('/') }}" class="bottom-nav-item {{ Request::is('/') ? 'active' : '' }}">
-            <i class="bi bi-house{{ Request::is('/') ? '-fill' : '' }}"></i>
+        {{-- 1. Cart (Was Home) --}}
+        <a href="{{ route('cart.index') }}" class="bottom-nav-item {{ Request::routeIs('cart.*') ? 'active' : '' }}">
+            <div class="position-relative">
+                <i class="bi bi-cart3"></i>
+                @if(session('cart') && count(session('cart')) > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem; padding: 2px 4px;">
+                        {{ count(session('cart')) }}
+                    </span>
+                @endif
+            </div>
         </a>
         
         {{-- 2. Kategori (Matches Desktop 'Kategori') --}}
@@ -618,16 +625,9 @@
             </a>
         </div>
         
-        {{-- 4. Cart (Matches Desktop 'Keranjang') --}}
-        <a href="{{ route('cart.index') }}" class="bottom-nav-item {{ Request::routeIs('cart.*') ? 'active' : '' }}">
-            <div class="position-relative">
-                <i class="bi bi-cart3"></i>
-                @if(session('cart') && count(session('cart')) > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem; padding: 2px 4px;">
-                        {{ count(session('cart')) }}
-                    </span>
-                @endif
-            </div>
+        {{-- 4. Tracking (Was Cart) --}}
+        <a href="{{ route('tracking.index') }}" class="bottom-nav-item {{ Request::routeIs('tracking.*') ? 'active' : '' }}">
+            <i class="bi bi-truck{{ Request::routeIs('tracking.*') ? '-front-fill' : '' }}"></i>
         </a>
         
         {{-- 5. Profile / Account --}}
