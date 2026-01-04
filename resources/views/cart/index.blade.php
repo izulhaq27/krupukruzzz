@@ -3,7 +3,7 @@
 @section('content')
 <div class="container my-5">
     <h2 class="fw-bold mb-4" style="color: #28a745;">
-        <i class="bi bi-cart3"></i> Keranjang Belanja
+        <i class="bi bi-cart3 me-2"></i>Keranjang Belanja
     </h2>
     
     @if(empty($cart))
@@ -14,7 +14,7 @@
             <h3 class="fw-bold" style="color: #28a745;">Keranjang Kosong</h3>
             <p class="text-muted">Belum ada produk di keranjang Anda</p>
             <a href="{{ route('products.index') }}" class="btn btn-success btn-lg mt-3">
-                <i class="bi bi-bag-plus"></i> Mulai Belanja
+                <i class="bi bi-bag-plus me-2"></i>Mulai Belanja
             </a>
         </div>
     @else
@@ -113,7 +113,7 @@
                         border-color: #28a745;
                         color: #28a745;
                     ">
-                        <i class="bi bi-arrow-left"></i> Lanjut Belanja
+                        <i class="bi bi-arrow-left me-2"></i>Lanjut Belanja
                     </a>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                         padding: 1rem;
                     ">
                         <h5 class="mb-0 fw-bold">
-                            <i class="bi bi-receipt"></i> Ringkasan Belanja
+                            <i class="bi bi-receipt me-2"></i>Ringkasan Belanja
                         </h5>
                     </div>
                     <div class="card-body p-4">
@@ -143,7 +143,7 @@
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Ongkos Kirim</span>
                             <span style="color: #28a745; font-weight: 500;">
-                                <i class="bi bi-check-circle-fill"></i> GRATIS
+                                <i class="bi bi-check-circle-fill me-2"></i>GRATIS
                             </span>
                         </div>
                         <hr>
@@ -162,7 +162,7 @@
                                     border-radius: 8px;
                                     font-weight: 600;
                                 ">
-                                    <i class="bi bi-credit-card"></i> Checkout Sekarang
+                                    <i class="bi bi-credit-card me-2"></i>Checkout Sekarang
                                 </a>
                             </div>
                         @else
@@ -181,7 +181,7 @@
                                     border-radius: 8px;
                                     font-weight: 600;
                                 ">
-                                    <i class="bi bi-box-arrow-in-right"></i> Login
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
                                 </a>
                                 <a href="{{ route('register') }}" class="btn btn-outline-success" style="
                                     border-color: #28a745;
@@ -189,7 +189,7 @@
                                     border-radius: 8px;
                                     font-weight: 500;
                                 ">
-                                    <i class="bi bi-person-plus"></i> Daftar
+                                    <i class="bi bi-person-plus me-2"></i>Daftar
                                 </a>
                             </div>
                         @endauth

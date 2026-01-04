@@ -113,7 +113,7 @@
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
                                 <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium py-1">
-                                    <i class="bi bi-cart-plus"></i> <span class="d-none d-md-inline">Beli</span>
+                                    <i class="bi bi-cart-plus me-2"></i><span class="d-none d-md-inline">Beli</span>
                                 </button>
                             </form>
                         @endif
