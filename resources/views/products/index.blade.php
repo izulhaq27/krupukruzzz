@@ -61,7 +61,7 @@
         @foreach ($products as $product)
         <!-- GRID ADJUSTMENT: col-4 for mobile (3 items) as requested, or col-6 (2 items) -->
         <!-- User asked for "3 baris" (3 rows/lines/cols?). Assuming 3 Columns for "card" -->
-        <div class="col-xl-2 col-lg-3 col-md-4 col-4"> 
+        <div class="col-xl-2 col-lg-3 col-md-4 col-6"> 
             <div class="card product-card h-100 bg-white" style="border: 1px solid #f0f0f0;">
                 
                 <!-- Position Relative for Badge -->
@@ -164,10 +164,11 @@
     /* Mobile Interaction - NO STICKY HOVER */
     @media (max-width: 576px) {
         .product-card {
-            border-radius: 8px;
+            border-radius: 10px; /* Consistent radius */
         }
+        /* Allow font size to be same as desktop or slightly adjusted but not too small */
         .card-title {
-            font-size: 0.8rem !important;
+            font-size: 0.9rem !important; /* Match desktop size */
         }
         .product-card:active {
             background-color: #f8f9fa !important;
