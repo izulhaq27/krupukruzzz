@@ -74,7 +74,8 @@
                                      class="w-100 h-100"
                                      style="object-fit: cover; transition: transform 0.3s;"
                                      alt="{{ $product->name }}"
-                                     loading="lazy">
+                                     loading="lazy"
+                                     decoding="async">
                             @else
                                 <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
                                     <i class="bi bi-image fs-1 opacity-25"></i>
