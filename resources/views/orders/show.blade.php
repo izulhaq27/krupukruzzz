@@ -444,6 +444,7 @@
     
     .timeline-content {
         padding-bottom: 8px;
+        margin-left: 20px; /* Fix overlap with icon */
     }
     
     .breadcrumb {
