@@ -281,6 +281,116 @@
             animation: spinner-border .75s linear infinite;
             margin-left: 5px;
         }
+        /* Mobile Bottom Nav Styles */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: #fff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            text-decoration: none;
+            flex: 1;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary-green);
+        }
+
+        .bottom-nav-item.active i {
+            font-weight: bold;
+        }
+        
+        /* Floating Center Button & Curve */
+        .nav-center-wrapper {
+            position: relative;
+            width: 80px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .center-fab {
+            position: absolute;
+            top: -30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+            border: 5px solid #f8f9fa; /* Matches body bg to fake the separation */
+            transition: transform 0.2s;
+        }
+        
+        .center-fab:active {
+            transform: scale(0.95);
+        }
+
+        .center-fab i {
+            font-size: 1.5rem;
+        }
+
+        /* SVG Curve Background */
+        .curve-svg {
+            position: absolute;
+            top: -1px; /* Adjust slightly to cover gap */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 40px;
+            fill: #fff;
+            pointer-events: none;
+        }
+
+        /* Media Queries for Responsive Nav */
+        @media (max-width: 991.98px) {
+            .navbar {
+                display: none !important; /* Hide Top Nav */
+            }
+            .bottom-nav {
+                display: flex !important; /* Show Bottom Nav */
+            }
+            #app {
+                padding-bottom: 80px; /* Space for bottom nav */
+            }
+            /* Adjust center FAB border to match curved background checks */
+            .center-fab {
+                 border: 4px solid var(--light-bg); 
+            }
+        }
+        
+        @media (min-width: 992px) {
+             .bottom-nav {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -481,6 +591,54 @@
                 </div>
             </div>
         </footer>
+    </div>
+
+    {{-- BOTTOM NAVIGATION (Mobile) --}}
+    <div class="bottom-nav">
+        {{-- 1. Home --}}
+        <a href="{{ url('/') }}" class="bottom-nav-item {{ Request::is('/') ? 'active' : '' }}">
+            <i class="bi bi-house{{ Request::is('/') ? '-fill' : '' }}"></i>
+        </a>
+        
+        {{-- 2. Kategori (Search in concept) --}}
+        <a href="{{ route('categories.index') }}" class="bottom-nav-item {{ Request::routeIs('categories.*') ? 'active' : '' }}">
+            <i class="bi bi-search"></i>
+        </a>
+        
+        {{-- 3. Center FAB (Produk) --}}
+        <div class="nav-center-wrapper">
+            <svg class="curve-svg" viewBox="0 0 120 40" preserveAspectRatio="none">
+                 <path d="M0,40 L0,40 Q0,40 20,40 Q40,40 40,20 Q60,-20 80,20 Q80,40 100,40 Q120,40 120,40 L120,40 Z" fill="none"/>
+                 <!-- Simplified Curve Approximation via CSS preferred or SVG path if needed precise -->
+                 <!-- Using simple CSS radial cut out via mask is cleaner, but let's stick to the FAB 'border' hack for now which is robust -->
+            </svg>
+            <a href="{{ route('products.index') }}" class="center-fab">
+                <i class="bi bi-shop"></i>
+            </a>
+        </div>
+        
+        {{-- 4. Cart --}}
+        <a href="{{ route('cart.index') }}" class="bottom-nav-item {{ Request::routeIs('cart.*') ? 'active' : '' }}">
+            <div class="position-relative">
+                <i class="bi bi-cart{{ Request::routeIs('cart.*') ? '-fill' : '' }}"></i>
+                @if(session('cart') && count(session('cart')) > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem; padding: 2px 4px;">
+                        {{ count(session('cart')) }}
+                    </span>
+                @endif
+            </div>
+        </a>
+        
+        {{-- 5. Profile / Account --}}
+        @auth
+            <a href="{{ route('profile.edit') }}" class="bottom-nav-item {{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? 'active' : '' }}">
+                <i class="bi bi-person{{ Request::routeIs('profile.*') ? '-fill' : '' }}"></i>
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="bottom-nav-item {{ Request::routeIs('login') ? 'active' : '' }}">
+                <i class="bi bi-person"></i>
+            </a>
+        @endauth
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
