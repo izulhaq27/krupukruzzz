@@ -5,16 +5,16 @@
     <div class="row">
         <div class="col-12">
             <!-- HEADER -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <div>
                     <h1 class="h3 fw-bold text-success mb-2">
-                        <i class="bi bi-box-seam"></i> Pesanan Saya
+                        <i class="bi bi-box-seam me-2"></i>Pesanan Saya
                     </h1>
                     <p class="text-muted mb-0 small">Kelola dan lacak semua pesanan Anda</p>
                 </div>
-                <div class="ms-2">
-                    <a href="{{ route('products.index') }}" class="btn btn-success btn-sm text-nowrap">
-                        <i class="bi bi-plus-circle"></i> Belanja Lagi
+                <div>
+                    <a href="{{ route('products.index') }}" class="btn btn-success text-nowrap">
+                        <i class="bi bi-plus-circle me-2"></i>Belanja Lagi
                     </a>
                 </div>
             </div>
@@ -22,25 +22,25 @@
             <!-- FILTER STATUS -->
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex flex-nowrap gap-2 overflow-auto pb-2" style="scrollbar-width: none;">
+                    <div class="d-flex flex-wrap gap-2">
                         <a href="{{ route('orders.index') }}" 
-                           class="btn btn-outline-secondary btn-sm text-nowrap {{ !request('status') ? 'active' : '' }}">
+                           class="btn btn-outline-secondary btn-sm {{ !request('status') ? 'active' : '' }}">
                             Semua ({{ auth()->user()->orders()->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'pending']) }}" 
-                           class="btn btn-outline-warning btn-sm text-nowrap {{ request('status') == 'pending' ? 'active' : '' }}">
+                           class="btn btn-outline-warning btn-sm {{ request('status') == 'pending' ? 'active' : '' }}">
                             Menunggu Bayar ({{ auth()->user()->pendingOrders()->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'processed']) }}" 
-                           class="btn btn-outline-primary btn-sm text-nowrap {{ request('status') == 'processed' ? 'active' : '' }}">
+                           class="btn btn-outline-primary btn-sm {{ request('status') == 'processed' ? 'active' : '' }}">
                             Diproses ({{ auth()->user()->orders()->where('status', 'processed')->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'shipped']) }}" 
-                           class="btn btn-outline-info btn-sm text-nowrap {{ request('status') == 'shipped' ? 'active' : '' }}">
+                           class="btn btn-outline-info btn-sm {{ request('status') == 'shipped' ? 'active' : '' }}">
                             Dikirim ({{ auth()->user()->orders()->where('status', 'shipped')->count() }})
                         </a>
                         <a href="{{ route('orders.index', ['status' => 'completed']) }}" 
-                           class="btn btn-outline-success btn-sm text-nowrap {{ request('status') == 'completed' ? 'active' : '' }}">
+                           class="btn btn-outline-success btn-sm {{ request('status') == 'completed' ? 'active' : '' }}">
                             Selesai ({{ auth()->user()->completedOrders()->count() }})
                         </a>
                     </div>
@@ -58,7 +58,7 @@
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div>
                                         <h6 class="fw-bold mb-1 text-uppercase small text-muted">
-                                            <i class="bi bi-receipt"></i> NO. PESANAN
+                                            <i class="bi bi-receipt me-2"></i>NO. PESANAN
                                         </h6>
                                         <h5 class="fw-bold mb-0">{{ $order->order_number }}</h5>
                                     </div>
@@ -86,7 +86,7 @@
                                     @endphp
                                     
                                     <span class="badge bg-{{ $config['color'] }} px-3 py-2 mb-2">
-                                        <i class="bi bi-{{ $config['icon'] }} me-1"></i> {{ $config['label'] }}
+                                        <i class="bi bi-{{ $config['icon'] }} me-2"></i>{{ $config['label'] }}
                                     </span>
                                 </div>
 
@@ -157,15 +157,15 @@
                                             </h4>
                                         </div>
                                     </div>
-                                    <div class="d-flex gap-2 mt-2 mt-sm-0">
+                                    <div class="d-flex gap-2 mt-3 mt-sm-0 flex-wrap">
                                         <a href="{{ route('orders.show', $order->order_number) }}" 
                                            class="btn btn-outline-primary btn-sm px-3">
-                                            <i class="bi bi-eye"></i> Detail
+                                            <i class="bi bi-eye me-2"></i>Detail
                                         </a>
                                         @if($order->status == 'shipped')
                                             <a href="{{ $order->tracking_link ?? '#' }}" target="_blank"
                                                class="btn btn-success btn-sm px-3">
-                                                <i class="bi bi-truck"></i> Lacak
+                                                <i class="bi bi-truck me-2"></i>Lacak
                                             </a>
                                         @endif
                                         @if(in_array($order->status, ['cancelled', 'failed']))
@@ -173,7 +173,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm px-3">
-                                                    <i class="bi bi-trash"></i> Hapus
+                                                    <i class="bi bi-trash me-2"></i>Hapus
                                                 </button>
                                             </form>
                                         @endif
