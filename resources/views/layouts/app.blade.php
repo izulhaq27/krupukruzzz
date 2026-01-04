@@ -631,8 +631,8 @@
         
         {{-- 5. Profile / Account --}}
         @auth
-            <a href="{{ route('profile.edit') }}" class="bottom-nav-item {{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? 'active' : '' }}">
-                <i class="bi bi-person{{ Request::routeIs('profile.*') ? '-fill' : '' }}"></i>
+            <a href="{{ Route::has('profile.edit') ? route('profile.edit') : route('orders.index') }}" class="bottom-nav-item {{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? 'active' : '' }}">
+                <i class="bi bi-person{{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? '-fill' : '' }}"></i>
             </a>
         @else
             <a href="{{ route('login') }}" class="bottom-nav-item {{ Request::routeIs('login') ? 'active' : '' }}">
