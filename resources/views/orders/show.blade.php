@@ -13,18 +13,18 @@
             </nav>
 
             <!-- HEADER -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                 <div>
-                    <h1 class="h3 fw-bold text-success mb-2">
+                    <h1 class="h3 fw-bold text-success mb-2" style="font-size: calc(1.3rem + .6vw);">
                         <i class="bi bi-receipt me-2"></i>Detail Pesanan
                     </h1>
-                    <p class="text-muted mb-0">No. Pesanan: <strong>{{ $order->order_number }}</strong></p>
+                    <p class="text-muted mb-0 small">No. Pesanan: <strong class="text-break">{{ $order->order_number }}</strong></p>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary">
+                <div class="d-flex gap-2 w-100 w-md-auto">
+                    <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary flex-fill flex-md-grow-0 text-nowrap">
                         <i class="bi bi-arrow-left me-2"></i>Kembali
                     </a>
-                    <a href="{{ route('orders.invoice', $order->order_number) }}" class="btn btn-success">
+                    <a href="{{ route('orders.invoice', $order->order_number) }}" class="btn btn-success flex-fill flex-md-grow-0 text-nowrap">
                         <i class="bi bi-printer me-2"></i>Invoice
                     </a>
                 </div>
