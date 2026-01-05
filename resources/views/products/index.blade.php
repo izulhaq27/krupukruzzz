@@ -57,10 +57,9 @@
         </h4>
     </div>
 
-    <div class="row g-2 g-md-3"> <!-- Smaller Gap for Mobile -->
+    <div class="row g-2 g-md-3 justify-content-center"> <!-- Smaller Gap for Mobile, Centered Items -->
         @foreach ($products as $product)
-        <!-- GRID ADJUSTMENT: col-4 for mobile (3 items) as requested, or col-6 (2 items) -->
-        <!-- User asked for "3 baris" (3 rows/lines/cols?). Assuming 3 Columns for "card" -->
+        <!-- GRID ADJUSTMENT: col-xl-2 (6 items/row desktop), col-lg-3 (4 items), col-md-4 (3 items), col-6 (2 items) -->
         <div class="col-xl-2 col-lg-3 col-md-4 col-6"> 
             <div class="card product-card h-100 bg-white" style="border: 1px solid #f0f0f0;">
                 
