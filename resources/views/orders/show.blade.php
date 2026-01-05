@@ -20,11 +20,11 @@
                     </h1>
                     <p class="text-muted mb-0 small">No. Pesanan: <strong class="text-break">{{ $order->order_number }}</strong></p>
                 </div>
-                <div class="d-flex gap-2 w-100 w-md-auto">
-                    <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary flex-fill flex-md-grow-0 text-nowrap">
+                <div class="d-flex gap-2 ms-auto">
+                    <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary text-nowrap">
                         <i class="bi bi-arrow-left me-2"></i>Kembali
                     </a>
-                    <a href="{{ route('orders.invoice', $order->order_number) }}" class="btn btn-success flex-fill flex-md-grow-0 text-nowrap">
+                    <a href="{{ route('orders.invoice', $order->order_number) }}" class="btn btn-success text-nowrap">
                         <i class="bi bi-printer me-2"></i>Invoice
                     </a>
                 </div>
