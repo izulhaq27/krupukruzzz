@@ -71,18 +71,37 @@
                     
                     @if($order->payment_type == 'manual_transfer')
                     <div class="alert alert-info border-0 shadow-sm mb-4 text-start p-4">
-                        <h6 class="fw-bold"><i class="bi bi-bank"></i> Instruksi Pembayaran Manual:</h6>
-                        <p class="mb-3 small">Silakan lakukan transfer ke rekening berikut untuk memproses pesanan Anda:</p>
-                        <div class="bg-white p-3 rounded mb-3 border shadow-sm">
-                            <p class="mb-1 text-muted small">Nama Bank</p>
-                            <p class="mb-2 fw-bold">Bank Jago</p>
-                            <p class="mb-1 text-muted small">Nomor Rekening</p>
-                            <p class="mb-2 fw-bold text-success h4">{{ '100641390135' }}</p>
-                            <p class="mb-1 text-muted small">Atas Nama</p>
-                            <p class="mb-0 fw-bold">Acmad Machrus Ali</p>
+                        <h6 class="fw-bold mb-3"><i class="bi bi-bank"></i> Konfirmasi Pembayaran Manual</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-white p-3 rounded h-100 border shadow-sm">
+                                    <p class="mb-2 small text-muted">Silakan transfer ke:</p>
+                                    <h6 class="fw-bold text-dark">Bank Jago</h6>
+                                    <h4 class="fw-bold text-success mb-1">100641390135</h4>
+                                    <p class="mb-0 small fw-semibold">a.n. Acmad Machrus Ali</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-white p-3 rounded h-100 border shadow-sm">
+                                    <p class="mb-2 small text-muted fw-bold">Sudah Transfer?</p>
+                                    <form action="{{ route('orders.upload-payment-proof', $order->order_number) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-2">
+                                            <input type="text" name="bank_name" class="form-control form-control-sm" placeholder="Nama Bank Pengirim" required>
+                                        </div>
+                                        <div class="mb-2">
+                                            <input type="file" name="payment_proof" class="form-control form-control-sm" accept="image/*" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                                            <i class="bi bi-upload me-1"></i> Kirim Bukti
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <p class="mb-0 small text-muted">
-                            <i class="bi bi-info-circle me-1"></i> Setelah transfer, silakan unggah bukti pembayaran di menu <strong>"Pesanan Saya"</strong>.
+                        <p class="mb-0 small text-muted mt-1">
+                            <i class="bi bi-info-circle me-1"></i> Pesanan akan diproses setelah bukti pembayaran diverifikasi admin.
                         </p>
                     </div>
                     @endif
