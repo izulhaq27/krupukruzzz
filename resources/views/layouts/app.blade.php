@@ -106,6 +106,9 @@
             justify-content: center;
             outline: none !important;
             box-shadow: none !important;
+            white-space: nowrap !important; /* Forces single line */
+            text-overflow: ellipsis; /* Adds ... if really too long */
+            max-width: 100%; /* Prevents overflowing parent */
         }
 
         /* Prevent Bootstrap Sticky States */

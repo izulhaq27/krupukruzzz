@@ -114,6 +114,15 @@
             color: #ffffff;
         }
 
+        /* Global Button Safety */
+        .btn {
+            white-space: nowrap !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+        }
+
         /* ================= MOBILE ================= */
         @media (max-width: 768px) {
             .sidebar {

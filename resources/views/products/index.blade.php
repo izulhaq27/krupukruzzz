@@ -124,9 +124,10 @@
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2" style="font-size: 0.9rem;">
-                                    <i class="bi bi-bag-plus-fill me-2 fs-6"></i> 
-                                    <span>Beli Sekarang</span>
+                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2" style="font-size: 0.85rem;">
+                                    <i class="bi bi-bag-plus-fill me-1 fs-6"></i> 
+                                    <span class="d-none d-sm-inline">Beli Sekarang</span>
+                                    <span class="d-inline d-sm-none">Beli</span>
                                 </button>
                             </form>
                         @endif
