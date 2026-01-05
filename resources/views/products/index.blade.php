@@ -60,18 +60,17 @@
     <div class="row g-2 g-md-3 justify-content-center"> <!-- Smaller Gap for Mobile, Centered Items -->
         @foreach ($products as $product)
         <!-- GRID ADJUSTMENT: col-xl-2 (6 items/row desktop), col-lg-3 (4 items), col-md-4 (3 items), col-6 (2 items) -->
-        <div class="col-xl-2 col-lg-3 col-md-4 col-6"> 
-            <div class="card product-card h-100 bg-white" style="border: 1px solid #f0f0f0;">
+        <!-- Animation Wrapper -->
+        <div class="col-xl-2 col-lg-3 col-md-4 col-6 product-item" style="animation-delay: {{ $loop->iteration * 0.1 }}s;"> 
+            <div class="card product-card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative group-hover-trigger">
                 
-                <!-- Position Relative for Badge -->
-                <div class="position-relative">
-                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
-                        <!-- FOTO -->
-                        <div class="skeleton-loader" style="width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #eee;">
+                <!-- Image Wrapper -->
+                <div class="position-relative overflow-hidden">
+                    <a href="{{ route('products.show', $product->slug) }}" class="d-block">
+                        <div class="skeleton-loader ratio ratio-1x1 bg-light">
                             @if($product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}"
-                                     class="w-100 h-100"
-                                     style="object-fit: cover; transition: transform 0.3s;"
+                                     class="w-100 h-100 object-fit-cover transition-transform duration-500"
                                      alt="{{ $product->name }}"
                                      loading="lazy"
                                      decoding="async">
@@ -82,38 +81,52 @@
                             @endif
                         </div>
                     </a>
+                    
+                    <!-- Floating Badge (Top Left) -->
+                    @if($product->categories->isNotEmpty())
+                        <div class="position-absolute top-0 start-0 p-2 z-2">
+                            <span class="badge bg-white text-success shadow-sm rounded-pill px-2 py-1 fw-medium" style="font-size: 0.65rem;">
+                                {{ $product->categories->first()->name }}
+                            </span>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- CARD BODY -->
-                <div class="card-body p-2 p-md-3 d-flex flex-column">
-                    <!-- Categories -->
-                    <div class="mb-1 mb-md-2">
-                        @foreach($product->categories->take(1) as $cat)
-                            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.65rem;">{{ $cat->name }}</span>
-                        @endforeach
-                    </div>
-
-                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
-                        <h6 class="card-title fw-semibold text-dark mb-1 text-truncate" style="font-size: 0.9rem;">{{ $product->name }}</h6>
-                    </a>
+                <div class="card-body p-3 d-flex flex-column">
                     
-                    <div class="d-flex align-items-baseline mb-2 mb-md-3 flex-wrap">
-                        <span class="fw-bold" style="color: var(--primary-green); font-size: 1rem;">
+                    <!-- Product Name -->
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none mb-1">
+                        <h6 class="card-title fw-bold text-dark mb-0 text-truncate" style="font-size: 0.95rem; letter-spacing: -0.02em;">
+                            {{ $product->name }}
+                        </h6>
+                    </a>
+
+                    <!-- Price Section -->
+                    <div class="mb-3">
+                        <span class="fw-bolder text-success" style="font-size: 1.1rem;">
                             Rp{{ number_format($product->price, 0, ',', '.') }}
                         </span>
                     </div>
 
-                    <!-- BUTTONS -->
-                    <div class="mt-auto d-flex gap-1">
-                        <a href="{{ route('products.show', $product->slug) }}" class="btn btn-outline-secondary btn-sm flex-grow-0 px-2" title="Detail">
-                            <i class="bi bi-eye"></i>
+                    <!-- Action Buttons -->
+                    <div class="mt-auto d-flex gap-2">
+                         <!-- View Detail (Icon Only) -->
+                        <a href="{{ route('products.show', $product->slug) }}" 
+                           class="btn btn-light rounded-3 d-flex align-items-center justify-content-center" 
+                           style="width: 38px; height: 38px; flex-shrink: 0;"
+                           title="Detail Produk">
+                            <i class="bi bi-arrow-right text-dark"></i>
                         </a>
+
+                        <!-- Buy Button -->
                         @if($product->stock > 0)
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-outline-success btn-sm w-100 fw-medium py-1">
-                                    <i class="bi bi-cart-plus me-2"></i><span class="d-none d-md-inline">Beli</span>
+                                <button type="submit" class="btn btn-success w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center h-100 shadow-sm-hover py-2" style="font-size: 0.85rem;">
+                                    <i class="bi bi-bag-plus-fill me-1 d-none d-sm-inline"></i> 
+                                    <span>Beli</span>
                                 </button>
                             </form>
                         @endif
@@ -141,6 +154,23 @@
         0% { background-color: rgba(240, 240, 240, 0.5); }
         100% { background-color: rgba(224, 224, 224, 0.5); }
     }
+    
+    /* Entrance Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .product-item {
+        opacity: 0; /* Hidden initially */
+        animation: fadeInUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
     .skeleton-loader {
         animation: skeleton-loading 1s linear infinite alternate;
     }
@@ -161,17 +191,45 @@
         }
     }
 
+    /* Base Card Style for smooth transitions */
+    .product-card {
+        transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border: 1px solid rgba(0,0,0,0.04) !important; /* Extremely subtle border */
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+    
+    .shadow-sm-hover:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2) !important;
+    }
+
     /* Mobile Interaction - NO STICKY HOVER */
     @media (max-width: 576px) {
         .product-card {
-            border-radius: 10px; /* Consistent radius */
+            border-radius: 12px !important;
         }
-        /* Allow font size to be same as desktop or slightly adjusted but not too small */
         .card-title {
-            font-size: 0.9rem !important; /* Match desktop size */
+            font-size: 0.9rem !important; 
         }
+        /* Tap effect */
         .product-card:active {
-            background-color: #f8f9fa !important;
+            transform: scale(0.98);
+        }
+    }
+
+    /* Desktop Hover Effects */
+    @media (hover: hover) {
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+            border-color: transparent !important;
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.08); /* Slight zoom */
         }
     }
 </style>
