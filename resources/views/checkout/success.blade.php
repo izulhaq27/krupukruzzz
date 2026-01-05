@@ -69,7 +69,8 @@
                         </div>
                     </div>
                     
-                    @if($order->payment_type == 'manual_transfer')
+                    {{-- Debug: Payment Type is {{ $order->payment_type }} --}}
+                    @if($order->payment_type == 'manual_transfer' || \Illuminate\Support\Str::contains(strtolower($order->payment_type_label), 'manual'))
                     <div class="alert alert-info border-0 shadow-sm mb-4 text-start p-4">
                         <h6 class="fw-bold mb-3"><i class="bi bi-bank"></i> Konfirmasi Pembayaran Manual</h6>
                         
