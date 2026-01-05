@@ -110,23 +110,23 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="mt-auto d-flex gap-2">
-                         <!-- View Detail (Icon Only) -->
+                    <div class="mt-auto d-flex gap-2 align-items-center">
+                         <!-- View Detail (Icon Only - Secondary) -->
                         <a href="{{ route('products.show', $product->slug) }}" 
-                           class="btn btn-light rounded-3 d-flex align-items-center justify-content-center" 
-                           style="width: 38px; height: 38px; flex-shrink: 0;"
+                           class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center border-0 bg-light" 
+                           style="width: 40px; height: 40px; flex-shrink: 0;"
                            title="Detail Produk">
-                            <i class="bi bi-arrow-right text-dark"></i>
+                            <i class="bi bi-arrow-right fs-5"></i>
                         </a>
 
-                        <!-- Buy Button -->
+                        <!-- Buy Button (Primary - Pill Shaped) -->
                         @if($product->stock > 0)
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-success w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center h-100 shadow-sm-hover py-2" style="font-size: 0.85rem;">
-                                    <i class="bi bi-bag-plus-fill me-1 d-none d-sm-inline"></i> 
-                                    <span>Beli</span>
+                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2" style="font-size: 0.9rem;">
+                                    <i class="bi bi-bag-plus-fill me-2 fs-6"></i> 
+                                    <span>Beli Sekarang</span>
                                 </button>
                             </form>
                         @endif
