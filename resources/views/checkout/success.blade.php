@@ -69,10 +69,20 @@
                         </div>
                     </div>
                     
-                    {{-- Debug: Payment Type is {{ $order->payment_type }} --}}
-                    @if($order->payment_type == 'manual_transfer' || \Illuminate\Support\Str::contains(strtolower($order->payment_type_label), 'manual'))
+                    {{-- Logic Check: Payment Type: {{ $order->payment_type }} | Snap: {{ $order->snap_token ? 'Yes' : 'No' }} --}}
+                    
+                    @php
+                        $isManual = $order->payment_type == 'manual_transfer' || 
+                                    \Illuminate\Support\Str::contains(strtolower($order->payment_type_label), 'manual') ||
+                                    ($order->status == 'pending' && !$order->snap_token); // Fallback: Pending + No Snap Token = Likely Manual
+                    @endphp
+
+                    @if($isManual)
                     <div class="alert alert-info border-0 shadow-sm mb-4 text-start p-4">
-                        <h6 class="fw-bold mb-3"><i class="bi bi-bank"></i> Konfirmasi Pembayaran Manual</h6>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0"><i class="bi bi-bank"></i> Konfirmasi Pembayaran Manual</h6>
+                            <span class="badge bg-light text-dark border">{{ $order->payment_type_label }}</span>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
