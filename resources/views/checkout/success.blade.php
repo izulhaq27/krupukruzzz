@@ -73,39 +73,19 @@
                     @if(!$order->snap_token && $order->status == 'pending')
                     <div class="alert alert-info border-0 shadow-sm mb-4 text-start p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0"><i class="bi bi-bank"></i> Konfirmasi Pembayaran Manual</h6>
+                            <h6 class="fw-bold mb-0"><i class="bi bi-bank"></i> Instruksi Pembayaran Manual</h6>
                             <span class="badge bg-light text-dark border">Transfer Manual</span>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="bg-white p-3 rounded h-100 border shadow-sm">
-                                    <p class="mb-2 small text-muted">Silakan transfer ke:</p>
-                                    <h6 class="fw-bold text-dark">Bank Jago</h6>
-                                    <h4 class="fw-bold text-success mb-1">100641390135</h4>
-                                    <p class="mb-0 small fw-semibold">a.n. Acmad Machrus Ali</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="bg-white p-3 rounded h-100 border shadow-sm">
-                                    <p class="mb-2 small text-muted fw-bold">Sudah Transfer?</p>
-                                    <form action="{{ route('orders.upload-payment-proof', $order->order_number) }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="mb-2">
-                                            <input type="text" name="bank_name" class="form-control form-control-sm" placeholder="Nama Bank Pengirim" required>
-                                        </div>
-                                        <div class="mb-2">
-                                            <input type="file" name="payment_proof" class="form-control form-control-sm" accept="image/*" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm w-100">
-                                            <i class="bi bi-upload me-1"></i> Kirim Bukti
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
+                        <div class="bg-white p-3 rounded mb-3 border shadow-sm">
+                            <p class="mb-2 small text-muted">Silakan transfer ke:</p>
+                            <h6 class="fw-bold text-dark">Bank Jago</h6>
+                            <h4 class="fw-bold text-success mb-1">100641390135</h4>
+                            <p class="mb-0 small fw-semibold">a.n. Acmad Machrus Ali</p>
                         </div>
+
                         <p class="mb-0 small text-muted mt-1">
-                            <i class="bi bi-info-circle me-1"></i> Pesanan akan diproses setelah bukti pembayaran diverifikasi admin.
+                            <i class="bi bi-info-circle me-1"></i> Setelah melakukan transfer, silakan unggah bukti pembayaran melalui menu <a href="{{ route('orders.index') }}" class="fw-bold text-decoration-none">Pesanan Saya</a>.
                         </p>
                     </div>
                     @endif

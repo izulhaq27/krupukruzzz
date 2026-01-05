@@ -15,7 +15,7 @@
             <!-- HEADER -->
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                 <div>
-                    <h1 class="h3 fw-bold text-success mb-2" style="font-size: calc(1.3rem + .6vw);">
+                    <h1 class="h3 fw-bold text-success mb-2 text-nowrap" style="font-size: calc(1.3rem + .6vw);">
                         <i class="bi bi-receipt me-2"></i>Detail Pesanan
                     </h1>
                     <p class="text-muted mb-0 small">No. Pesanan: <strong class="text-break">{{ $order->order_number }}</strong></p>
