@@ -59,9 +59,9 @@
 
     <div class="row g-2 g-md-3 justify-content-center"> <!-- Smaller Gap for Mobile, Centered Items -->
         @foreach ($products as $product)
-        <!-- GRID ADJUSTMENT: col-xl-2 (6 items/row desktop), col-lg-3 (4 items), col-md-4 (3 items), col-6 (2 items) -->
+        <!-- GRID ADJUSTMENT: col-xl-3 (4 items/row desktop), col-lg-3 (4 items), col-md-4 (3 items), col-6 (2 items) -->
         <!-- Animation Wrapper -->
-        <div class="col-xl-2 col-lg-3 col-md-4 col-6 product-item" style="animation-delay: {{ $loop->iteration * 0.1 }}s;"> 
+        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-6 product-item" style="animation-delay: {{ $loop->iteration * 0.1 }}s;"> 
             <div class="card product-card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative group-hover-trigger">
                 
                 <!-- Image Wrapper -->
@@ -114,7 +114,7 @@
                          <!-- View Detail (Icon Only - Secondary) -->
                         <a href="{{ route('products.show', $product->slug) }}" 
                            class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center border-0 bg-light" 
-                           style="width: 40px; height: 40px; flex-shrink: 0;"
+                           style="width: 38px; height: 38px; flex-shrink: 0;"
                            title="Detail Produk">
                             <i class="bi bi-arrow-right fs-5"></i>
                         </a>
@@ -124,12 +124,9 @@
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2" style="font-size: 0.85rem;">
-                                    <i class="bi bi-bag-plus-fill me-1 fs-6"></i> 
-                                    <!-- Show "Beli Sekarang" on SM, MD, LG (Tablet/Laptop) -->
-                                    <span class="d-none d-sm-inline d-xl-none">Beli Sekarang</span>
-                                    <!-- Show "Beli" on Mobile (XS) and Desktop (XL+) where columns are narrow -->
-                                    <span class="d-inline d-sm-none d-xl-inline">Beli</span>
+                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2 px-1" title="Beli Sekarang">
+                                    <i class="bi bi-bag-plus-fill me-1 fs-6 d-none d-md-inline"></i> 
+                                    <span class="text-nowrap" style="font-size: clamp(0.7rem, 2vw, 0.85rem);">Beli Sekarang</span>
                                 </button>
                             </form>
                         @endif
