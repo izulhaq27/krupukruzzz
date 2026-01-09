@@ -126,8 +126,10 @@
                                 <input type="hidden" name="redirect_to" value="cart">
                                 <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2" style="font-size: 0.85rem;">
                                     <i class="bi bi-bag-plus-fill me-1 fs-6"></i> 
-                                    <span class="d-none d-sm-inline">Beli Sekarang</span>
-                                    <span class="d-inline d-sm-none">Beli</span>
+                                    <!-- Show "Beli Sekarang" on SM, MD, LG (Tablet/Laptop) -->
+                                    <span class="d-none d-sm-inline d-xl-none">Beli Sekarang</span>
+                                    <!-- Show "Beli" on Mobile (XS) and Desktop (XL+) where columns are narrow -->
+                                    <span class="d-inline d-sm-none d-xl-inline">Beli</span>
                                 </button>
                             </form>
                         @endif
