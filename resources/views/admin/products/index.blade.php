@@ -1,185 +1,186 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Manajemen Produk')
+
 @section('content')
-<div class="container-fluid mt-4">
-    {{-- Flash Messages --}}
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Flash Messages -->
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px;">
-            <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div x-data="{ show: true }" x-show="show" class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <i class="bi bi-check-circle-fill text-emerald-500 text-xl"></i>
+            <span class="font-medium">{{ session('success') }}</span>
         </div>
+        <button @click="show = false" class="text-emerald-600 hover:text-emerald-800"><i class="bi bi-x-lg"></i></button>
+    </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="border-radius: 12px;">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div x-data="{ show: true }" x-show="show" class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <i class="bi bi-exclamation-triangle-fill text-red-500 text-xl"></i>
+            <span class="font-medium">{{ session('error') }}</span>
         </div>
+        <button @click="show = false" class="text-red-600 hover:text-red-800"><i class="bi bi-x-lg"></i></button>
+    </div>
     @endif
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-0" style="color: #1e293b;">Kelola Produk</h4>
-        <p class="text-muted mb-0 small">Total {{ $products->total() }} produk</p>
+    <!-- Page Header & Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <nav class="flex text-sm text-slate-500 mb-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center"><a href="{{ route('admin.dashboard') }}" class="hover:text-slate-900">Admin</a></li>
+                    <li><span class="mx-2 text-slate-400">/</span></li>
+                    <li class="font-medium text-slate-800" aria-current="page">Manajemen Produk</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Kelola Produk</h2>
+                <span class="bg-[#5C5DCD]/10 text-[#5C5DCD] text-xs font-bold px-2.5 py-1 rounded-full">Total {{ $products->total() }}</span>
+            </div>
+        </div>
+        
+        <div>
+            <a href="{{ route('admin.products.create') }}" class="bg-[#1D2438] hover:bg-[#171C2B] text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm flex items-center gap-2">
+                <i class="bi bi-plus-lg"></i>
+                Tambah Produk
+            </a>
+        </div>
     </div>
-    <a href="{{ route('admin.products.create') }}" class="btn fw-bold" 
-       style="background: #10b981; color: white; border: none; border-radius: 8px; padding: 8px 16px;">
-        <i class="bi bi-plus-circle me-1"></i> Tambah Produk
-    </a>
-</div>
 
-<div class="card border-0 shadow-sm" style="border-radius: 10px;">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead style="background: #f8fafc;">
-                    <tr>
-                        <th class="border-0" style="padding: 16px; color: #64748b; width: 60px;">NO</th>
-                        <th class="border-0" style="padding: 16px; color: #64748b;">Nama Produk</th>
-                        <th class="border-0" style="padding: 16px; color: #64748b;">Kategori</th>
-                        <th class="border-0" style="padding: 16px; color: #64748b; width: 150px;">Harga</th>
-                        <th class="border-0" style="padding: 16px; color: #64748b; width: 100px;">Stok</th>
-                        <th class="border-0 text-center" style="padding: 16px; color: #64748b; width: 150px;">Aksi</th>
+    <!-- Products Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        
+        <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <button class="bg-[#1D2438] text-white px-3 py-1.5 rounded-lg text-sm font-medium">Semua</button>
+                <button class="text-slate-500 hover:bg-slate-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Tersedia</button>
+                <button class="text-slate-500 hover:bg-slate-50 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">Habis</button>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" placeholder="Cari produk..." class="pl-9 pr-4 py-2 border-slate-200 rounded-xl text-sm focus:ring-[#5C5DCD] focus:border-[#5C5DCD] w-full sm:w-64">
+                </div>
+                <button class="bg-white border border-slate-200 text-slate-700 p-2 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                    <i class="bi bi-filter"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider w-16">NO</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Produk</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($products as $p)
-                    <tr class="border-bottom">
-                        <td style="padding: 16px; color: #475569;">
-                            <span class="badge" style="background: #f1f5f9; color: #334155;">
-                                {{ $loop->iteration }}
-                            </span>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($products as $p)
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <!-- NO -->
+                        <td class="py-4 px-6 text-sm font-medium text-slate-500">
+                            {{ $loop->iteration + $products->firstItem() - 1 }}
                         </td>
-                        <td style="padding: 16px;">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0 me-3">
+                        
+                        <!-- Nama & Gambar -->
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 flex items-center justify-center">
                                     @if($p->image)
-                                    <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; background: #eee;">
-                                        <img src="{{ asset('storage/' . $p->image) }}" 
-                                             alt="{{ $p->name }}"
-                                             style="width: 100%; height: 100%; object-fit: cover;"
-                                             loading="lazy">
-                                    </div>
+                                        <img src="{{ asset('storage/' . $p->image) }}" alt="{{ $p->name }}" class="w-full h-full object-cover">
                                     @else
-                                    <div style="width: 40px; height: 40px; border-radius: 6px; background: #f1f5f9; 
-                                                display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-image text-muted"></i>
-                                    </div>
+                                        <i class="bi bi-image text-slate-400 text-xl"></i>
                                     @endif
                                 </div>
-                                <div class="flex-grow-1">
-                                    <div class="fw-medium" style="color: #1e293b;">{{ $p->name }}</div>
-                                    <small class="text-muted" style="font-size: 0.85rem;">
+                                <div>
+                                    <div class="font-bold text-slate-900">{{ $p->name }}</div>
+                                    <div class="text-xs text-slate-500 truncate max-w-[200px]" title="{{ $p->description }}">
                                         {{ Str::limit($p->description, 50) }}
-                                    </small>
+                                    </div>
                                 </div>
                             </div>
                         </td>
-                        <td style="padding: 16px;">
-                            @foreach($p->categories as $category)
-                                <span class="badge bg-light text-dark">{{ $category->name }}</span>
-                            @endforeach
+
+                        <!-- Kategori -->
+                        <td class="py-4 px-6">
+                            <div class="flex flex-wrap gap-1">
+                                @forelse($p->categories as $category)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
+                                        {{ $category->name }}
+                                    </span>
+                                @empty
+                                    <span class="text-xs text-slate-400 italic">-</span>
+                                @endforelse
+                            </div>
                         </td>
-                        <td style="padding: 16px; color: #10b981; font-weight: 600;">
-                            Rp {{ number_format($p->price, 0, ',', '.') }}
+
+                        <!-- Harga -->
+                        <td class="py-4 px-6">
+                            <div class="font-bold text-[#5C5DCD]">Rp {{ number_format($p->price, 0, ',', '.') }}</div>
                         </td>
-                        <td style="padding: 16px;">
-                            <span class="badge" style="
-                                background: {{ $p->stock > 0 ? '#d1fae5' : '#fee2e2' }};
-                                color: {{ $p->stock > 0 ? '#065f46' : '#991b1b' }};
-                                padding: 4px 12px;
-                                border-radius: 20px;
-                                font-weight: 500;
-                            ">
-                                {{ $p->stock > 0 ? $p->stock . ' pcs' : 'Stok Habis' }}
-                            </span>
+
+                        <!-- Stok -->
+                        <td class="py-4 px-6">
+                            @if($p->stock > 0)
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    {{ $p->stock }} pcs
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    Habis
+                                </span>
+                            @endif
                         </td>
-                        <td style="padding: 16px;">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a href="{{ route('admin.products.edit', $p->id) }}" 
-                                   class="btn btn-sm" 
-                                   style="
-                                        background: #fbbf24;
-                                        color: #000;
-                                        border: none;
-                                        border-radius: 6px;
-                                        padding: 6px 12px;
-                                        font-size: 0.85rem;
-                                   ">
-                                    <i class="bi bi-pencil-square me-1"></i> Edit
+
+                        <!-- Aksi -->
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('admin.products.edit', $p->id) }}" class="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Edit">
+                                    <i class="bi bi-pencil-square text-lg"></i>
                                 </a>
-                                <form method="POST" action="{{ route('admin.products.destroy', $p->id) }}" 
-                                      onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                <form method="POST" action="{{ route('admin.products.destroy', $p->id) }}" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus produk ini secara permanen?')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm" 
-                                            style="
-                                                background: #ef4444;
-                                                color: white;
-                                                border: none;
-                                                border-radius: 6px;
-                                                padding: 6px 12px;
-                                                font-size: 0.85rem;
-                                            ">
-                                        <i class="bi bi-trash me-1"></i> Hapus
+                                    <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
+                                        <i class="bi bi-trash-fill text-lg"></i>
                                     </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-12 text-center">
+                            <div class="w-16 h-16 mx-auto bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                                <i class="bi bi-box-seam text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Belum ada produk</h3>
+                            <p class="text-slate-500 mb-4">Mulai dengan menambahkan produk pertama Anda.</p>
+                            <a href="{{ route('admin.products.create') }}" class="inline-flex items-center gap-2 bg-[#1D2438] hover:bg-[#171C2B] text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm">
+                                <i class="bi bi-plus-lg"></i> Tambah Produk
+                            </a>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination Links -->
+        @if($products->hasPages())
+        <div class="p-4 border-t border-slate-100">
+            {{ $products->links() }}
+        </div>
+        @endif
     </div>
 </div>
-
-{{-- Pagination Links --}}
-<div class="mt-4 d-flex justify-content-center">
-    {{ $products->links('pagination::bootstrap-5') }}
-</div>
-
-@if($products->isEmpty())
-<div class="text-center py-5">
-    <div class="mb-3">
-        <i class="bi bi-box-seam display-4" style="color: #cbd5e1;"></i>
-    </div>
-    <h5 class="text-muted">Belum ada produk</h5>
-    <p class="text-muted small mb-3">Mulai dengan menambahkan produk pertama</p>
-    <a href="{{ route('admin.products.create') }}" class="btn" 
-       style="background: #10b981; color: white; border-radius: 8px;">
-        <i class="bi bi-plus-circle me-1"></i> Tambah Produk Pertama
-    </a>
-</div>
-@endif
-
-<style>
-    .table > :not(caption) > * > * {
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8fafc;
-    }
-    
-    @media (max-width: 768px) {
-        .table-responsive {
-            font-size: 0.85rem;
-        }
-        
-        .table th, 
-        .table td {
-            padding: 12px 8px !important;
-        }
-        
-        .btn {
-            padding: 5px 10px !important;
-            font-size: 0.8rem !important;
-        }
-        
-        .d-flex.gap-2 {
-            gap: 4px !important;
-        }
-    }
-</style>
 @endsection
-</div>

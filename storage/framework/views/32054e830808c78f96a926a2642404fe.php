@@ -1,222 +1,186 @@
-
+<?php $__env->startSection('title', 'Daftar Pesanan'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold mb-0">Daftar Pesanan</h3>
-        <span class="badge bg-secondary"><?php echo e($orders->count()); ?> pesanan</span>
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <nav class="flex text-sm text-slate-500 mb-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center">Admin</li>
+                    <li><span class="mx-2 text-slate-400">/</span></li>
+                    <li class="font-medium text-slate-800" aria-current="page">Pesanan</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Daftar Pesanan</h2>
+                <span class="bg-[#5C5DCD]/10 text-[#5C5DCD] text-xs font-bold px-2.5 py-1 rounded-full"><?php echo e($orders->count()); ?> total</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <button class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
+                <i class="bi bi-filter"></i>
+                Filter
+            </button>
+            <button class="bg-[#1D2438] hover:bg-[#171C2B] text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm flex items-center gap-2">
+                <i class="bi bi-download"></i>
+                Ekspor Data
+            </button>
+        </div>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0" style="table-layout: fixed; width: 100%;">
-                    <thead style="background: #f8f9fa;">
-                        <tr>
-                            <th style="width: 80px; min-width: 80px; padding: 12px;">ID</th>
-                            <th style="width: 180px; min-width: 180px; padding: 12px;">Pelanggan</th>
-                            <th style="width: 200px; min-width: 200px; padding: 12px;">Email</th>
-                            <th style="width: 140px; min-width: 140px; padding: 12px;">Telepon</th>
-                            <th style="width: 120px; min-width: 120px; padding: 12px;">Total</th>
-                            <th style="width: 100px; min-width: 100px; padding: 12px;">Status</th>
-                            <th style="width: 180px; min-width: 180px; padding: 12px; text-align: right;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <tr class="border-bottom">
-                            <!-- Kolom 1 - ID -->
-                            <td style="padding: 12px;">
-                                <span class="fw-bold text-dark">#<?php echo e($order->id); ?></span>
-                            </td>
-                            
-                            <!-- Kolom 2 - Pelanggan -->
-                            <td style="padding: 12px;">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
-                                             style="width: 36px; height: 36px; background: #f0f0f0;">
-                                            <i class="bi bi-person text-muted"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="fw-medium text-truncate" style="max-width: 150px;">
-                                            <?php echo e($order->name); ?>
-
-                                        </div>
-                                        <small class="text-muted" style="font-size: 0.8rem;">
-                                            ID: <?php echo e($order->id); ?>
-
-                                        </small>
-                                    </div>
-                                </div>
-                            </td>
-                            
-                            <!-- Kolom 3 - Email -->
-                            <td style="padding: 12px;">
-                                <div class="text-truncate" title="<?php echo e($order->email); ?>" style="max-width: 180px;">
-                                    <?php if($order->email && $order->email != 'belum-diisi@example.com'): ?>
-                                        <?php echo e($order->email); ?>
-
-                                    <?php else: ?>
-                                        <span class="text-muted fst-italic">-</span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            
-                            <!-- Kolom 4 - Telepon -->
-                            <td style="padding: 12px;">
-                                <div class="text-truncate" style="max-width: 130px;">
-                                    <?php if($order->phone): ?>
-                                        <?php echo e($order->phone); ?>
-
-                                    <?php else: ?>
-                                        <span class="text-muted">-</span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            
-                            <!-- Kolom 5 - Total -->
-                            <td style="padding: 12px;">
-                                <span class="fw-bold" style="color: #28a745;">
-                                    Rp <?php echo e(number_format($order->total_amount, 0, ',', '.')); ?>
-
-                                </span>
-                            </td>
-                            
-                            <!-- Kolom 6 - Status -->
-                            <td style="padding: 12px;">
-                                <?php
-                                    $badgeClass = match($order->status) {
-                                        'pending' => 'bg-warning text-dark',
-                                        'processing' => 'bg-info text-white',
-                                        'completed' => 'bg-success text-white',
-                                        'cancelled' => 'bg-danger text-white',
-                                        'Quadro' => 'bg-primary text-white',
-                                        default => 'bg-secondary text-white'
-                                    };
-                                    
-                                    $statusText = $order->status == 'Quadro' ? 'Quadro' : ucfirst($order->status);
-                                ?>
-                                <span class="badge <?php echo e($badgeClass); ?> px-2 py-1 rounded-pill d-inline-block" style="font-size: 0.75rem;">
-                                    <?php echo e($statusText); ?>
-
-                                </span>
-                            </td>
-                            
-                            <!-- Kolom 7 - Aksi -->
-                            <td style="padding: 12px; text-align: right;">
-                                <div class="d-flex gap-2 justify-content-end">
-                                    <a href="/admin/orders/<?php echo e($order->id); ?>" 
-                                       class="btn btn-sm px-3" 
-                                       style="background: #6c757d; color: white; border-radius: 6px; font-size: 0.85rem;">
-                                        <i class="bi bi-eye me-1"></i> Detail
-                                    </a>
-
-                                    <?php if(in_array($order->status, ['cancelled', 'failed'])): ?>
-                                        <form action="<?php echo e(route('admin.orders.destroy', $order->id)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesanan ini secara permanen?')">
-                                            <?php echo csrf_field(); ?>
-                                            <?php echo method_field('DELETE'); ?>
-                                            <button type="submit" class="btn btn-sm btn-danger px-3" style="border-radius: 6px; font-size: 0.85rem;">
-                                                <i class="bi bi-trash me-1"></i> Hapus
-                                            </button>
-                                        </form>
-                                    <?php endif; ?>
-                                    
-                                    <?php if(!$order->tracking_number && !in_array($order->status, ['cancelled', 'failed'])): ?>
-                                    <a href="/admin/orders/<?php echo e($order->id); ?>#resi-form" 
-                                       class="btn btn-sm px-3" 
-                                       style="background: #28a745; color: white; border-radius: 6px; font-size: 0.85rem;">
-                                        <i class="bi bi-truck me-1"></i> Resi
-                                    </a>
-                                    <?php else: ?>
-                                    <span class="badge bg-light text-dark border px-2 py-1">
-                                        <i class="bi bi-check-circle text-success me-1"></i>
-                                        <?php echo e(Str::limit($order->tracking_number, 8)); ?>
-
-                                    </span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </tbody>
-                </table>
+    <!-- Stats summary for Orders (Optional matching design) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-[#5C5DCD]/10 text-[#5C5DCD] flex items-center justify-center text-xl">
+                <i class="bi bi-receipt"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Pesanan</p>
+                <h3 class="text-xl font-bold text-slate-900"><?php echo e($orders->count()); ?></h3>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Diproses</p>
+                <h3 class="text-xl font-bold text-slate-900"><?php echo e($orders->where('status', 'pending')->count()); ?></h3>
+            </div>
+        </div>
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                <i class="bi bi-check2-circle"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Selesai (Hari ini)</p>
+                <h3 class="text-xl font-bold text-slate-900"><?php echo e($orders->where('status', 'paid')->count()); ?></h3>
             </div>
         </div>
     </div>
 
-    <?php if($orders->isEmpty()): ?>
-    <div class="text-center py-5">
-        <div class="mb-3">
-            <i class="bi bi-cart-x display-4 text-muted"></i>
-        </div>
-        <h5 class="text-muted">Belum ada pesanan</h5>
-        <p class="text-muted small">Pesanan akan muncul di sini</p>
-    </div>
-    <?php endif; ?>
-</div>
+    <!-- Orders Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Order ID</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Customer</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tanggal</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Total</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <?php $__empty_1 = true; $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <!-- ID -->
+                        <td class="py-4 px-6">
+                            <span class="font-bold text-slate-900">#<?php echo e($order->id); ?></span>
+                        </td>
+                        
+                        <!-- Customer -->
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                                    <i class="bi bi-person-fill text-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900"><?php echo e($order->name); ?></div>
+                                    <div class="text-xs text-slate-500"><?php echo e($order->email ?? $order->phone ?? '-'); ?></div>
+                                </div>
+                            </div>
+                        </td>
 
-<style>
-    /* PERBAIKAN UTAMA: table-layout fixed untuk kolom tetap */
-    .table {
-        table-layout: fixed;
-        width: 100%;
-    }
-    
-    .table th {
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #495057;
-        border-top: none;
-        border-bottom: 2px solid #e9ecef;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .table td {
-        vertical-align: middle;
-        padding: 12px;
-        border-bottom: 1px solid #f0f0f0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
-    
-    .table tbody tr:last-child {
-        border-bottom: none;
-    }
-    
-    /* Responsive untuk mobile */
-    @media (max-width: 768px) {
-        .table-responsive {
-            font-size: 0.85rem;
-        }
-        
-        h3 {
-            font-size: 1.25rem;
-        }
-        
-        /* Sembunyikan kolom Email dan Telepon di mobile */
-        .table th:nth-child(3), 
-        .table th:nth-child(4),
-        .table td:nth-child(3),
-        .table td:nth-child(4) {
-            display: none;
-        }
-        
-        /* Perlebar kolom Pelanggan di mobile */
-        .table th:nth-child(2),
-        .table td:nth-child(2) {
-            width: 250px !important;
-            min-width: 250px !important;
-        }
-    }
-</style>
+                        <!-- Tanggal -->
+                        <td class="py-4 px-6">
+                            <div class="text-sm font-medium text-slate-900"><?php echo e($order->created_at->format('d M Y')); ?></div>
+                            <div class="text-xs text-slate-500"><?php echo e($order->created_at->format('H:i')); ?></div>
+                        </td>
+
+                        <!-- Total -->
+                        <td class="py-4 px-6">
+                            <div class="font-bold text-[#5C5DCD]">Rp <?php echo e(number_format($order->total_amount, 0, ',', '.')); ?></div>
+                            <div class="text-xs text-slate-500 truncate max-w-[150px]">
+                                <?php $__currentLoopData = $order->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php echo e($item->product_name); ?><?php echo e(!$loop->last ? ',' : ''); ?>
+
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </div>
+                        </td>
+
+                        <!-- Status -->
+                        <td class="py-4 px-6">
+                            <?php
+                                $statusClasses = match($order->status) {
+                                    'pending' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                    'processed' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                    'paid' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                    'completed' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                    'cancelled' => 'bg-red-100 text-red-700 border-red-200',
+                                    'failed' => 'bg-red-100 text-red-700 border-red-200',
+                                    default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                };
+                                $dotColor = match($order->status) {
+                                    'pending' => 'bg-amber-500',
+                                    'processed' => 'bg-blue-500',
+                                    'paid', 'completed' => 'bg-emerald-500',
+                                    'cancelled', 'failed' => 'bg-red-500',
+                                    default => 'bg-slate-500'
+                                };
+                            ?>
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border <?php echo e($statusClasses); ?>">
+                                <span class="w-1.5 h-1.5 rounded-full mr-1.5 <?php echo e($dotColor); ?>"></span>
+                                <?php echo e($order->status_label ?? ucfirst($order->status)); ?>
+
+                            </span>
+                        </td>
+
+                        <!-- Aksi -->
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="/admin/orders/<?php echo e($order->id); ?>" class="p-2 text-slate-400 hover:text-[#5C5DCD] hover:bg-[#5C5DCD]/10 rounded-lg transition-colors" title="Detail">
+                                    <i class="bi bi-eye-fill text-lg"></i>
+                                </a>
+
+                                <?php if(!$order->tracking_number && !in_array($order->status, ['cancelled', 'failed'])): ?>
+                                <a href="/admin/orders/<?php echo e($order->id); ?>#resi-form" class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Input Resi">
+                                    <i class="bi bi-truck text-lg"></i>
+                                </a>
+                                <?php endif; ?>
+
+                                <?php if(in_array($order->status, ['cancelled', 'failed'])): ?>
+                                <form action="<?php echo e(route('admin.orders.destroy', $order->id)); ?>" method="POST" class="inline-block" onsubmit="return confirm('Yakin hapus pesanan ini?')">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
+                                    <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
+                                        <i class="bi bi-trash-fill text-lg"></i>
+                                    </button>
+                                </form>
+                                <?php endif; ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <tr>
+                        <td colspan="6" class="py-12 text-center">
+                            <div class="w-16 h-16 mx-auto bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                                <i class="bi bi-cart-x text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Belum ada pesanan</h3>
+                            <p class="text-slate-500">Daftar pesanan yang masuk akan muncul di sini.</p>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\Umkm_Krupuk\resources\views/admin/orders/index.blade.php ENDPATH**/ ?>

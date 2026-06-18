@@ -4,231 +4,166 @@
     <meta charset="UTF-8">
     <title>Admin Panel - KrupuKruzz</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Vite (Tailwind) -->
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
-        body {
-            background: #F1F5F9; /* Light Gray Background */
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            overflow-x: hidden;
-            color: #64748b;
-        }
-
-        /* ================= SIDEBAR ================= */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 280px; /* Slightly wider */
-            height: 100vh;
-            background: #1C2434; /* TailAdmin Dark Blue */
-            color: #dee4ee;
-            z-index: 1200;
-            transition: .3s ease;
-            border-right: none;
-        }
-
-        .sidebar-header {
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 32px;
-            color: #dee4ee;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background: #333A48;
-            color: #ffffff;
-            border-left: none; /* Removed border */
-        }
-        
-        .sidebar a.active {
-            position: relative;
-        }
-
-        /* ================= MAIN ================= */
-        .main-content {
-            margin-left: 280px;
-            width: calc(100% - 280px);
-            min-height: 100vh;
-            transition: .3s ease;
-            background: #F1F5F9;
-        }
-
-        .topbar {
-            background: #ffffff;
-            padding: 14px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #e5e7eb;
-            color: #333333;
-        }
-
-        /* ================= OVERLAY ================= */
-        .sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.7);
-            z-index: 1100;
-            display: none;
-        }
-
-        .sidebar-overlay.show {
-            display: block;
-        }
-
-        /* ================= BUTTON ================= */
-        .btn-orange {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #ffffff;
-            border: none;
-        }
-
-        .btn-orange:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            color: #ffffff;
-        }
-
-        /* ================= MOBILE ================= */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-            }
-        }
+        [x-cloak] { display: none !important; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased" x-data="{ sidebarOpen: window.innerWidth >= 1024 }" @resize.window="sidebarOpen = window.innerWidth >= 1024">
 
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <h5 class="fw-bold mb-0 text-white fs-6">Admin Panel KrupuKruzz</h5>
-    </div>
+    <!-- Overlay for Mobile -->
+    <div x-show="sidebarOpen" x-transition.opacity 
+         class="fixed inset-0 z-20 bg-slate-900/50 lg:hidden"
+         @click="sidebarOpen = false" x-cloak></div>
 
-    <div class="px-4 mb-2 text-muted text-uppercase" style="font-size: 11px; letter-spacing: 1px;">Menu</div>
-
-    <a href="<?php echo e(route('admin.dashboard')); ?>"
-       class="<?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
-        <i class="bi bi-grid-fill"></i> Dashboard
-    </a>
-    
-    <a href="<?php echo e(route('admin.categories.index')); ?>" 
-       class="nav-link <?php echo e(request()->routeIs('admin.categories.*') ? 'active' : ''); ?>">
-        <i class="bi bi-tags-fill"></i>
-        <span>Kategori</span>
-    </a>
-
-    <a href="<?php echo e(route('admin.products.index')); ?>"
-       class="<?php echo e(request()->routeIs('admin.products.*') ? 'active' : ''); ?>">
-        <i class="bi bi-box-seam-fill"></i> Produk
-    </a>
-
-    <a href="<?php echo e(route('admin.orders.index')); ?>"
-       class="<?php echo e(request()->routeIs('admin.orders.*') ? 'active' : ''); ?>">
-        <i class="bi bi-cart-fill"></i> Pesanan
-    </a>
-
-    <a href="<?php echo e(route('admin.users.index')); ?>"
-       class="<?php echo e(request()->routeIs('admin.users.*') ? 'active' : ''); ?>">
-        <i class="bi bi-people-fill"></i> Users
-    </a>
-
-    <div class="mt-auto p-4">
-        <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
-            <?php echo csrf_field(); ?>
-            <button class="btn w-100 fw-bold text-start text-white" style="background: transparent; border: 1px solid #333A48;">
-                <i class="bi bi-box-arrow-right me-2"></i> Logout
+    <!-- SIDEBAR -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+           class="hidden lg:flex fixed inset-y-0 left-0 z-30 w-64 bg-[#1D2438] text-slate-300 transition-transform duration-300 ease-in-out flex-col">
+        
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between h-16 px-6 bg-[#171C2B]">
+            <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-emerald-500 flex items-center justify-center text-white font-bold text-xl">K</div>
+                <span class="text-white font-bold text-lg tracking-wide">KrupuKruzzz</span>
+            </a>
+            <!-- Mobile Close Button -->
+            <button @click="sidebarOpen = false" class="lg:hidden text-slate-400 hover:text-white">
+                <i class="bi bi-x-lg text-xl"></i>
             </button>
-        </form>
-    </div>
-</div>
-
-<!-- OVERLAY -->
-<div class="sidebar-overlay" id="overlay"></div>
-
-<!-- MAIN -->
-<div class="main-content">
-
-    <!-- TOPBAR -->
-    <div class="topbar d-flex justify-content-between align-items-center bg-white" style="box-shadow: 0 1px 4px rgba(0,0,0,0.05); border: none;">
-        <div class="d-flex align-items-center">
-            <button class="btn d-md-none border-0 fs-4" id="toggle" style="color: #64748b;">
-                <i class="bi bi-list"></i>
-            </button>
-            
-            <!-- Search Removed -->
         </div>
 
-        <div class="d-flex align-items-center gap-3">
-            <div class="d-flex align-items-center gap-2">
-                <div class="text-end d-none d-sm-block line-height-sm">
-                    <span class="d-block fw-bold text-dark" style="font-size: 14px;">Admin Panel</span>
-                </div>
-                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;">
-                    <i class="bi bi-person-circle fs-4"></i>
+        <!-- Sidebar Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+            <div class="px-2 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Menu</div>
+
+            <a href="<?php echo e(route('admin.dashboard')); ?>"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors <?php echo e(request()->routeIs('admin.dashboard') ? 'bg-[#5C5DCD] text-white font-medium shadow-sm' : 'hover:bg-white/5 hover:text-white'); ?>">
+                <i class="bi bi-grid-fill text-lg <?php echo e(request()->routeIs('admin.dashboard') ? 'text-white' : 'text-slate-400'); ?>"></i>
+                Ringkasan
+            </a>
+            
+            <a href="<?php echo e(route('admin.orders.index')); ?>"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors mt-1 <?php echo e(request()->routeIs('admin.orders.*') ? 'bg-[#5C5DCD] text-white font-medium shadow-sm' : 'hover:bg-white/5 hover:text-white'); ?>">
+                <i class="bi bi-bag-check-fill text-lg <?php echo e(request()->routeIs('admin.orders.*') ? 'text-white' : 'text-slate-400'); ?>"></i>
+                Kelola Pesanan
+            </a>
+
+            <a href="<?php echo e(route('admin.products.index')); ?>"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors mt-1 <?php echo e(request()->routeIs('admin.products.*') ? 'bg-[#5C5DCD] text-white font-medium shadow-sm' : 'hover:bg-white/5 hover:text-white'); ?>">
+                <i class="bi bi-box-seam-fill text-lg <?php echo e(request()->routeIs('admin.products.*') ? 'text-white' : 'text-slate-400'); ?>"></i>
+                Manajemen Produk
+            </a>
+
+            <a href="<?php echo e(route('admin.categories.index')); ?>" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors mt-1 <?php echo e(request()->routeIs('admin.categories.*') ? 'bg-[#5C5DCD] text-white font-medium shadow-sm' : 'hover:bg-white/5 hover:text-white'); ?>">
+                <i class="bi bi-tags-fill text-lg <?php echo e(request()->routeIs('admin.categories.*') ? 'text-white' : 'text-slate-400'); ?>"></i>
+                Kategori
+            </a>
+
+            <a href="<?php echo e(route('admin.users.index')); ?>"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors mt-1 <?php echo e(request()->routeIs('admin.users.*') ? 'bg-[#5C5DCD] text-white font-medium shadow-sm' : 'hover:bg-white/5 hover:text-white'); ?>">
+                <i class="bi bi-people-fill text-lg <?php echo e(request()->routeIs('admin.users.*') ? 'text-white' : 'text-slate-400'); ?>"></i>
+                Kelola Pengguna
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer (Logout) -->
+        <div class="p-4 border-t border-white/10">
+            <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <button type="submit" class="flex items-center justify-center gap-2 w-full px-4 py-2 text-sm font-medium text-slate-300 bg-white/5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div :class="sidebarOpen ? 'lg:ml-64' : 'ml-0'" class="min-h-screen transition-all duration-300 ease-in-out flex flex-col">
+        
+        <!-- TOPBAR -->
+        <header class="sticky top-0 z-10 flex items-center justify-between h-16 px-4 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm sm:px-6">
+            <div class="flex items-center gap-4">
+                <!-- Hamburger Toggle -->
+                <button @click="sidebarOpen = !sidebarOpen" class="hidden lg:block p-2 -ml-2 text-slate-500 rounded-lg hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+                
+                <!-- Page Title Placeholder (Optional) -->
+                <h1 class="hidden text-lg font-bold text-slate-800 sm:block">
+                    <?php echo $__env->yieldContent('title', 'Admin Panel'); ?>
+                </h1>
+            </div>
+
+            <!-- Right Topbar -->
+            <div class="flex items-center gap-4">
+                <!-- Notifications (Dummy) -->
+                <button class="relative p-2 text-slate-500 hover:text-slate-700 transition-colors">
+                    <i class="bi bi-bell text-xl"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+
+                <div class="h-8 w-px bg-slate-200 mx-1"></div>
+
+                <!-- Profile -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden text-right sm:block">
+                        <div class="text-sm font-bold text-slate-800 leading-none mb-1">Admin</div>
+                        <div class="text-xs text-slate-500 leading-none">Administrator</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500">
+                        <i class="bi bi-person-fill text-xl"></i>
+                    </div>
                 </div>
             </div>
+        </header>
+
+        <!-- MAIN PAGE CONTENT -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 pb-20 lg:pb-8">
+            <?php echo $__env->yieldContent('content'); ?>
+        </main>
+        
+    </div>
+
+    <!-- MOBILE BOTTOM NAVIGATION (FOOTBAR) -->
+    <nav class="lg:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 z-40 pb-safe">
+        <div class="flex justify-around items-center h-14">
+            <a href="<?php echo e(route('admin.dashboard')); ?>" class="flex flex-col items-center justify-center w-full h-full space-y-0.5 <?php echo e(request()->routeIs('admin.dashboard') ? 'text-[#5C5DCD]' : 'text-slate-400 hover:text-slate-600'); ?>">
+                <i class="bi bi-grid-fill text-lg"></i>
+                <span class="text-[9px] font-semibold">Ringkasan</span>
+            </a>
+            <a href="<?php echo e(route('admin.orders.index')); ?>" class="flex flex-col items-center justify-center w-full h-full space-y-0.5 <?php echo e(request()->routeIs('admin.orders.*') ? 'text-[#5C5DCD]' : 'text-slate-400 hover:text-slate-600'); ?>">
+                <i class="bi bi-cart-fill text-lg"></i>
+                <span class="text-[9px] font-semibold">Pesanan</span>
+            </a>
+            <a href="<?php echo e(route('admin.products.index')); ?>" class="flex flex-col items-center justify-center w-full h-full space-y-0.5 <?php echo e(request()->routeIs('admin.products.*') ? 'text-[#5C5DCD]' : 'text-slate-400 hover:text-slate-600'); ?>">
+                <i class="bi bi-box-seam-fill text-lg"></i>
+                <span class="text-[9px] font-semibold">Produk</span>
+            </a>
+            <a href="<?php echo e(route('admin.categories.index')); ?>" class="flex flex-col items-center justify-center w-full h-full space-y-0.5 <?php echo e(request()->routeIs('admin.categories.*') ? 'text-[#5C5DCD]' : 'text-slate-400 hover:text-slate-600'); ?>">
+                <i class="bi bi-tags-fill text-lg"></i>
+                <span class="text-[9px] font-semibold">Kategori</span>
+            </a>
         </div>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="container-fluid px-4 py-4">
-        <?php echo $__env->yieldContent('content'); ?>
-    </div>
-</div>
-
-<!-- SCRIPT -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const toggle = document.getElementById('toggle');
-
-    if (toggle) {
-        toggle.addEventListener('click', function () {
-            sidebar.classList.toggle('show');
-            overlay.classList.toggle('show');
-        });
-    }
-
-    if (overlay) {
-        overlay.addEventListener('click', function () {
-            sidebar.classList.remove('show');
-            overlay.classList.remove('show');
-        });
-    }
-});
-</script>
+    </nav>
 
 </body>
 </html><?php /**PATH C:\laragon\www\Umkm_Krupuk\resources\views/admin/layouts/app.blade.php ENDPATH**/ ?>

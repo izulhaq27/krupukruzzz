@@ -13,7 +13,7 @@
             </div>
 
             <h2 class="font-extrabold text-2xl md:text-3xl text-slate-900 tracking-tight mb-3">
-                Selamat Datang, {{ Auth::user()->name }}! 👋
+                Selamat Datang, {{ Auth::user()->name }}!
             </h2>
             
             <p class="text-slate-500 leading-relaxed mb-10">

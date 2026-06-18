@@ -1,144 +1,213 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Ringkasan Dashboard')
+
+@php
+    $hour = date('H');
+    if ($hour < 11) {
+        $greeting = 'Selamat Pagi';
+    } elseif ($hour < 15) {
+        $greeting = 'Selamat Siang';
+    } elseif ($hour < 18) {
+        $greeting = 'Selamat Sore';
+    } else {
+        $greeting = 'Selamat Malam';
+    }
+@endphp
+
 @section('content')
-<div class="container-fluid">
-    
-    <!-- Statistics Cards -->
-    <div class="row g-3 mb-4">
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Page Header & Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <nav class="flex text-sm text-slate-500 mb-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center">Admin</li>
+                    <li><span class="mx-2 text-slate-400">/</span></li>
+                    <li class="font-medium text-slate-800" aria-current="page">Ringkasan Dashboard</li>
+                </ol>
+            </nav>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">{{ $greeting }}, Admin</h2>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <!-- Date Range Picker (Dummy) -->
+            <button class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center gap-2">
+                <i class="bi bi-calendar3 text-slate-400"></i>
+                01 Jan - 31 Jan
+            </button>
+            <!-- Export Button -->
+            <button class="bg-[#5C5DCD] hover:bg-[#4B4CB5] text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm flex items-center gap-2">
+                <i class="bi bi-download"></i>
+                Export
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
         <!-- Total Products -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 4px;">
-                <div class="d-flex justify-content-between">
-                    <div style="width: 45px; height: 45px; background: #eff2f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3C50E0;">
-                        <i class="bi bi-box-seam-fill fs-5"></i>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <h3 class="fw-bold mb-1 text-dark">{{ $totalProducts }}</h3>
-                    <small class="text-muted">Total Products</small>
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-box-seam-fill"></i>
                 </div>
             </div>
+            <div>
+                <p class="text-xs sm:text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">Total Produk</p>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">{{ $totalProducts }}</h3>
+            </div>
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
         </div>
 
         <!-- Total Revenue -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 4px;">
-                <div class="d-flex justify-content-between">
-                    <div style="width: 45px; height: 45px; background: #eff2f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3C50E0;">
-                        <i class="bi bi-currency-dollar fs-5"></i>
-                    </div>
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-wallet2"></i>
                 </div>
-                <div class="mt-3">
-                    <h3 class="fw-bold mb-1 text-dark">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
-                    <small class="text-muted">Total Paid Revenue</small>
-                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] sm:text-xs font-medium">
+                    <i class="bi bi-graph-up-arrow"></i> +12.5%
+                </span>
             </div>
+            <div>
+                <p class="text-xs sm:text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">Total Penjualan</p>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
+            </div>
+            <p class="text-[10px] sm:text-xs text-slate-400 mt-2">Dibandingkan bulan lalu</p>
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
         </div>
 
         <!-- Pending Orders -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 4px;">
-                <div class="d-flex justify-content-between">
-                    <div style="width: 45px; height: 45px; background: #eff2f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3C50E0;">
-                        <i class="bi bi-cart-check-fill fs-5"></i>
-                    </div>
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-cart-check-fill"></i>
                 </div>
-                <div class="mt-3">
-                    <h3 class="fw-bold mb-1 text-dark">{{ $newOrders }}</h3>
-                    <small class="text-muted">Pending Orders</small>
-                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] sm:text-xs font-medium">
+                    <i class="bi bi-graph-up-arrow"></i> +8.2%
+                </span>
             </div>
+            <div>
+                <p class="text-xs sm:text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">Total Pesanan</p>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">{{ $newOrders }}</h3>
+            </div>
+            <p class="text-[10px] sm:text-xs text-slate-400 mt-2">Pesanan diproses</p>
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
         </div>
 
         <!-- Total Users -->
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 p-3" style="border-radius: 4px;">
-                <div class="d-flex justify-content-between">
-                    <div style="width: 45px; height: 45px; background: #eff2f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #3C50E0;">
-                        <i class="bi bi-people-fill fs-5"></i>
-                    </div>
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 flex flex-col relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
+                    <i class="bi bi-people-fill"></i>
                 </div>
-                <div class="mt-3">
-                    <h3 class="fw-bold mb-1 text-dark">{{ $totalUsers }}</h3>
-                    <small class="text-muted">Total Users</small>
+            </div>
+            <div>
+                <p class="text-xs sm:text-sm font-medium text-slate-500 mb-1 uppercase tracking-wider">Pelanggan Baru</p>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">{{ $totalUsers }}</h3>
+            </div>
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Revenue Line Chart -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 lg:col-span-2">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">Statistik Pendapatan</h3>
+                    <p class="text-sm text-slate-500">Tahun {{ date('Y') }}</p>
                 </div>
+            </div>
+            <div class="relative h-[300px] w-full">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Weekly Orders Bar Chart -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-slate-900">Pesanan Minggu Ini</h3>
+                <p class="text-sm text-slate-500">7 hari terakhir</p>
+            </div>
+            <div class="relative h-[300px] w-full">
+                <canvas id="profitChart"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="row g-3 mb-4">
-        <!-- Revenue Chart -->
-        <div class="col-12 col-lg-8">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 4px;">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h5 class="fw-bold text-dark mb-0">Monthly Revenue</h5>
-                        <p class="text-muted small mb-0">Year {{ date('Y') }}</p>
-                    </div>
-                </div>
-                <canvas id="revenueChart" style="max-height: 300px;"></canvas>
-            </div>
+    <!-- Latest Orders Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-900">Pesanan Terbaru</h3>
+            <a href="{{ route('admin.orders.index') }}" class="text-sm font-medium text-[#5C5DCD] hover:text-[#4B4CB5] transition-colors">Lihat Semua</a>
         </div>
-
-        <!-- Weekly Sales Chart -->
-        <div class="col-12 col-lg-4">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 4px;">
-                <h5 class="fw-bold text-dark mb-4">Orders This Week</h5>
-                <canvas id="profitChart" style="max-height: 300px;"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Orders -->
-    <div class="card border-0 shadow-sm" style="border-radius: 4px;">
-        <div class="card-body p-4">
-            <h5 class="fw-bold text-dark mb-3">Pesanan Terbaru</h5>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr class="text-muted small">
-                            <th class="fw-normal">ORDER ID</th>
-                            <th class="fw-normal">CUSTOMER</th>
-                            <th class="fw-normal">TOTAL</th>
-                            <th class="fw-normal">STATUS</th>
-                            <th class="fw-normal">DATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($latestOrders as $order)
-                        <tr>
-                            <td class="py-3">
-                                <span class="fw-bold text-dark">#{{ $order->id }}</span>
-                            </td>
-                            <td>
-                                <span class="d-block text-dark">{{ $order->user->name ?? 'Guest' }}</span>
-                            </td>
-                            <td class="text-dark fw-bold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                            <td>
-                                @if($order->status == 'paid')
-                                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Paid</span>
-                                @elseif($order->status == 'pending')
-                                    <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">Pending</span>
-                                @else
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">{{ $order->status }}</span>
-                                @endif
-                            </td>
-                            <td class="text-muted small">
-                                {{ $order->created_at->format('d M Y') }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Order ID</th>
+                        <th class="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Customer</th>
+                        <th class="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tanggal</th>
+                        <th class="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach($latestOrders as $order)
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="py-4 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">
+                            #{{ $order->id }}
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-[#5C5DCD]/10 text-[#5C5DCD] flex items-center justify-center font-bold text-xs uppercase">
+                                    {{ substr($order->user->name ?? 'G', 0, 1) }}
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-slate-900">{{ $order->user->name ?? 'Guest' }}</div>
+                                    <div class="text-xs text-slate-500">{{ $order->user->email ?? '-' }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-sm text-slate-500 whitespace-nowrap">
+                            {{ $order->created_at->format('d M Y, H:i') }}
+                        </td>
+                        <td class="py-4 px-6 whitespace-nowrap">
+                            @if($order->status == 'paid')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Selesai
+                                </span>
+                            @elseif($order->status == 'pending')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Pending
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span> {{ ucfirst($order->status) }}
+                                </span>
+                            @endif
+                        </td>
+                        <td class="py-4 px-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
+                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
 
+<!-- Chart Script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Real Data from Controller
     const monthlyRevenue = @json($monthlyRevenue);
     const weeklySales = @json($dailySales);
 
@@ -147,32 +216,33 @@ document.addEventListener("DOMContentLoaded", function () {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
             datasets: [{
-                label: 'Revenue (Rp)',
+                label: 'Pendapatan (Rp)',
                 data: monthlyRevenue,
-                borderColor: '#3C50E0',
-                backgroundColor: 'rgba(60, 80, 224, 0.05)',
-                tension: 0.3,
+                borderColor: '#5C5DCD',
+                backgroundColor: 'rgba(92, 93, 205, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
                 fill: true,
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#5C5DCD',
+                pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6
             }]
         },
         options: {
             plugins: {
-                legend: { position: 'top', align: 'start' },
+                legend: { display: false },
                 tooltip: {
+                    backgroundColor: '#1E293B',
+                    padding: 12,
+                    titleFont: { family: 'Plus Jakarta Sans', size: 13 },
+                    bodyFont: { family: 'Plus Jakarta Sans', size: 14, weight: 'bold' },
                     callbacks: {
                         label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
-                            }
-                            return label;
+                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(context.parsed.y);
                         }
                     }
                 }
@@ -182,14 +252,18 @@ document.addEventListener("DOMContentLoaded", function () {
             scales: {
                 y: { 
                     beginAtZero: true, 
-                    grid: { borderDash: [2, 2] },
+                    grid: { color: '#F1F5F9', drawBorder: false },
+                    border: { display: false },
                     ticks: {
-                        callback: function(value, index, values) {
-                            return 'Rp ' + (value/1000).toLocaleString() + 'k';
-                        }
+                        font: { family: 'Plus Jakarta Sans', size: 12, color: '#64748B' },
+                        callback: function(value) { return 'Rp ' + (value/1000).toLocaleString() + 'k'; }
                     }
                 },
-                x: { grid: { display: false } }
+                x: { 
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: { font: { family: 'Plus Jakarta Sans', size: 12, color: '#64748B' } }
+                }
             }
         }
     });
@@ -199,33 +273,46 @@ document.addEventListener("DOMContentLoaded", function () {
     new Chart(ctx2, {
         type: 'bar',
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
             datasets: [{
-                label: 'Orders',
+                label: 'Pesanan',
                 data: weeklySales,
-                backgroundColor: '#3C50E0',
-                borderRadius: 4
+                backgroundColor: '#5C5DCD',
+                borderRadius: 6,
+                barThickness: 24,
+                hoverBackgroundColor: '#4B4CB5'
             }]
         },
         options: {
-            plugins: { legend: { display: false } },
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1E293B',
+                    padding: 12,
+                    titleFont: { family: 'Plus Jakarta Sans', size: 13 },
+                    bodyFont: { family: 'Plus Jakarta Sans', size: 14, weight: 'bold' }
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
             scales: {
                 y: { 
                     beginAtZero: true,
-                    ticks: { precision: 0 } 
+                    grid: { color: '#F1F5F9', drawBorder: false },
+                    border: { display: false },
+                    ticks: {
+                        precision: 0,
+                        font: { family: 'Plus Jakarta Sans', size: 12, color: '#64748B' }
+                    } 
                 },
-                x: { grid: { display: false } }
+                x: { 
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: { font: { family: 'Plus Jakarta Sans', size: 12, color: '#64748B' } }
+                }
             }
         }
     });
 });
 </script>
-
-<style>
-    .card {
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-</style>
 @endsection

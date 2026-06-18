@@ -1,214 +1,131 @@
 @extends('admin.layouts.app')
 
-@section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-0" style="color: #1e293b;">Daftar Users</h4>
-            <p class="text-muted mb-0 small">Total {{ $users->count() }} pengguna</p>
-        </div>
-    </div>
+@section('title', 'Manajemen Pengguna')
 
-    <div class="card border-0 shadow-sm" style="border-radius: 10px;">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead style="background: #f8fafc;">
-                        <tr>
-                            <th class="border-0" style="padding: 16px; color: #64748b; width: 70px;">ID</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 180px;">Nama</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 200px;">Email</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 130px;">Telepon</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 250px;">Alamat</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 120px;">Kota</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 120px;">Provinsi</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; min-width: 100px;">Kode Pos</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; width: 100px;">Role</th>
-                            <th class="border-0" style="padding: 16px; color: #64748b; width: 100px;">Dibuat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                        <tr class="border-bottom">
-                            <td style="padding: 16px;">
-                                <span class="badge" style="background: #f1f5f9; color: #334155; font-weight: 500;">
-                                    #{{ $user->id }}
-                                </span>
-                            </td>
-                            <td style="padding: 16px;">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <div style="
-                                            width: 40px; 
-                                            height: 40px; 
-                                            border-radius: 50%; 
-                                            background: {{ $user->is_admin ? '#10b981' : '#3b82f6' }};
-                                            display: flex; 
-                                            align-items: center; 
-                                            justify-content: center;
-                                            color: white;
-                                            font-weight: 500;
-                                            font-size: 0.9rem;
-                                        ">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="fw-medium" style="color: #1e293b;">{{ $user->name }}</div>
-                                        <small class="text-muted" style="font-size: 0.85rem;">
-                                            ID: {{ $user->id }}
-                                        </small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 16px;">
-                                <a href="mailto:{{ $user->email }}" 
-                                   class="text-decoration-none d-flex align-items-center"
-                                   style="color: #3b82f6;">
-                                    <i class="bi bi-envelope me-2" style="font-size: 0.9rem;"></i>
-                                    <span style="word-break: break-all;">{{ $user->email }}</span>
-                                </a>
-                            </td>
-                            <td style="padding: 16px; color: #475569;">
-                                @if($user->phone)
-                                <a href="tel:{{ $user->phone }}" 
-                                   class="text-decoration-none d-flex align-items-center"
-                                   style="color: #475569;">
-                                    <i class="bi bi-telephone me-2" style="font-size: 0.9rem;"></i>
-                                    {{ $user->phone }}
-                                </a>
-                                @else
-                                <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td style="padding: 16px;">
-                                <div style="
-                                    max-height: 60px; 
-                                    overflow-y: auto;
-                                    color: #475569;
-                                    line-height: 1.4;
-                                    font-size: 0.9rem;
-                                ">
-                                    @if($user->address)
-                                        {{ $user->address }}
-                                    @else
-                                        <span class="text-muted fst-italic">Belum diisi</span>
-                                    @endif
-                                </div>
-                            </td>
-                            <td style="padding: 16px; color: #475569;">
-                                @if($user->city)
-                                    {{ $user->city }}
-                                @else
-                                    <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td style="padding: 16px; color: #475569;">
-                                @if($user->province)
-                                    {{ $user->province }}
-                                @else
-                                    <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td style="padding: 16px; color: #475569;">
-                                @if($user->postal_code)
-                                    <span class="badge" style="
-                                        background: #f1f5f9; 
-                                        color: #475569;
-                                        padding: 4px 10px;
-                                        border-radius: 6px;
-                                        font-weight: 500;
-                                    ">
-                                        {{ $user->postal_code }}
-                                    </span>
-                                @else
-                                    <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td style="padding: 16px;">
-                                @if($user->is_admin)
-                                    <span class="badge" style="
-                                        background: #10b981; 
-                                        color: white;
-                                        padding: 4px 12px;
-                                        border-radius: 20px;
-                                        font-weight: 500;
-                                    ">
-                                        Admin
-                                    </span>
-                                @else
-                                    <span class="badge" style="
-                                        background: #f1f5f9; 
-                                        color: #475569;
-                                        padding: 4px 12px;
-                                        border-radius: 20px;
-                                        font-weight: 500;
-                                    ">
-                                        User
-                                    </span>
-                                @endif
-                            </td>
-                            <td style="padding: 16px; color: #64748b;">
-                                <div class="text-center">
-                                    <div class="fw-medium" style="font-size: 0.9rem;">
-                                        {{ $user->created_at->format('d/m') }}
-                                    </div>
-                                    <small class="text-muted">
-                                        {{ $user->created_at->format('Y') }}
-                                    </small>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+@section('content')
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Page Header & Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <nav class="flex text-sm text-slate-500 mb-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                    <li class="inline-flex items-center"><a href="{{ route('admin.dashboard') }}" class="hover:text-slate-900">Admin</a></li>
+                    <li><span class="mx-2 text-slate-400">/</span></li>
+                    <li class="font-medium text-slate-800" aria-current="page">Pengguna</li>
+                </ol>
+            </nav>
+            <div class="flex items-center gap-3">
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Daftar Pengguna</h2>
+                <span class="bg-[#5C5DCD]/10 text-[#5C5DCD] text-xs font-bold px-2.5 py-1 rounded-full">Total {{ $users->count() }}</span>
             </div>
         </div>
     </div>
 
-    @if($users->isEmpty())
-    <div class="text-center py-5">
-        <div class="mb-3">
-            <i class="bi bi-people display-4" style="color: #cbd5e1;"></i>
+    <!-- Users Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        
+        <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h3 class="text-lg font-bold text-slate-900">Semua Pengguna</h3>
+            <div class="relative w-full sm:w-64">
+                <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Cari pengguna..." class="pl-9 pr-4 py-2 border-slate-200 rounded-xl text-sm focus:ring-[#5C5DCD] focus:border-[#5C5DCD] w-full">
+            </div>
         </div>
-        <h5 class="text-muted">Belum ada pengguna</h5>
-        <p class="text-muted small">Tidak ada user terdaftar</p>
-    </div>
-    @endif
-</div>
 
-<style>
-    .table > :not(caption) > * > * {
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .table tbody tr:hover {
-        background-color: #f8fafc;
-    }
-    
-    @media (max-width: 768px) {
-        .table-responsive {
-            font-size: 0.85rem;
-        }
-        
-        .table th, 
-        .table td {
-            padding: 12px 8px !important;
-        }
-        
-        /* Sembunyikan beberapa kolom di mobile */
-        .table thead th:nth-child(4), /* Telepon */
-        .table thead th:nth-child(6), /* Provinsi */
-        .table thead th:nth-child(7), /* Kode Pos */
-        .table tbody td:nth-child(4),
-        .table tbody td:nth-child(6),
-        .table tbody td:nth-child(7) {
-            display: none;
-        }
-        
-        h4 {
-            font-size: 1.25rem;
-        }
-    }
-</style>
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[1000px]">
+                <thead>
+                    <tr class="bg-slate-50/50 border-b border-slate-100">
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider w-16">ID</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Profil</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kontak</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Alamat & Lokasi</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+                        <th class="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider">Terdaftar</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($users as $user)
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <!-- ID -->
+                        <td class="py-4 px-6 text-sm font-medium text-slate-500">
+                            #{{ $user->id }}
+                        </td>
+                        
+                        <!-- Profil -->
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 {{ $user->is_admin ? 'bg-emerald-500' : 'bg-[#5C5DCD]' }}">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-900">{{ $user->name }}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Kontak -->
+                        <td class="py-4 px-6">
+                            <div class="space-y-1">
+                                <a href="mailto:{{ $user->email }}" class="flex items-center gap-2 text-sm text-[#5C5DCD] hover:underline">
+                                    <i class="bi bi-envelope"></i> {{ $user->email }}
+                                </a>
+                                @if($user->phone)
+                                <a href="tel:{{ $user->phone }}" class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900">
+                                    <i class="bi bi-telephone"></i> {{ $user->phone }}
+                                </a>
+                                @endif
+                            </div>
+                        </td>
+
+                        <!-- Alamat -->
+                        <td class="py-4 px-6">
+                            @if($user->address)
+                                <div class="text-sm text-slate-700 mb-1 max-w-[250px] truncate" title="{{ $user->address }}">{{ $user->address }}</div>
+                                <div class="flex items-center gap-2 text-xs text-slate-500">
+                                    @if($user->city)<span>{{ $user->city }}</span>@endif
+                                    @if($user->province)<span class="w-1 h-1 rounded-full bg-slate-300"></span><span>{{ $user->province }}</span>@endif
+                                    @if($user->postal_code)<span class="w-1 h-1 rounded-full bg-slate-300"></span><span class="font-mono">{{ $user->postal_code }}</span>@endif
+                                </div>
+                            @else
+                                <span class="text-xs text-slate-400 italic">Belum diisi</span>
+                            @endif
+                        </td>
+
+                        <!-- Role -->
+                        <td class="py-4 px-6">
+                            @if($user->is_admin)
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                    Admin
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+                                    User
+                                </span>
+                            @endif
+                        </td>
+
+                        <!-- Terdaftar -->
+                        <td class="py-4 px-6">
+                            <div class="text-sm font-medium text-slate-900">{{ $user->created_at->format('d M Y') }}</div>
+                            <div class="text-xs text-slate-500">{{ $user->created_at->format('H:i') }}</div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-12 text-center">
+                            <div class="w-16 h-16 mx-auto bg-slate-50 rounded-full flex items-center justify-center text-slate-400 mb-4">
+                                <i class="bi bi-people text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1">Belum ada pengguna</h3>
+                            <p class="text-slate-500">Tidak ada user terdaftar di sistem.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection
