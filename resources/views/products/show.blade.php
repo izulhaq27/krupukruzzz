@@ -1,142 +1,157 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb bg-transparent p-0">
-            <li class="breadcrumb-item"><a href="{{ route('products.index') }}" class="text-success text-decoration-none">Beranda</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('products.index') }}" class="text-success text-decoration-none">Produk</a></li>
-            <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">{{ $product->name }}</li>
+    <nav aria-label="breadcrumb" class="mb-8">
+        <ol class="flex items-center space-x-2 text-sm text-slate-500">
+            <li>
+                <a href="{{ route('products.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">Beranda</a>
+            </li>
+            <li class="flex items-center space-x-2">
+                <i class="bi bi-chevron-right text-[10px] text-slate-400"></i>
+                <a href="{{ route('products.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">Produk</a>
+            </li>
+            <li class="flex items-center space-x-2" aria-current="page">
+                <i class="bi bi-chevron-right text-[10px] text-slate-400"></i>
+                <span class="text-slate-800 font-bold">{{ Str::limit($product->name, 20) }}</span>
+            </li>
         </ol>
     </nav>
 
-    <div class="row g-4 lg-g-5">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
         <!-- Product Image Section -->
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-light h-100 d-flex align-items-center justify-content-center" style="min-height: 400px;">
+        <div class="lg:w-1/2">
+            <div class="bg-white rounded-3xl border border-slate-100 p-6 md:p-8 flex items-center justify-center min-h-[350px] shadow-sm animate-[fadeInUp_0.5s_cubic-bezier(0.4,0,0.2,1)_forwards] sticky top-24">
                 @if($product->image)
                     <img src="{{ asset('storage/' . $product->image) }}" 
-                         class="img-fluid w-100 h-100" 
-                         style="object-fit: contain; max-height: 600px;" 
+                         class="w-full h-full max-h-[500px] object-contain drop-shadow-xl rounded-2xl" 
                          alt="{{ $product->name }}"
                          fetchpriority="high"
                          decoding="async">
                 @else
-                    <div class="text-center py-5">
-                        <i class="bi bi-image display-1 text-muted opacity-25"></i>
-                        <p class="text-muted mt-2">Gambar tidak tersedia</p>
+                    <div class="text-center py-16">
+                        <i class="bi bi-image text-7xl text-slate-200"></i>
+                        <p class="mt-4 text-slate-400">Gambar tidak tersedia</p>
                     </div>
                 @endif
             </div>
         </div>
 
         <!-- Product Info Section -->
-        <div class="col-lg-6">
-            <div class="ps-lg-4">
+        <div class="lg:w-1/2 animate-[fadeInUp_0.5s_cubic-bezier(0.4,0,0.2,1)_forwards]" style="animation-delay: 0.1s;">
+            <div class="lg:pl-4">
                 <!-- Badges & Status -->
-                <div class="mb-3">
+                <div class="flex flex-wrap gap-2 mb-6">
                     @foreach($product->categories as $category)
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill fw-normal me-2 mb-2">
+                        <span class="inline-flex items-center bg-emerald-50 text-emerald-600 border border-emerald-100 px-3 py-1 rounded-full text-xs font-semibold">
                              {{ $category->name }}
                         </span>
                     @endforeach
                     @if($product->stock > 0)
-                        <span class="badge bg-light text-success border px-2 py-1 rounded small">
-                            <i class="bi bi-check-circle-fill me-2"></i>Stok Tersedia
+                        <span class="inline-flex items-center bg-emerald-50/50 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-semibold">
+                            <i class="bi bi-check-circle-fill mr-1.5"></i> Stok Tersedia
                         </span>
                     @else
-                        <span class="badge bg-light text-danger border px-2 py-1 rounded small">
-                            <i class="bi bi-x-circle-fill me-2"></i>Stok Habis
+                        <span class="inline-flex items-center bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-semibold">
+                            <i class="bi bi-x-circle-fill mr-1.5"></i> Stok Habis
                         </span>
                     @endif
                 </div>
 
                 <!-- Product Name -->
-                <h1 class="display-6 fw-bold text-dark mb-3">{{ $product->name }}</h1>
+                <h1 class="font-extrabold text-3xl md:text-4xl lg:text-5xl text-slate-900 leading-tight tracking-tight mb-4">
+                    {{ $product->name }}
+                </h1>
 
                 <!-- Price Section -->
-                <div class="mb-4">
+                <div class="mb-8">
                     @if($product->discount_price)
-                        <div class="d-flex align-items-center gap-3 mb-1">
-                            <span class="h2 fw-bold text-success mb-0">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                            <span class="text-muted text-decoration-line-through fs-5">Rp {{ number_format($product->discount_price, 0, ',', '.') }}</span>
+                        <div class="flex items-center gap-4 mb-2">
+                            <span class="font-extrabold text-3xl md:text-4xl text-emerald-500 tracking-tight">
+                                Rp{{ number_format($product->price, 0, ',', '.') }}
+                            </span>
+                            <span class="line-through text-slate-400 text-lg md:text-xl font-medium">
+                                Rp{{ number_format($product->discount_price, 0, ',', '.') }}
+                            </span>
                             @php
                                 $percent = round((($product->discount_price - $product->price) / $product->discount_price) * 100);
                             @endphp
-                            <span class="badge bg-danger rounded-pill">-{{ $percent }}%</span>
+                            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-{{ $percent }}%</span>
                         </div>
                     @else
-                        <span class="h2 fw-bold text-success">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                        <span class="block font-extrabold text-3xl md:text-4xl text-emerald-500 tracking-tight mb-2">
+                            Rp{{ number_format($product->price, 0, ',', '.') }}
+                        </span>
                     @endif
-                    <p class="text-muted small mt-2">
-                        <i class="bi bi-box-seam me-2"></i>Stok sisa: <strong>{{ $product->stock }} unit</strong>
+                    <p class="text-sm text-slate-500 flex items-center">
+                        <i class="bi bi-box-seam mr-2 text-emerald-500"></i> Sisa stok: <strong class="text-slate-700 ml-1">{{ $product->stock }} unit</strong>
                     </p>
                 </div>
 
-                <hr class="my-4 opacity-10">
+                <div class="h-px bg-slate-200 w-full my-8"></div>
 
                 <!-- Action Buttons -->
-                <div class="row g-3 mb-5">
-                    <div class="col-sm-8">
+                <div class="flex flex-col sm:flex-row gap-3 mb-10">
+                    <div class="sm:w-2/3">
                         @if($product->stock > 0)
                             <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-success btn-lg w-100 py-3 rounded-pill shadow-sm transition-hover">
-                                    <i class="bi bi-cart-plus me-2"></i> Tambah ke Keranjang
+                                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-full flex justify-center items-center gap-2 shadow-sm shadow-emerald-500/20 transition-all duration-200 active:scale-95 text-lg">
+                                    <i class="bi bi-bag-plus-fill text-xl"></i> Tambah ke Keranjang
                                 </button>
                             </form>
                         @else
-                            <button class="btn btn-secondary btn-lg w-100 py-3 rounded-pill disabled">
-                                <i class="bi bi-dash-circle me-2"></i> Stok Habis
+                            <button disabled class="w-full bg-slate-200 text-slate-500 font-bold py-4 rounded-full flex justify-center items-center gap-2 cursor-not-allowed text-lg">
+                                <i class="bi bi-dash-circle"></i> Stok Habis
                             </button>
                         @endif
                     </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-outline-success btn-lg w-100 py-3 rounded-pill" onclick="window.history.back()">
-                             <i class="bi bi-arrow-left me-2"></i>Kembali
+                    <div class="hidden sm:block sm:w-1/3">
+                        <button onclick="window.history.back()" class="w-full bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-bold py-4 rounded-full flex justify-center items-center gap-2 transition-all duration-200 active:scale-95 text-lg">
+                             <i class="bi bi-arrow-left"></i> Kembali
                         </button>
                     </div>
                 </div>
 
                 <!-- Product Description Box -->
-                <div class="card border-0 bg-light rounded-4 overflow-hidden">
-                    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
-                        <h5 class="fw-bold text-dark mb-0">
-                            <i class="bi bi-text-left text-success me-2"></i> Deskripsi Produk
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden mb-8 shadow-sm">
+                    <div class="border-b border-slate-100 px-6 pt-6 pb-4 bg-slate-50/50">
+                        <h5 class="font-bold text-slate-800 m-0 flex items-center gap-2 text-lg">
+                            <i class="bi bi-card-text text-emerald-500"></i> Deskripsi
                         </h5>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="text-muted lh-lg" style="white-space: pre-line;">
+                    <div class="p-6">
+                        <div class="text-slate-600 leading-relaxed text-sm whitespace-pre-line">
                             @if($product->description)
                                 {!! nl2br(e($product->description)) !!}
                             @else
-                                <span class="fst-italic">Tidak ada deskripsi untuk produk ini.</span>
+                                <span class="italic">Tidak ada deskripsi untuk produk ini.</span>
                             @endif
                         </div>
                     </div>
                 </div>
 
-                <!-- Info Tambahan (Visual Only) -->
-                <div class="mt-4 d-flex gap-4">
-                    <div class="text-center">
-                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 mx-auto" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-shield-check"></i>
+                <!-- Trust Badges -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 flex justify-between shadow-sm">
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto mb-3">
+                            <i class="bi bi-shield-check text-2xl"></i>
                         </div>
-                        <small class="text-muted d-block">Original</small>
+                        <span class="block font-semibold text-slate-700 text-xs">100% Asli</span>
                     </div>
-                    <div class="text-center">
-                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 mx-auto" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-clock-history"></i>
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-3">
+                            <i class="bi bi-clock-history text-2xl"></i>
                         </div>
-                        <small class="text-muted d-block">Fresh</small>
+                        <span class="block font-semibold text-slate-700 text-xs">Selalu Baru</span>
                     </div>
-                    <div class="text-center">
-                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 mx-auto" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-truck"></i>
+                    <div class="text-center flex-1">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-3">
+                            <i class="bi bi-box-seam text-2xl"></i>
                         </div>
-                        <small class="text-muted d-block">Cepat</small>
+                        <span class="block font-semibold text-slate-700 text-xs">Aman</span>
                     </div>
                 </div>
 
@@ -144,19 +159,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "\F285"; /* bi-chevron-right */
-        font-family: bi-icons;
-        font-size: 0.8rem;
-    }
-    .transition-hover {
-        transition: all 0.3s ease;
-    }
-    .transition-hover:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2) !important;
-    }
-</style>
 @endsection

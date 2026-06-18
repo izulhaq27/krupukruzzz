@@ -1,104 +1,99 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container my-5">
-    <h2 class="fw-bold mb-4" style="color: #28a745;">
-        <i class="bi bi-cart3 me-2"></i>Keranjang Belanja
-    </h2>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shrink-0">
+            <i class="bi bi-cart3 text-2xl"></i>
+        </div>
+        <h2 class="font-extrabold text-2xl md:text-3xl text-slate-900 tracking-tight m-0">Keranjang Belanja</h2>
+    </div>
     
     @if(empty($cart))
-        <div class="text-center py-5">
-            <div class="mb-4">
-                <i class="bi bi-cart-x display-1 text-muted"></i>
+        <div class="bg-white rounded-3xl p-10 md:p-16 text-center border border-slate-100 shadow-sm animate-[fadeInUp_0.5s_cubic-bezier(0.4,0,0.2,1)_forwards]">
+            <div class="mb-6">
+                <i class="bi bi-cart-x text-7xl text-slate-200"></i>
             </div>
-            <h3 class="fw-bold" style="color: #28a745;">Keranjang Kosong</h3>
-            <p class="text-muted">Belum ada produk di keranjang Anda</p>
-            <a href="{{ route('products.index') }}" class="btn btn-success btn-lg mt-3">
-                <i class="bi bi-bag-plus me-2"></i>Mulai Belanja
+            <h3 class="font-bold text-2xl text-slate-800 mb-3">Keranjang Masih Kosong</h3>
+            <p class="text-slate-500 max-w-md mx-auto mb-8">Belum ada produk lezat yang Anda tambahkan ke keranjang. Yuk mulai berbelanja!</p>
+            <a href="{{ route('products.index') }}" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-full transition-all duration-200 active:scale-95 shadow-sm shadow-emerald-500/20">
+                <i class="bi bi-bag-plus"></i> Mulai Belanja
             </a>
         </div>
     @else
-        <div class="row">
-            <div class="col-lg-8 mb-4">
-                <div class="card shadow-sm border-0" style="
-                    border-radius: 12px;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                ">
-                    <div class="card-body p-4">
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 animate-[fadeInUp_0.5s_cubic-bezier(0.4,0,0.2,1)_forwards]">
+            <!-- Items Section -->
+            <div class="flex-grow lg:w-2/3">
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <div class="hidden md:grid grid-cols-12 gap-4 bg-slate-50 border-b border-slate-100 p-5 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <div class="col-span-6">Produk</div>
+                        <div class="col-span-3 text-center">Jumlah</div>
+                        <div class="col-span-2 text-right">Subtotal</div>
+                        <div class="col-span-1"></div>
+                    </div>
+                    
+                    <div class="divide-y divide-slate-100">
                         @foreach($cart as $id => $item)
-                            <div class="row align-items-center mb-4 pb-4 border-bottom">
-                                <!-- Image -->
-                                <div class="col-md-2 col-4 mb-3 mb-md-0">
+                            <div class="p-4 md:p-5 flex flex-col md:grid md:grid-cols-12 md:items-center gap-4 group hover:bg-slate-50/50 transition-colors">
+                                <!-- Product Info -->
+                                <div class="md:col-span-6 flex items-center gap-4">
                                     @if($item['image'])
                                         <img src="{{ asset('storage/' . $item['image']) }}" 
-                                        class="img-fluid rounded" 
-                                        alt="{{ $item['name'] }}"
-                                        style="height: 80px; width: 80px; object-fit: cover;">
+                                             class="w-20 h-20 rounded-2xl object-cover border border-slate-100 shadow-sm shrink-0" 
+                                             alt="{{ $item['name'] }}">
                                     @else
-                                        <div class="bg-light text-center py-3 rounded">
-                                            <span style="font-size: 2rem;"></span>
+                                        <div class="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
+                                            <i class="bi bi-image text-slate-300 text-2xl"></i>
                                         </div>
                                     @endif
-                                </div>
-                                
-                                <!-- Product Info -->
-                                <div class="col-md-3 col-8 mb-3 mb-md-0">
-                                    <h6 class="fw-bold mb-2" style="color: #333;">{{ $item['name'] }}</h6>
-                                    <p class="fw-semibold mb-0" style="color: #28a745; font-size: 1.1rem;">
-                                        Rp {{ number_format($item['price'], 0, ',', '.') }}
-                                    </p>
+                                    <div>
+                                        <h6 class="font-bold text-slate-800 mb-1 leading-snug">{{ $item['name'] }}</h6>
+                                        <p class="font-semibold text-emerald-500 text-sm">
+                                            Rp{{ number_format($item['price'], 0, ',', '.') }}
+                                        </p>
+                                    </div>
                                 </div>
                                 
                                 <!-- Quantity -->
-                                <div class="col-md-3 col-6 mb-3 mb-md-0">
-                                    <form action="{{ route('cart.update', $id) }}" method="POST" class="d-flex align-items-center gap-2">
+                                <div class="md:col-span-3 flex md:justify-center items-center">
+                                    <form action="{{ route('cart.update', $id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <div class="input-group input-group-sm" style="width: 120px;">
-                                            <button class="btn btn-outline-secondary" type="button" onclick="decrementQty(this)" style="
-                                                border-color: #28a745;
-                                                color: #28a745;
-                                            ">
+                                        <div class="flex items-center bg-slate-50 border border-slate-200 rounded-full p-1 w-28">
+                                            <button type="button" onclick="decrementQty(this)" class="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-100 transition-colors shrink-0">
                                                 <i class="bi bi-dash"></i>
                                             </button>
                                             <input type="number" 
                                                    name="quantity" 
                                                    value="{{ $item['quantity'] }}" 
                                                    min="1" 
-                                                   class="form-control text-center qty-input">
-                                            <button class="btn btn-outline-secondary" type="button" onclick="incrementQty(this)" style="
-                                                border-color: #28a745;
-                                                color: #28a745;
-                                            ">
+                                                   class="w-full bg-transparent border-0 text-center font-bold text-slate-800 text-sm focus:ring-0 p-0 qty-input" readonly>
+                                            <button type="button" onclick="incrementQty(this)" class="w-7 h-7 rounded-full bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-100 transition-colors shrink-0">
                                                 <i class="bi bi-plus"></i>
                                             </button>
                                         </div>
-                                        <button type="submit" class="btn btn-sm" style="
-                                            background: #28a745;
-                                            color: white;
-                                        ">
-                                            <i class="bi bi-check2"></i>
-                                        </button>
                                     </form>
                                 </div>
                                 
                                 <!-- Subtotal -->
-                                <div class="col-md-3 col-4 text-md-end">
-                                    <strong class="fs-6" style="color: #28a745;">
-                                        Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}
+                                <div class="md:col-span-2 flex items-center justify-between md:justify-end">
+                                    <span class="md:hidden text-slate-500 text-sm">Subtotal:</span>
+                                    <strong class="text-slate-900 font-bold">
+                                        Rp{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}
                                     </strong>
                                 </div>
                                 
                                 <!-- Remove -->
-                                <div class="col-md-1 col-2 text-end">
-                                    <form action="{{ route('cart.remove', $id) }}" method="POST">
+                                <div class="md:col-span-1 flex justify-end">
+                                    <form action="{{ route('cart.remove', $id) }}" method="POST" class="w-full md:w-auto">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
-                                                class="btn btn-sm btn-outline-danger" 
+                                                class="w-full md:w-9 md:h-9 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl flex items-center justify-center gap-2 transition-colors focus:outline-none py-2 md:py-0"
                                                 onclick="return confirm('Hapus produk dari keranjang?')"
                                                 title="Hapus">
                                             <i class="bi bi-trash"></i>
+                                            <span class="md:hidden font-medium text-sm">Hapus Item</span>
                                         </button>
                                     </form>
                                 </div>
@@ -107,89 +102,62 @@
                     </div>
                 </div>
                 
-                <!-- Continue Shopping -->
-                <div class="mt-3">
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-success" style="
-                        border-color: #28a745;
-                        color: #28a745;
-                    ">
-                        <i class="bi bi-arrow-left me-2"></i>Lanjut Belanja
+                <div class="mt-6 hidden md:block">
+                    <a href="{{ route('products.index') }}" class="inline-flex items-center gap-2 bg-white border-2 border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 px-6 py-3 rounded-full font-bold transition-all duration-200">
+                        <i class="bi bi-arrow-left"></i> Lanjut Belanja
                     </a>
                 </div>
             </div>
             
             <!-- Summary Card -->
-            <div class="col-lg-4 mb-4">
-                <div class="card border-0" style="
-                    border-radius: 12px;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                ">
-                    <div class="card-header text-white" style="
-                        background: #28a745;
-                        border-radius: 12px 12px 0 0;
-                        padding: 1rem;
-                    ">
-                        <h5 class="mb-0 fw-bold">
-                            <i class="bi bi-receipt me-2"></i>Ringkasan Belanja
+            <div class="lg:w-1/3 shrink-0">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm sticky top-24 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                        <h5 class="font-extrabold text-lg text-slate-900 m-0">
+                            Ringkasan Belanja
                         </h5>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Subtotal ({{ count($cart) }} item)</span>
-                            <span class="fw-semibold" style="color: #28a745;">
-                                Rp {{ number_format($total, 0, ',', '.') }}
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4 text-sm">
+                            <span class="text-slate-500">Total Item</span>
+                            <span class="font-semibold text-slate-800">{{ count($cart) }} Item</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4 text-sm">
+                            <span class="text-slate-500">Subtotal</span>
+                            <span class="font-semibold text-slate-800">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-6 pb-6 border-b border-slate-100 text-sm">
+                            <span class="text-slate-500">Ongkos Kirim</span>
+                            <span class="font-medium px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md text-xs">
+                                Dihitung saat checkout
                             </span>
                         </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Ongkos Kirim</span>
-                            <span style="color: #28a745; font-weight: 500;">
-                                <i class="bi bi-check-circle-fill me-2"></i>GRATIS
-                            </span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between mb-4">
-                            <strong class="fs-5" style="color: #333;">Total Bayar</strong>
-                            <strong class="fs-4" style="color: #28a745;">
-                                Rp {{ number_format($total, 0, ',', '.') }}
+                        
+                        <div class="flex justify-between items-end mb-8">
+                            <strong class="text-slate-900 font-bold">Total Harga</strong>
+                            <strong class="text-2xl text-emerald-500 font-extrabold leading-none">
+                                Rp{{ number_format($total, 0, ',', '.') }}
                             </strong>
                         </div>
                         
                         @auth
-                            <div class="d-grid">
-                                <a href="{{ route('checkout.index') }}" class="btn btn-lg" style="
-                                    background: #28a745;
-                                    color: white;
-                                    border-radius: 8px;
-                                    font-weight: 600;
-                                ">
-                                    <i class="bi bi-credit-card me-2"></i>Checkout Sekarang
-                                </a>
-                            </div>
+                            <a href="{{ route('checkout.index') }}" class="w-full flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-6 rounded-full transition-all duration-200 active:scale-95 shadow-sm shadow-emerald-500/20">
+                                Lanjut ke Checkout
+                            </a>
                         @else
-                            <div class="alert mb-3" style="
-                                background: rgba(40, 167, 69, 0.1);
-                                border-left: 4px solid #28a745;
-                                color: #155724;
-                            ">
-                                <i class="bi bi-info-circle"></i>
-                                <small class="d-block mt-1">Silakan login terlebih dahulu untuk melakukan checkout</small>
+                            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl flex gap-3 items-start mb-6">
+                                <i class="bi bi-info-circle-fill text-amber-500 mt-0.5"></i>
+                                <div>
+                                    <p class="font-bold text-amber-900 text-sm">Akses Terbatas</p>
+                                    <p class="text-xs text-amber-700 mt-1">Silakan login atau daftar untuk melanjutkan checkout.</p>
+                                </div>
                             </div>
-                            <div class="d-grid gap-2">
-                                <a href="{{ route('login') }}" class="btn btn-lg" style="
-                                    background: #28a745;
-                                    color: white;
-                                    border-radius: 8px;
-                                    font-weight: 600;
-                                ">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            <div class="flex flex-col gap-3">
+                                <a href="{{ route('login') }}" class="w-full flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 active:scale-95">
+                                    Login
                                 </a>
-                                <a href="{{ route('register') }}" class="btn btn-outline-success" style="
-                                    border-color: #28a745;
-                                    color: #28a745;
-                                    border-radius: 8px;
-                                    font-weight: 500;
-                                ">
-                                    <i class="bi bi-person-plus me-2"></i>Daftar
+                                <a href="{{ route('register') }}" class="w-full flex items-center justify-center bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-bold py-3 px-6 rounded-full transition-all duration-200 active:scale-95">
+                                    Daftar Akun Baru
                                 </a>
                             </div>
                         @endauth
@@ -202,14 +170,18 @@
 
 <script>
     function incrementQty(button) {
-        const input = button.parentElement.querySelector('.qty-input');
+        const form = button.closest('form');
+        const input = form.querySelector('.qty-input');
         input.value = parseInt(input.value) + 1;
+        form.submit();
     }
     
     function decrementQty(button) {
-        const input = button.parentElement.querySelector('.qty-input');
+        const form = button.closest('form');
+        const input = form.querySelector('.qty-input');
         if (parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
+            form.submit();
         }
     }
 </script>

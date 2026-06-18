@@ -1,204 +1,127 @@
 @extends('layouts.app')
 
-@section('title', 'Selesaikan Pembayaran')
-
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <!-- Header Section -->
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-2">Selesaikan Pembayaran</h2>
-                <p class="text-muted">Pilih metode pembayaran yang Anda inginkan</p>
-                
-                <div class="card border-0 shadow-sm d-inline-block px-4 py-3 mt-2" style="background: rgba(40, 167, 69, 0.08);">
-                    <span class="text-muted small text-uppercase fw-bold ls-1 d-block mb-1">Total Tagihan</span>
-                    <h3 class="text-success fw-bold mb-0">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</h3>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header + Progress -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <nav class="flex items-center space-x-2 text-sm text-slate-500 mb-2">
+                <a href="{{ route('cart.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">Keranjang</a>
+                <i class="bi bi-chevron-right text-[10px] text-slate-400"></i>
+                <a href="{{ route('checkout.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">Pengiriman</a>
+                <i class="bi bi-chevron-right text-[10px] text-slate-400"></i>
+                <span class="text-slate-800 font-bold">Pembayaran</span>
+            </nav>
+            <h2 class="font-extrabold text-2xl md:text-3xl text-slate-900 tracking-tight">Pilih Pembayaran</h2>
+        </div>
+        <!-- Progress Steps -->
+        <div class="hidden md:flex items-center gap-3 text-sm">
+            <div class="flex items-center gap-2 font-medium text-emerald-500">
+                <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">
+                    <i class="bi bi-check"></i>
                 </div>
-                <div class="mt-3">
-                    <span class="badge bg-light text-dark border fw-normal px-3 py-2">Order ID: <span class="fw-bold">#{{ $order->order_number }}</span></span>
-                </div>
+                Pengiriman
             </div>
-
-            @if($snapToken)
-            <!-- Automated Payment Card -->
-            <div class="card border-0 shadow-sm mb-4 overflow-hidden payment-card ring-hover">
-                <div class="card-body p-4 text-center">
-                    <div class="mb-4">
-                        <div class="icon-circle bg-success-subtle text-success mx-auto mb-3">
-                            <i class="bi bi-lightning-charge-fill fs-3"></i>
-                        </div>
-                        <h5 class="fw-bold">Pembayaran Otomatis</h5>
-                        <p class="text-muted small px-4">QRIS, E-Wallet (GoPay, OVO, ShopeePay), Virtual Account Bank, & Kartu Kredit.</p>
-                    </div>
-                    
-                    <button id="pay-button" class="btn btn-success w-100 py-3 rounded-3 fw-bold shadow-sm hover-elevate">
-                        <i class="bi bi-wallet2 me-2"></i> Bayar Sekarang (Otomatis)
-                    </button>
-                    <div class="mt-3 text-muted x-small">
-                        <small><i class="bi bi-shield-check me-1"></i> Pembayaran aman, instan & terverifikasi otomatis</small>
-                    </div>
-                </div>
+            <div class="w-8 h-0.5 bg-emerald-400"></div>
+            <div class="flex items-center gap-2 font-bold text-emerald-500">
+                <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold">2</div>
+                Pembayaran
             </div>
-
-            <div class="position-relative text-center my-4">
-                <hr class="text-muted opacity-25">
-                <span class="position-absolute top-50 start-50 translate-middle bg-light px-3 text-muted small fw-medium text-uppercase">
-                    Atau
-                </span>
-            </div>
-            @endif
-
-            <!-- Manual Transfer Card -->
-            <div class="card border-0 shadow-sm mb-4 payment-card">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="icon-circle bg-primary-subtle text-primary me-3" style="width: 45px; height: 45px;">
-                            <i class="bi bi-bank fs-5"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-0">Transfer Manual</h5>
-                            <small class="text-muted">Transfer ke rekening bank & upload bukti secara manual</small>
-                        </div>
-                    </div>
-
-                    <div class="bank-account-card p-3 rounded-3 mb-4 bg-light border border-secondary border-opacity-10 position-relative">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="badge bg-primary mb-2">Bank Jago</span>
-                                <h4 class="font-monospace mb-1 text-dark" id="rek-number">100641390135</h4>
-                                <p class="mb-0 small text-uppercase fw-bold text-muted">A.N. Acmad Machrus Ali</p>
-                            </div>
-                            <button onclick="copyToClipboard('100641390135')" class="btn btn-sm btn-white border shadow-sm text-primary" data-bs-toggle="tooltip" title="Salin No. Rekening">
-                                <i class="bi bi-files"></i> Salin
-                            </button>
-                        </div>
-                    </div>
-
-                    <form action="{{ route('orders.set-manual', $order->order_number) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-primary w-100 py-2 fw-medium border-2 rounded-3">
-                            Lanjut Transfer Manual <i class="bi bi-arrow-right ms-1"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            @if(!$snapToken)
-                <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-3 fs-4"></i>
-                    <div>
-                        Layanan pembayaran otomatis (Midtrans) sedang tidak tersedia saat ini. Silakan gunakan metode transfer manual.
-                    </div>
-                </div>
-            @endif
-            
-            <div class="text-center mt-5 mb-4">
-                <a href="{{ route('checkout.index') }}" class="text-decoration-none text-muted fw-medium small hover-underline">
-                    <i class="bi bi-arrow-left me-1"></i> Kembali ke detail pesanan
-                </a>
-            </div>
-
         </div>
     </div>
-</div>
 
-<style>
-    .icon-circle {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .hover-elevate {
-        transition: all 0.2s ease;
-    }
-    .hover-elevate:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(40, 167, 69, 0.2) !important;
-    }
-    .hover-underline:hover {
-        text-decoration: underline !important;
-        color: var(--primary-green) !important;
-    }
-    .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); }
-    .bg-success-subtle { background-color: rgba(40, 167, 69, 0.1); }
-    .ls-1 { letter-spacing: 1px; }
-    .x-small { font-size: 0.75rem; }
-    .payment-card {
-        border-radius: 16px;
-        transition: box-shadow 0.3s ease;
-    }
-    .ring-hover:hover {
-        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1) !important;
-    }
-    .btn-white {
-        background: white;
-    }
-    .btn-white:hover {
-        background: #f8f9fa;
-        color: var(--primary-green) !important;
-    }
-</style>
+    <form action="{{ route('checkout.process_payment') }}" method="POST">
+        @csrf
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <!-- Left: Payment Options -->
+            <div class="flex-grow lg:w-2/3 space-y-6">
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                    <h5 class="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="bi bi-wallet2 text-emerald-500"></i> Metode Pembayaran
+                    </h5>
+                    <div class="space-y-4" x-data="{ selected: 'automatic' }">
+                        <!-- Option 1: Automatic -->
+                        <label class="block cursor-pointer">
+                            <input type="radio" name="payment_type" value="automatic" class="sr-only" x-model="selected" checked>
+                            <div :class="selected === 'automatic' ? 'border-emerald-500 bg-emerald-50' : 'border-slate-200 hover:border-slate-300'"
+                                 class="border-2 rounded-2xl p-5 flex items-center gap-4 transition-all duration-200">
+                                <div :class="selected === 'automatic' ? 'bg-emerald-500 border-emerald-500' : 'bg-white border-slate-300'"
+                                     class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all">
+                                    <div :class="selected === 'automatic' ? 'opacity-100 scale-100' : 'opacity-0 scale-0'"
+                                         class="w-2.5 h-2.5 rounded-full bg-white transition-all"></div>
+                                </div>
+                                <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
+                                    <i class="bi bi-credit-card-2-front text-2xl text-emerald-500"></i>
+                                </div>
+                                <div>
+                                    <h6 class="font-bold text-slate-800 mb-1">Pembayaran Otomatis (Midtrans)</h6>
+                                    <p class="text-sm text-slate-500 m-0">VA BCA, Mandiri, BNI, BRI, GoPay, OVO, dll. Konfirmasi otomatis.</p>
+                                </div>
+                            </div>
+                        </label>
 
-@if($snapToken)
-<script type="text/javascript"
-    src="https://app.{{ config('services.midtrans.is_production') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
-    data-client-key="{{ config('services.midtrans.client_key') }}">
-</script>
+                        <!-- Option 2: Manual Transfer -->
+                        <label class="block cursor-pointer">
+                            <input type="radio" name="payment_type" value="manual_transfer" class="sr-only" x-model="selected">
+                            <div :class="selected === 'manual_transfer' ? 'border-emerald-500 bg-emerald-50' : 'border-slate-200 hover:border-slate-300'"
+                                 class="border-2 rounded-2xl p-5 flex items-center gap-4 transition-all duration-200">
+                                <div :class="selected === 'manual_transfer' ? 'bg-emerald-500 border-emerald-500' : 'bg-white border-slate-300'"
+                                     class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all">
+                                    <div :class="selected === 'manual_transfer' ? 'opacity-100 scale-100' : 'opacity-0 scale-0'"
+                                         class="w-2.5 h-2.5 rounded-full bg-white transition-all"></div>
+                                </div>
+                                <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center shrink-0">
+                                    <i class="bi bi-bank text-2xl text-amber-500"></i>
+                                </div>
+                                <div>
+                                    <h6 class="font-bold text-slate-800 mb-1">Transfer Bank Manual</h6>
+                                    <p class="text-sm text-slate-500 m-0">Transfer ke rekening Bank Jago kami. Perlu konfirmasi manual.</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
 
-<script type="text/javascript">
-    const payButton = document.getElementById('pay-button');
-    if (payButton) {
-        payButton.addEventListener('click', function () {
-            window.snap.pay('{{ $snapToken }}', {
-                onSuccess: function(result){
-                    console.log(result);
-                    window.location.href = "{{ route('checkout.success') }}?order_id={{ $order->order_number }}";
-                },
-                onPending: function(result){
-                    console.log(result);
-                },
-                onError: function(result){
-                    console.log(result);
-                    alert("Pembayaran gagal atau terjadi kesalahan.");
-                },
-                onClose: function(){
-                    console.log('customer closed the popup without finishing the payment');
-                }
-            });
-        });
-    }
-    
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            // Check if toast container exists, if not create one
-            let toast = document.createElement('div');
-            toast.className = 'position-fixed bottom-0 start-50 translate-middle-x p-3';
-            toast.style.zIndex = '9999';
-            toast.innerHTML = `
-                <div class="toast show align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <i class="bi bi-check-circle me-2"></i> Nomor rekening berhasil disalin!
+                    <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 mt-6 flex gap-3 items-start">
+                        <i class="bi bi-shield-check text-emerald-500 text-xl mt-0.5"></i>
+                        <div>
+                            <strong class="text-emerald-800 text-sm block mb-1">Pembayaran Aman</strong>
+                            <p class="text-xs text-slate-600 m-0">Semua transaksi di KrupuKruzzz dilindungi oleh enkripsi standar industri.</p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                 </div>
-            `;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }, function(err) {
-            console.error('Async: Could not copy text: ', err);
-            // Fallback
-            alert("Nomor rekening: " + text);
-        });
-    }
-</script>
-@endif
+            </div>
+
+            <!-- Right: Summary -->
+            <div class="lg:w-1/3 shrink-0">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm sticky top-24 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                        <h5 class="font-extrabold text-lg text-slate-900 m-0">Ringkasan Pembayaran</h5>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between text-sm mb-3">
+                            <span class="text-slate-500">Total Harga Barang</span>
+                            <span class="font-semibold text-slate-800">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm mb-6 pb-6 border-b border-slate-100">
+                            <span class="text-slate-500">Ongkos Kirim ({{ strtoupper($checkoutData['shipping_courier']) }})</span>
+                            <span class="font-semibold text-slate-800">Rp {{ number_format($shippingCost, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex justify-between items-end mb-8">
+                            <strong class="text-slate-900 font-bold">Total Tagihan</strong>
+                            <strong class="text-2xl text-emerald-500 font-extrabold leading-none">Rp {{ number_format($total, 0, ',', '.') }}</strong>
+                        </div>
+                        <button type="submit" class="w-full flex justify-center items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-full shadow-sm shadow-emerald-500/20 transition-all duration-200 active:scale-95">
+                            <i class="bi bi-lock-fill"></i> Bayar Sekarang
+                        </button>
+                    </div>
+                    <div class="px-6 pb-5 text-center">
+                        <a href="{{ route('checkout.index') }}" class="text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors">
+                            <i class="bi bi-arrow-left mr-1"></i> Kembali ke Pengiriman
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 @endsection

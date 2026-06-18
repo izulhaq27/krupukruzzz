@@ -20,11 +20,11 @@ return new class extends Migration
             $table->rememberToken();
             
             // Tambah kolom alamat pengiriman
-           $table->string('phone')->nullable();           // ✅ Tanpa after
-           $table->text('address')->nullable();           // ✅ Tanpa after
-           $table->string('city')->nullable();            // ✅ Tanpa after
-           $table->string('province')->nullable();        // ✅ Tanpa after
-           $table->string('postal_code')->nullable();
+            $table->string('phone')->nullable();          
+            $table->text('address')->nullable();           
+            $table->string('city')->nullable();            
+            $table->string('province')->nullable();      
+            $table->string('postal_code')->nullable();
             
             $table->timestamps();
         });

@@ -1,231 +1,146 @@
 @extends('layouts.app')
 
-@section('title', 'Checkout')
-
 @section('content')
-<div class="container py-4">
-    <h1 class="mb-4">🛒 Checkout</h1>
-    
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header + Progress -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <nav class="flex items-center space-x-2 text-sm text-slate-500 mb-2">
+                <a href="{{ route('cart.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">Keranjang</a>
+                <i class="bi bi-chevron-right text-[10px] text-slate-400"></i>
+                <span class="text-slate-800 font-bold">Pengiriman</span>
+            </nav>
+            <h2 class="font-extrabold text-2xl md:text-3xl text-slate-900 tracking-tight">Detail Pengiriman</h2>
         </div>
-    @endif
-    
-    @if(empty($cart))
-        <div class="alert alert-warning">
-            Keranjang Anda kosong! 
-            <a href="{{ route('products.index') }}">Belanja dulu</a>
+        <!-- Progress Steps -->
+        <div class="hidden md:flex items-center gap-3 text-sm">
+            <div class="flex items-center gap-2 font-bold text-emerald-500">
+                <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold">1</div>
+                Pengiriman
+            </div>
+            <div class="w-8 h-0.5 bg-slate-200"></div>
+            <div class="flex items-center gap-2 font-medium text-slate-400">
+                <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold">2</div>
+                Pembayaran
+            </div>
         </div>
-    @else
-        <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
-            @csrf
-            
-            <div class="row">
-                <div class="col-md-8">
-                    <!-- Cart Summary -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>Ringkasan Pesanan</h5>
+    </div>
+
+    <form action="{{ route('checkout.process') }}" method="POST">
+        @csrf
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <!-- Left Column: Form -->
+            <div class="flex-grow lg:w-2/3 space-y-6">
+                <!-- Alamat Pengiriman -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                    <h5 class="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="bi bi-geo-alt text-emerald-500"></i> Alamat Pengiriman
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label for="shipping_name" class="block text-sm font-semibold text-slate-700 mb-2">Nama Penerima <span class="text-red-500">*</span></label>
+                            <input type="text" id="shipping_name" name="shipping_name" value="{{ auth()->user()->name }}" required placeholder="Masukkan nama lengkap"
+                                   class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors">
                         </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Produk</th>
-                                        <th>Harga</th>
-                                        <th>Qty</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($cart as $id => $item)
-                                    <tr>
-                                        <td>{{ $item['name'] }}</td>
-                                        <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
-                                        <td>{{ $item['quantity'] }}</td>
-                                        <td>Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3">Total</th>
-                                        <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div>
+                            <label for="shipping_phone" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Telepon/WA <span class="text-red-500">*</span></label>
+                            <input type="text" id="shipping_phone" name="shipping_phone" value="{{ auth()->user()->phone }}" required placeholder="Contoh: 081234567890"
+                                   class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors">
                         </div>
-                    </div>
-                    
-                    <!-- Data Diri -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">👤 Data Diri</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Nama Lengkap *</label>
-                                        <input type="text" class="form-control" id="name" name="name" 
-                                               value="{{ old('name', auth()->user()->name ?? '') }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="phone" class="form-label">Nomor Telepon *</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" 
-                                               value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email *</label>
-                                        <input type="email" class="form-control" id="email" name="email" 
-                                               value="{{ old('email', auth()->user()->email ?? '') }}" required>
-                                        <small class="text-muted">Invoice dan info pengiriman akan dikirim ke email ini</small>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="alert alert-info mt-3 mb-0">
-                                <i class="fas fa-info-circle"></i>
-                                Data ini akan digunakan untuk pengiriman dan kontak.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Address Form -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>📍 Alamat Pengiriman</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Nama Penerima *</label>
-                                <input type="text" name="shipping_name" class="form-control" 
-                                       value="{{ old('shipping_name', auth()->user()->name ?? '') }}" required>
-                                <small class="text-muted">Nama penerima paket</small>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Alamat Lengkap *</label>
-                                <textarea name="address" class="form-control" rows="3" required>{{ old('address', auth()->user()->address ?? '') }}</textarea>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Kota *</label>
-                                        <input type="text" name="city" class="form-control" 
-                                               value="{{ old('city', auth()->user()->city ?? '') }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Provinsi *</label>
-                                        <input type="text" name="province" class="form-control" 
-                                               value="{{ old('province', auth()->user()->province ?? '') }}" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Kode Pos *</label>
-                                        <input type="text" name="postal_code" class="form-control" 
-                                               value="{{ old('postal_code', auth()->user()->postal_code ?? '') }}" required>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="md:col-span-2">
+                            <label for="shipping_address" class="block text-sm font-semibold text-slate-700 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
+                            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="Nama jalan, gedung, no. rumah, RT/RW, kelurahan, kecamatan"
+                                      class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors resize-none">{{ auth()->user()->address }}</textarea>
+                            <p class="mt-2 text-xs text-slate-400"><i class="bi bi-info-circle mr-1"></i>Pastikan alamat ditulis selengkap mungkin.</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-4">
-                    <!-- Order Summary -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>Total Pembayaran</h5>
+
+                <!-- Kurir -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                    <h5 class="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="bi bi-truck text-emerald-500"></i> Pilih Kurir Pengiriman
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Kurir <span class="text-red-500">*</span></label>
+                            <select name="shipping_courier" id="shipping_courier" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors">
+                                <option value="">Pilih Kurir</option>
+                                <option value="jne">JNE Express</option>
+                                <option value="jnt">J&T Express</option>
+                                <option value="sicepat">SiCepat Ekspres</option>
+                                <option value="pos">Pos Indonesia</option>
+                            </select>
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Ongkir:</span>
-                                <span>Gratis</span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between">
-                                <strong>Total:</strong>
-                                <strong class="text-primary">Rp {{ number_format($total, 0, ',', '.') }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Payment Info -->
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h6><i class="fas fa-shield-alt"></i> Pembayaran Aman</h6>
-                            <p class="small text-muted mb-0">
-                                Pembayaran diproses melalui Midtrans dengan enkripsi SSL.
-                            </p>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Layanan <span class="text-red-500">*</span></label>
+                            <select name="shipping_service" id="shipping_service" required class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors">
+                                <option value="">Pilih Layanan</option>
+                                <option value="reg">Reguler (2-3 hari)</option>
+                                <option value="yes">YES / Next Day (1 hari)</option>
+                                <option value="eco">Ekonomi (4-7 hari)</option>
+                            </select>
                         </div>
                     </div>
-                    
-                    <!-- Submit Button -->
-                    <div class="card">
-                        <div class="card-body">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-lock"></i> Lanjutkan ke Pembayaran
-                            </button>
-                            <p class="text-muted small mt-2 mb-0">
-                                Dengan mengklik tombol ini, Anda menyetujui 
-                                <a href="#">Syarat & Ketentuan</a> kami.
-                            </p>
+                </div>
+
+                <!-- Catatan -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
+                    <h5 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-pencil-square text-emerald-500"></i> Catatan Pesanan 
+                        <span class="text-sm font-normal text-slate-400">(Opsional)</span>
+                    </h5>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Contoh: Tolong packing yang aman, kerupuk mudah hancur."
+                              class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-colors resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Right Column: Summary -->
+            <div class="lg:w-1/3 shrink-0">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm sticky top-24 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                        <h5 class="font-extrabold text-lg text-slate-900 m-0">Ringkasan Pesanan</h5>
+                    </div>
+                    <div class="p-4 bg-slate-50/30 max-h-56 overflow-y-auto divide-y divide-slate-100">
+                        @foreach($cart as $id => $item)
+                            <div class="flex gap-3 py-3 {{ !$loop->last ? '' : '' }}">
+                                @if($item['image'])
+                                    <img src="{{ asset('storage/' . $item['image']) }}" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-100" alt="{{ $item['name'] }}">
+                                @else
+                                    <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center shrink-0 border border-slate-200">
+                                        <i class="bi bi-image text-slate-300"></i>
+                                    </div>
+                                @endif
+                                <div class="flex-grow min-w-0">
+                                    <h6 class="text-sm font-semibold text-slate-800 truncate mb-1">{{ $item['name'] }}</h6>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-slate-500">{{ $item['quantity'] }} x Rp{{ number_format($item['price'], 0, ',', '.') }}</span>
+                                        <span class="text-sm font-bold text-slate-800">Rp{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between text-sm mb-3">
+                            <span class="text-slate-500">Total Harga ({{ count($cart) }} barang)</span>
+                            <span class="font-semibold text-slate-800">Rp {{ number_format($total, 0, ',', '.') }}</span>
                         </div>
+                        <div class="flex justify-between text-sm mb-6 pb-6 border-b border-slate-100">
+                            <span class="text-slate-500">Ongkos Kirim</span>
+                            <span class="text-xs font-medium px-2 py-1 bg-amber-50 text-amber-600 rounded-md">Dihitung selanjutnya</span>
+                        </div>
+                        <div class="flex justify-between items-end mb-8">
+                            <strong class="text-slate-900 font-bold">Subtotal</strong>
+                            <strong class="text-2xl text-emerald-500 font-extrabold leading-none">Rp {{ number_format($total, 0, ',', '.') }}</strong>
+                        </div>
+                        <button type="submit" class="w-full flex justify-center items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-full shadow-sm shadow-emerald-500/20 transition-all duration-200 active:scale-95">
+                            Lanjut ke Pembayaran <i class="bi bi-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-        </form>
-    @endif
+        </div>
+    </form>
 </div>
-
-<style>
-    .form-label {
-        font-weight: 600;
-        color: #495057;
-    }
-    
-    .card {
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 1rem 1.25rem;
-    }
-    
-    .card-header h5 {
-        margin: 0;
-        color: #333;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        padding: 12px;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-</style>
 @endsection

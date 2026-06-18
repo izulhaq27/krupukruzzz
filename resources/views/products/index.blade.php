@@ -1,134 +1,182 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Hero Section (Static Visual Only) -->
-<div class="container-fluid px-lg-5 mb-4"> <!-- FULL WIDTH with Padding -->
-    <div class="rounded-4 p-4 p-lg-5 text-white position-relative overflow-hidden" 
-         style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); min-height: 280px; display: flex; align-items: center;"> 
+<!-- Hero Section -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+    <div class="rounded-3xl p-6 md:p-10 lg:p-12 text-white relative overflow-hidden flex items-center min-h-[260px]" 
+         style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 60%, #064E3B 100%);">
         
-        <!-- Background Pattern/Image (Optional) -->
-        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1; background-image: url('https://www.transparenttextures.com/patterns/food.png');"></div>
-
-        <div class="row align-items-center position-relative z-1 w-100">
-            <div class="col-lg-7 col-12 text-start">
-                <!-- Responsive Typography: Display-4 for desktop, smaller for mobile -->
-                <h1 class="fw-bold display-3 d-none d-lg-block mb-3">Selamat Datang di KrupuKruzzz</h1>
-                <h1 class="fw-bold fs-1 d-lg-none mb-3">Selamat Datang di KrupuKruzzz</h1>
+        <!-- Decorative Elements -->
+        <div class="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full"></div>
+        <div class="absolute -bottom-16 right-24 w-40 h-40 bg-white/5 rounded-full"></div>
+        <div class="absolute top-8 right-48 w-16 h-16 bg-white/10 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] rotate-45"></div>
+        <div class="absolute bottom-5 -left-5 w-24 h-24 border-2 border-dashed border-white/10 rounded-full"></div>
+        
+        <!-- Dot Pattern -->
+        <div class="hidden lg:block absolute top-0 right-0 bottom-0 w-2/5 opacity-5" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center relative z-10 w-full gap-8">
+            <div class="col-span-1 lg:col-span-7 text-left">
+                <span class="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-1.5 rounded-full mb-4 text-xs font-semibold backdrop-blur-sm border border-white/10">
+                    <i class="bi bi-stars"></i> Premium Snack Boutique
+                </span>
+                <h1 class="hidden lg:block font-extrabold mb-4 text-4xl lg:text-5xl leading-tight tracking-tight">Selamat Datang di<br>KrupuKruzzz</h1>
+                <h1 class="lg:hidden font-extrabold mb-3 text-3xl leading-snug">Selamat Datang di KrupuKruzzz</h1>
                 
-                <p class="lead mb-4 opacity-90 fs-6 fs-lg-5">Solusi camilan kerupuk berkualitas, gurih, dan harga bersahabat.</p>
+                <p class="mb-6 text-white/90 text-sm md:text-base max-w-md">Solusi camilan kerupuk berkualitas, gurih, renyah, dan harga bersahabat.</p>
                 
-                <a href="#produk-list" class="btn btn-white-premium text-success fw-bold px-4 py-2 px-md-5 py-md-3 rounded-pill shadow-sm transition-hover">
-                    Belanja Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                <a href="#produk-list" class="inline-flex items-center gap-2 bg-white text-emerald-600 hover:bg-emerald-50 hover:shadow-lg px-6 py-3 rounded-full font-bold text-sm transition-all duration-200 active:scale-95">
+                    Belanja Sekarang <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
             
-            <!-- Abstract Elements / Bintik-bintik on Desktop Only -->
-            <div class="col-lg-5 d-none d-lg-block text-end position-relative">
-                 <!-- Element 1: Big Dotted Circle -->
-                 <div class="position-absolute" 
-                      style="top: -60px; right: 20px; width: 180px; height: 180px; border: 4px dotted rgba(255,255,255,0.3); border-radius: 50%;"></div>
-                 
-                 <!-- Element 2: Small Dashed Circle -->
-                 <div class="position-absolute" 
-                      style="bottom: -40px; right: 100px; width: 120px; height: 120px; border: 3px dashed rgba(255,255,255,0.2); border-radius: 50%;"></div>
-                 
-                 <!-- Element 3: Abstract Shape (Kerupuk-like) -->
-                 <div class="position-absolute" 
-                      style="top: 20px; right: 80px; width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(45deg);"></div>
+            <!-- Abstract Elements - Desktop -->
+            <div class="hidden lg:block col-span-5 text-right relative h-full min-h-[200px]">
+                <div class="absolute -top-12 right-4 w-44 h-44 border-4 border-dotted border-white/20 rounded-full"></div>
+                <div class="absolute -bottom-8 right-20 w-28 h-28 border-2 border-dashed border-white/10 rounded-full"></div>
+                <div class="absolute top-4 right-16 w-12 h-12 bg-white/10 rounded-[30%_70%_70%_30%/30%_30%_70%_70%] rotate-45"></div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Kategori Populer (Horizontal Chips Marquee) -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+    <div class="relative overflow-hidden">
+        <div class="flex gap-3 py-1 w-max animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]">
+            @php
+                $categories = \App\Models\Category::withCount('products')->get();
+            @endphp
+            
+            {{-- Set 1 --}}
+            <a href="{{ route('products.index') }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs whitespace-nowrap bg-emerald-500 text-white border border-emerald-500 transition-colors">
+                <i class="bi bi-stars"></i> Semua Produk
+            </a>
+            @foreach($categories as $cat)
+            <a href="{{ route('categories.show', $cat->slug) }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-xs whitespace-nowrap bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition-colors">
+                <i class="bi bi-tag"></i> {{ $cat->name }}
+            </a>
+            @endforeach
+
+            {{-- Set 2 --}}
+            <a href="{{ route('products.index') }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs whitespace-nowrap bg-emerald-500 text-white border border-emerald-500 transition-colors" aria-hidden="true">
+                <i class="bi bi-stars"></i> Semua Produk
+            </a>
+            @foreach($categories as $cat)
+            <a href="{{ route('categories.show', $cat->slug) }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-xs whitespace-nowrap bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition-colors" aria-hidden="true">
+                <i class="bi bi-tag"></i> {{ $cat->name }}
+            </a>
+            @endforeach
+
+            {{-- Set 3 --}}
+            <a href="{{ route('products.index') }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs whitespace-nowrap bg-emerald-500 text-white border border-emerald-500 transition-colors" aria-hidden="true">
+                <i class="bi bi-stars"></i> Semua Produk
+            </a>
+            @foreach($categories as $cat)
+            <a href="{{ route('categories.show', $cat->slug) }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-xs whitespace-nowrap bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition-colors" aria-hidden="true">
+                <i class="bi bi-tag"></i> {{ $cat->name }}
+            </a>
+            @endforeach
+
+            {{-- Set 4 --}}
+            <a href="{{ route('products.index') }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs whitespace-nowrap bg-emerald-500 text-white border border-emerald-500 transition-colors" aria-hidden="true">
+                <i class="bi bi-stars"></i> Semua Produk
+            </a>
+            @foreach($categories as $cat)
+            <a href="{{ route('categories.show', $cat->slug) }}" class="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-xs whitespace-nowrap bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition-colors" aria-hidden="true">
+                <i class="bi bi-tag"></i> {{ $cat->name }}
+            </a>
+            @endforeach
+        </div>
+        
+        {{-- Gradient Fades --}}
+        <div class="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-10"></div>
+        <div class="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-10"></div>
+    </div>
+</div>
+
 <style>
-    .transition-hover { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; }
-    @media (hover: hover) {
-        .transition-hover:hover { transform: translateY(-3px) !important; }
+    @keyframes marquee {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-25%); }
     }
-    .transition-hover:active { transform: scale(0.92) !important; }
 </style>
 
-<div class="container-fluid px-lg-5 my-4" id="produk-list"> <!-- FULL WIDTH -->
-
+<!-- Product Grid -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6" id="produk-list">
     <!-- Section Header -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold text-dark m-0">
-            <span style="border-left: 4px solid var(--primary-green); padding-left: 10px;">Rekomendasi Produk</span>
+    <div class="flex justify-between items-center mb-4 px-1">
+        <h4 class="font-bold m-0 flex items-center gap-2 text-slate-900 text-xl tracking-tight">
+            <span class="w-1 h-6 bg-emerald-500 rounded-sm inline-block"></span>
+            Rekomendasi Produk
         </h4>
     </div>
 
-    <div class="row g-2 g-md-3 justify-content-center"> <!-- Smaller Gap for Mobile, Centered Items -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
         @foreach ($products as $product)
-        <!-- GRID ADJUSTMENT: col-xl-3 (4 items/row desktop), col-lg-3 (4 items), col-md-4 (3 items), col-6 (2 items) -->
-        <!-- Animation Wrapper -->
-        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-6 product-item" style="animation-delay: {{ $loop->iteration * 0.1 }}s;"> 
-            <div class="card product-card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative group-hover-trigger">
-                
-                <!-- Image Wrapper -->
-                <div class="position-relative overflow-hidden">
-                    <a href="{{ route('products.show', $product->slug) }}" class="d-block">
-                        <div class="skeleton-loader ratio ratio-1x1 bg-light">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}"
-                                     class="w-100 h-100 object-fit-cover transition-transform duration-500"
-                                     alt="{{ $product->name }}"
-                                     loading="lazy"
-                                     decoding="async">
-                            @else
-                                <div class="w-100 h-100 d-flex justify-content-center align-items-center text-muted">
-                                    <i class="bi bi-image fs-1 opacity-25"></i>
-                                </div>
-                            @endif
-                        </div>
+        <div class="opacity-0 animate-[fadeInUp_0.5s_cubic-bezier(0.4,0,0.2,1)_forwards]" style="animation-delay: {{ $loop->iteration * 0.08 }}s;">
+            <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden relative flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-100 active:scale-98 group">
+                <!-- Image -->
+                <div class="relative overflow-hidden aspect-square bg-slate-50">
+                    <a href="{{ route('products.show', $product->slug) }}" class="block h-full">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}"
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                 alt="{{ $product->name }}"
+                                 loading="lazy">
+                        @else
+                            <div class="w-full h-full flex justify-center items-center text-slate-300">
+                                <i class="bi bi-image text-4xl"></i>
+                            </div>
+                        @endif
                     </a>
                     
-                    <!-- Floating Badge (Top Left) -->
+                    <!-- Category Badge -->
                     @if($product->categories->isNotEmpty())
-                        <div class="position-absolute top-0 start-0 p-2 z-2">
-                            <span class="badge bg-white text-success shadow-sm rounded-pill px-2 py-1 fw-medium" style="font-size: 0.65rem;">
+                        <div class="absolute top-2 left-2 z-10">
+                            <span class="bg-white/90 backdrop-blur-sm text-emerald-600 shadow-sm px-2.5 py-1 rounded-full text-[10px] font-semibold border border-white/20">
                                 {{ $product->categories->first()->name }}
                             </span>
                         </div>
                     @endif
                 </div>
 
-                <!-- CARD BODY -->
-                <div class="card-body p-3 d-flex flex-column">
-                    
-                    <!-- Product Name -->
-                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none mb-1">
-                        <h6 class="card-title fw-bold text-dark mb-0 text-truncate" style="font-size: 0.95rem; letter-spacing: -0.02em;">
+                <!-- Card Body -->
+                <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                    <a href="{{ route('products.show', $product->slug) }}" class="mb-1 block">
+                        <h6 class="font-bold text-sm text-slate-800 tracking-tight line-clamp-2 leading-snug group-hover:text-emerald-600 transition-colors">
                             {{ $product->name }}
                         </h6>
                     </a>
 
-                    <!-- Price Section -->
                     <div class="mb-3">
-                        <span class="fw-bolder text-success" style="font-size: 1.1rem;">
+                        <span class="font-bold text-emerald-500 text-lg">
                             Rp{{ number_format($product->price, 0, ',', '.') }}
                         </span>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="mt-auto d-flex gap-2 align-items-center">
-                         <!-- View Detail (Icon Only - Secondary) -->
+                    <div class="mt-auto flex gap-2 items-center">
+                        <!-- Detail Button -->
                         <a href="{{ route('products.show', $product->slug) }}" 
-                           class="btn btn-outline-secondary rounded-pill d-flex align-items-center justify-content-center border-0 bg-light" 
-                           style="width: 38px; height: 38px; flex-shrink: 0;"
+                           class="flex items-center justify-center w-9 h-9 shrink-0 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 hover:text-slate-700 transition-colors"
                            title="Detail Produk">
-                            <i class="bi bi-arrow-right fs-5"></i>
+                            <i class="bi bi-arrow-right"></i>
                         </a>
 
-                        <!-- Buy Button (Primary - Pill Shaped) -->
+                        <!-- Buy Button -->
                         @if($product->stock > 0)
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="flex-grow-1">
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="grow">
                                 @csrf
                                 <input type="hidden" name="redirect_to" value="cart">
-                                <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold d-flex align-items-center justify-content-center shadow-sm py-2 px-1" title="Beli Sekarang">
-                                    <i class="bi bi-bag-plus-fill me-1 fs-6 d-none d-md-inline"></i> 
-                                    <span class="text-nowrap" style="font-size: clamp(0.7rem, 2vw, 0.85rem);">Beli Sekarang</span>
+                                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center gap-1.5 h-9 rounded-lg shadow-sm shadow-emerald-500/20 font-bold text-[11px] sm:text-xs transition-colors active:scale-95" title="Beli Sekarang">
+                                    <i class="bi bi-bag-plus hidden sm:inline text-sm"></i>
+                                    <span>Beli</span>
                                 </button>
                             </form>
+                        @else
+                            <button disabled class="grow bg-slate-200 text-slate-500 h-9 rounded-lg text-[11px] sm:text-xs font-semibold cursor-not-allowed">
+                                Habis
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -138,99 +186,34 @@
     </div>
 
     @if($products->isEmpty())
-        <div class="text-center py-5">
-            <div class="opacity-25 mb-3">
-                <i class="bi bi-search display-1 text-secondary"></i>
+        <div class="text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 mt-6">
+            <div class="text-slate-200 mb-4">
+                <i class="bi bi-search text-6xl"></i>
             </div>
-            <h5 class="text-muted">Produk belum tersedia</h5>
+            <h5 class="text-slate-500 font-semibold text-lg">Produk belum tersedia</h5>
+            <p class="text-slate-400 text-sm mt-1">Nantikan produk terbaru dari kami!</p>
         </div>
     @endif
+</div>
 
+<!-- Promo Banner -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-10">
+    <div class="rounded-3xl p-8 md:p-12 text-center text-white shadow-xl shadow-amber-500/10" style="background: linear-gradient(135deg, var(--color-secondary), #EA580C);">
+        <div class="mb-4 text-white/90">
+            <i class="bi bi-gift-fill text-5xl"></i>
+        </div>
+        <h3 class="font-extrabold text-2xl mb-3 tracking-tight">Promo Member Baru!</h3>
+        <p class="text-white/90 text-sm max-w-md mx-auto mb-6 leading-relaxed">Dapatkan diskon 15% untuk pembelian pertama Anda dengan mendaftar akun sekarang.</p>
+        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 bg-white text-amber-600 hover:bg-amber-50 hover:shadow-lg px-6 py-3 rounded-full font-bold text-sm transition-all duration-200 active:scale-95">
+            <i class="bi bi-person-plus"></i> Daftar Sekarang
+        </a>
+    </div>
 </div>
 
 <style>
-    /* Skeleton Animation */
-    @keyframes skeleton-loading {
-        0% { background-color: rgba(240, 240, 240, 0.5); }
-        100% { background-color: rgba(224, 224, 224, 0.5); }
-    }
-    
-    /* Entrance Animation */
     @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .product-item {
-        opacity: 0; /* Hidden initially */
-        animation: fadeInUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    }
-    .skeleton-loader {
-        animation: skeleton-loading 1s linear infinite alternate;
-    }
-
-    /* Hero Hover Effect - Desktop Only */
-    @media (hover: hover) {
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
-        }
-        
-        .product-card:hover img {
-            transform: scale(1.05);
-        }
-        .btn-light:hover {
-            background-color: #f8f9fa !important;
-            color: #2e7d32 !important;
-        }
-    }
-
-    /* Base Card Style for smooth transitions */
-    .product-card {
-        transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border: 1px solid rgba(0,0,0,0.04) !important; /* Extremely subtle border */
-    }
-
-    .object-fit-cover {
-        object-fit: cover;
-    }
-    
-    .shadow-sm-hover:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2) !important;
-    }
-
-    /* Mobile Interaction - NO STICKY HOVER */
-    @media (max-width: 576px) {
-        .product-card {
-            border-radius: 12px !important;
-        }
-        .card-title {
-            font-size: 0.9rem !important; 
-        }
-        /* Tap effect */
-        .product-card:active {
-            transform: scale(0.98);
-        }
-    }
-
-    /* Desktop Hover Effects */
-    @media (hover: hover) {
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
-            border-color: transparent !important;
-        }
-        
-        .product-card:hover img {
-            transform: scale(1.08); /* Slight zoom */
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 @endsection

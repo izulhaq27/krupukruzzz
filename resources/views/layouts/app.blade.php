@@ -6,673 +6,303 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'KrupuKruzzz') }}</title>
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
-    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}" type="image/png">
     
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
+    <!-- Bootstrap Icons (still useful for icons) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS (via Vite) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Alpine.js for interactions (dropdowns, alerts) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
-        :root {
-            --primary-green: #28a745; 
-            --primary-green-dark: #1e7e34;
-            --light-bg: #f8f9fa;
-            --text-dark: #212529;
-        }
+        [x-cloak] { display: none !important; }
         
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        /*Navbar*/
-        .navbar {
-            background: white !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding-top: 0.8rem;
-            padding-bottom: 0.8rem;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-green) !important;
-            letter-spacing: -0.5px;
-        }
-        
-        .navbar-nav .nav-link {
-            color: #333 !important;
-            font-weight: 500;
-            padding: 0.5rem 1rem !important;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
-            color: var(--primary-green) !important;
-        }
-        
-        @media (hover: hover) {
-            .navbar-nav .nav-link:hover {
-                background: rgba(56, 142, 60, 0.05);
-                border-radius: 6px;
-                color: var(--primary-green) !important;
-            }
-            .btn:hover {
-                filter: brightness(95%);
-            }
-            .btn-success:hover {
-                background: var(--primary-green-dark);
-                border-color: var(--primary-green-dark);
-            }
-            .product-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 25px rgba(40, 167, 69, 0.15);
-            }
-        }
-
-        /* Mobile Reset: Kill ANY hover/focus background change */
-        @media (hover: none) {
-            .btn:hover, .btn:focus {
-                background-color: inherit !important;
-                color: inherit !important;
-                filter: none !important;
-            }
-            .btn-light:hover, .btn-light:focus, .btn-white-premium:hover, .btn-white-premium:focus {
-                background-color: #ffffff !important;
-                color: var(--primary-green) !important;
-            }
-            .btn-success:hover, .btn-success:focus {
-                background-color: var(--primary-green) !important;
-                color: #ffffff !important;
-            }
-        }
-        
-        /* Button Interaction Feedback */
-        .btn {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            position: relative;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            outline: none !important;
-            box-shadow: none !important;
-            white-space: nowrap !important; /* Forces single line */
-            text-overflow: ellipsis; /* Adds ... if really too long */
-            max-width: 100%; /* Prevents overflowing parent */
-        }
-
-        /* Prevent Bootstrap Sticky States */
-        .btn:focus, .btn:active, .btn.active, .btn:focus-visible {
-            outline: none !important;
-            box-shadow: none !important;
-            background-color: inherit; /* Fallback */
-        }
-
-        /* Fix for btn-light and custom buttons staying grey on mobile */
-        .btn-light:hover, .btn-light:focus, .btn-light:active,
-        .btn-white-premium:hover, .btn-white-premium:focus, .btn-white-premium:active {
-            background-color: #ffffff !important;
-            color: var(--primary-green) !important;
-        }
-
-        .btn-white-premium {
-            background-color: #ffffff !important;
-            color: var(--primary-green) !important;
-            border: none !important;
-            font-weight: 700 !important;
-        }
-
-        .btn:active {
-            transform: scale(0.92) !important;
-            opacity: 0.85;
-            filter: brightness(95%);
-        }
-
-        /* Prevent tap blue overlay on specific elements */
-        .btn, .product-card, .nav-link {
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        .cart-badge {
-            background: #ffc107 !important;
-            color: #333;
-            font-weight: 600;
-        }
-        
-        /*Button*/
-        .btn-success {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            font-weight: 600;
-        }
-        
-        /*Product Card*/
-        .product-card {
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        
-        .product-card .price {
-            color: var(--primary-green);
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
-        
-        /*Footer*/
-        footer {
-            background: #1a1d20;
-            color: white;
-            padding: 2rem 0;
-            margin-top: auto;
-            width: 100%;
-        }
-        
-        .footer-alamat {
-            color: #b0b7c3;
-            font-size: 0.9rem;
-        }
-        
-        /*Footer Bootom*/
-        html, body {
-            height: 100%;
-        }
-        
-        #app {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        main {
-            flex: 1 0 auto;
-        }
-        
-        footer {
-            flex-shrink: 0;
-        }
-        
-        /*New Style*/
-        .orders-badge {
-            background: #ffc107 !important;
-            color: #333;
-            font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.4rem;
-            margin-left: 3px;
-        }
-        
-        .dropdown-item.active, .dropdown-item:active {
-            background-color: var(--primary-green);
-        }
-
-        /* Preloader Styles */
+        /* Preloader */
         #preloader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.4s ease, visibility 0.4s;
         }
-        .loader-logo {
-            width: 80px;
-            animation: pulse 1.5s infinite;
-            margin-bottom: 20px;
-        }
-        .loader-bar {
-            width: 150px;
-            height: 4px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
+        .preloader-hidden { opacity: 0; visibility: hidden; }
+        .loader-logo { width: 72px; animation: pulse 1.5s infinite; margin-bottom: 20px; }
+        .loader-bar { width: 120px; height: 4px; background: #E5E7EB; border-radius: 999px; position: relative; overflow: hidden; }
         .loader-bar::after {
-            content: '';
-            position: absolute;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-green);
-            animation: loading 1.5s infinite;
+            content: ''; position: absolute; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, #10B981, #34D399);
+            animation: loading 1.2s infinite;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        @keyframes loading {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        .preloader-hidden {
-            opacity: 0 !important;
-            visibility: hidden !important;
-        }
-
-        .btn-loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        .btn-loading .bi {
-            display: none !important;
-        }
-        .btn-loading::after {
-            content: "";
-            width: 1rem;
-            height: 1rem;
-            border: 2px solid currentColor;
-            border-right-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            vertical-align: text-bottom;
-            animation: spinner-border .75s linear infinite;
-            margin-left: 5px;
-        }
-        /* Mobile Bottom Nav Styles */
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background: #fff;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-        }
-
-        .bottom-nav-item {
-            display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-    text-decoration: none;
-    flex: 1;
-    height: 100%;
-    position: relative; /* Context for pseudo element */
-    z-index: 1;
-}
-
-/* Icon style */
-.bottom-nav-item i {
-    font-size: 1.4rem;
-    z-index: 3;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-/* Background shape for active state */
-.bottom-nav-item::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 45px;
-    height: 45px;
-    background-color: var(--primary-green);
-    border-radius: 50%; /* Circle shape */
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
-    z-index: 2;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0;
-}
-
-.bottom-nav-item.active::before {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-}
-
-.bottom-nav-item.active {
-    color: white !important;
-}
-
-.bottom-nav-item.active i {
-    transform: translateY(-2px);
-}
-        /* Floating Center Button & Curve */
-        .nav-center-wrapper {
-            position: relative;
-            width: 80px;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .center-fab {
-            position: absolute;
-            top: -30px;
-            width: 60px;
-            height: 60px;
-            background: var(--primary-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            /* Stronger glowing shadow as requested */
-            box-shadow: 0 0 20px rgba(40, 167, 69, 0.6), 0 5px 15px rgba(0,0,0,0.2);
-            border: 5px solid #f8f9fa; 
-            transition: transform 0.2s;
-        }
-        
-        .center-fab:active {
-            transform: scale(0.95);
-        }
-
-        .center-fab i {
-            font-size: 1.5rem;
-        }
-
-        /* SVG Curve Background */
-        .curve-svg {
-            position: absolute;
-            top: -1px; /* Adjust slightly to cover gap */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 40px;
-            fill: #fff;
-            pointer-events: none;
-        }
-
-        /* Media Queries for Responsive Nav */
-        @media (max-width: 991.98px) {
-            .navbar {
-                display: none !important; /* Hide Top Nav */
-            }
-            .bottom-nav {
-                display: flex !important; /* Show Bottom Nav */
-            }
-            #app {
-                padding-bottom: 80px; /* Space for bottom nav */
-            }
-            /* Adjust center FAB border to match curved background checks */
-            .center-fab {
-                 border: 4px solid var(--light-bg); 
-            }
-        }
-        
-        @media (min-width: 992px) {
-             .bottom-nav {
-                display: none !important;
-            }
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.08); opacity: 1; } }
+        @keyframes loading { 0% { left: -100%; } 100% { left: 100%; } }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+    
     <div id="preloader">
         <img src="{{ asset('images/logo.png') }}" class="loader-logo" alt="Loading...">
         <div class="loader-bar"></div>
-        <p class="mt-3 text-muted small fw-medium">Menyiapkan kelezatan...</p>
+        <p class="mt-4 text-sm font-medium text-slate-400">Menyiapkan kelezatan...</p>
     </div>
 
-    <div id="app">
-        {{-- NAVBAR --}}
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid px-lg-5"> <!-- Full Width Navbar -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ asset('images/logo.png') }}" 
-                         alt="KrupuKruzz Logo" 
-                         height="35" 
-                         class="me-2">
+    <div id="app" class="flex-grow flex flex-col pb-20 lg:pb-0">
+        
+        {{-- NAVBAR — Desktop --}}
+        <nav x-data="{ scrolled: false }" 
+             @scroll.window="scrolled = (window.pageYOffset > 10)"
+             :class="scrolled ? 'shadow-md shadow-slate-200/50' : 'border-b border-slate-100'"
+             class="hidden lg:block sticky top-0 z-50 bg-white/80 backdrop-blur-xl transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="{{ url('/') }}" class="flex items-center gap-2 text-emerald-500 font-extrabold text-xl tracking-tight hover:text-emerald-600 transition">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9">
                     KrupuKruzzz
                 </a>
                 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse" id="navbarMain">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('products.index') }}">
-                                <i class="bi bi-shop"></i> Produk
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">
-                        <i class="bi bi-tags"></i> Kategori
+                <!-- Links -->
+                <div class="flex items-center gap-1">
+                    <a href="{{ route('products.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition {{ Request::routeIs('products.*') && !Request::routeIs('products.show') ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:text-emerald-500 hover:bg-slate-50' }}">
+                        <i class="bi bi-shop text-lg"></i> Produk
+                    </a>
+                    
+                    <a href="{{ route('categories.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition {{ Request::routeIs('categories.*') ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:text-emerald-500 hover:bg-slate-50' }}">
+                        <i class="bi bi-tags text-lg"></i> Kategori
+                    </a>
+                    
+                    <a href="{{ route('cart.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition {{ Request::routeIs('cart.*') ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:text-emerald-500 hover:bg-slate-50' }}">
+                        <i class="bi bi-cart3 text-lg"></i> Keranjang
+                        @if(session('cart') && count(session('cart')) > 0)
+                            <span class="bg-amber-500 text-amber-950 text-xs font-bold px-2 py-0.5 rounded-full">{{ count(session('cart')) }}</span>
+                        @endif
+                    </a>
+                    
+                    @auth
+                    <a href="{{ route('orders.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition {{ Request::routeIs('orders.*') ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:text-emerald-500 hover:bg-slate-50' }}">
+                        <i class="bi bi-box-seam text-lg"></i> Pesanan Saya
+                        @php
+                            $pendingCount = auth()->user()->pendingOrders()->count();
+                        @endphp
+                        @if($pendingCount > 0)
+                            <span class="bg-amber-500 text-amber-950 text-xs font-bold px-2 py-0.5 rounded-full">{{ $pendingCount }}</span>
+                        @endif
+                    </a>
+                    @endauth
+                    
+                    <a href="{{ route('tracking.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition {{ Request::routeIs('tracking.*') ? 'bg-emerald-50 text-emerald-600' : 'text-slate-600 hover:text-emerald-500 hover:bg-slate-50' }}">
+                        <i class="bi bi-truck text-lg"></i> Lacak Resi
+                    </a>
+                </div>
+
+                <!-- Auth -->
+                <div class="flex items-center border-l border-slate-200 pl-4 ml-2">
+                    @guest
+                        <a href="{{ route('login') }}" class="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-emerald-500 font-medium transition">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
                         </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('cart.index') }}">
-                                <i class="bi bi-cart3"></i> Keranjang
-                                @if(session('cart') && count(session('cart')) > 0)
-                                    <span class="badge cart-badge">{{ count(session('cart')) }}</span>
-                                @endif
-                            </a>
-                        </li>
-                        
-                        {{--Orders Show --}}
-                        @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('orders.index') }}">
-                                <i class="bi bi-box-seam"></i> Pesanan Saya
-                                @php
-                                    $pendingCount = 0;
-                                    if (auth()->check()) {
-                                        $pendingCount = auth()->user()->pendingOrders()->count();
-                                    }
-                                @endphp
-                                @if($pendingCount > 0)
-                                    <span class="badge orders-badge">{{ $pendingCount }}</span>
-                                @endif
-                            </a>
-                        </li>
-                        @endauth
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('tracking.index') }}">
-                                <i class="bi bi-truck"></i> Lacak Resi
-                            </a>
-                        </li>
-                        
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">
-                                    <i class="bi bi-box-arrow-in-right"></i> Login
+                    @else
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-slate-700 hover:bg-slate-100 transition focus:outline-none">
+                                <i class="bi bi-person-circle text-lg text-emerald-500"></i>
+                                {{ Auth::user()->name }}
+                                <i class="bi bi-chevron-down text-xs ml-1 text-slate-400" :class="{'rotate-180': open}"></i>
+                            </button>
+                            
+                            <!-- Dropdown -->
+                            <div x-show="open" x-transition.opacity.duration.200ms x-cloak 
+                                 class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
+                                
+                                <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition">
+                                    <span class="flex items-center gap-2"><i class="bi bi-box-seam"></i> Pesanan Saya</span>
+                                    @if(auth()->user()->pendingOrders()->count() > 0)
+                                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">{{ auth()->user()->pendingOrders()->count() }}</span>
+                                    @endif
                                 </a>
-                            </li>
-                        @else
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="bi bi-person"></i> {{ Auth::user()->name }}
+                                
+                                @if(Route::has('dashboard'))
+                                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition">
+                                    <i class="bi bi-speedometer"></i> Dashboard
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    {{-- Order Show dropdown --}}
-                                    <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                        <i class="bi bi-box-seam me-2"></i> Pesanan Saya
-                                        @if(auth()->user()->pendingOrders()->count() > 0)
-                                            <span class="badge bg-warning float-end mt-1">{{ auth()->user()->pendingOrders()->count() }}</span>
-                                        @endif
-                                    </a>
-                                    
-                                    @if(Route::has('dashboard'))
-                                        <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                            <i class="bi bi-speedometer me-2"></i> Dashboard
-                                        </a>
-                                    @else
-                                        <a class="dropdown-item" href="{{ url('/') }}">
-                                            <i class="bi bi-house me-2"></i> Home
-                                        </a>
-                                    @endif
-                                    
-                                    @if(Route::has('profile.edit'))
-                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                            <i class="bi bi-person-circle me-2"></i> Profil Saya
-                                        </a>
-                                    @endif
-                                    
-                                    <div class="dropdown-divider"></div>
-                                    
-                                    @if(auth()->user()->is_admin)
-                                        <a class="dropdown-item" href="{{ route('admin.orders.index') }}">
-                                            <i class="bi bi-speedometer2 me-2"></i> Admin Dashboard
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                    @endif
-                                    
-                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                                @endif
+                                
+                                <div class="h-px bg-slate-100 my-1"></div>
+                                
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                    @csrf
+                                </form>
+                            </div>
+                        </div>
+                    @endguest
                 </div>
             </div>
         </nav>
-        
-        {{-- MAIN CONTENT --}}
-        <main class="py-4">
+
+        {{-- ALERTS --}}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full pt-6 space-y-3">
             @if(session('success'))
-                <div class="container-fluid px-lg-5">
-                    <div class="alert alert-success alert-dismissible fade show">
-                        <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl flex justify-between items-start shadow-sm">
+                    <div class="flex gap-3 text-emerald-800">
+                        <i class="bi bi-check-circle-fill text-emerald-500 mt-0.5"></i>
+                        <p class="text-sm font-medium">{{ session('success') }}</p>
                     </div>
+                    <button @click="show = false" class="text-emerald-400 hover:text-emerald-600"><i class="bi bi-x-lg"></i></button>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="container-fluid px-lg-5">
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="bi bi-exclamation-triangle-fill"></i> {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl flex justify-between items-start shadow-sm">
+                    <div class="flex gap-3 text-red-800">
+                        <i class="bi bi-exclamation-triangle-fill text-red-500 mt-0.5"></i>
+                        <p class="text-sm font-medium">{{ session('error') }}</p>
                     </div>
-                </div>
-            @endif
-
-            @if(session('info'))
-                <div class="container-fluid px-lg-5">
-                    <div class="alert alert-info alert-dismissible fade show">
-                        <i class="bi bi-info-circle-fill"></i> {{ session('info') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
+                    <button @click="show = false" class="text-red-400 hover:text-red-600"><i class="bi bi-x-lg"></i></button>
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="container-fluid px-lg-5">
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="bi bi-exclamation-triangle-fill"></i> 
-                        <strong>Terdapat kesalahan:</strong>
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div x-data="{ show: true }" x-show="show" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl flex justify-between items-start shadow-sm">
+                    <div class="flex gap-3 text-red-800">
+                        <i class="bi bi-exclamation-triangle-fill text-red-500 mt-0.5"></i>
+                        <div>
+                            <p class="text-sm font-bold mb-1">Terdapat kesalahan:</p>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
+                    <button @click="show = false" class="text-red-400 hover:text-red-600"><i class="bi bi-x-lg"></i></button>
                 </div>
             @endif
+        </div>
 
+        {{-- MAIN CONTENT --}}
+        <main class="flex-grow py-6">
             @yield('content')
         </main>
         
-        {{-- FOOTER --}}
-        <footer>
-            <div class="container-fluid px-lg-5">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="mb-3">KrupuKruzzz</h5>
-                        <p class="footer-alamat">
-                            <i class="bi bi-geo-alt"></i> Dusun Garas RT 001 RW 001 Desa Palembon<br>
-                            Kecamatan Kanor, Kabupaten Bojonegoro, Jawa Timur, Indonesia
+        {{-- FOOTER — Desktop Only --}}
+        <footer class="hidden lg:block bg-slate-900 text-slate-300 mt-auto">
+            <div class="max-w-7xl mx-auto px-6 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+                    <!-- Brand -->
+                    <div class="md:col-span-5">
+                        <h5 class="flex items-center gap-3 text-white font-bold text-lg mb-4">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 brightness-0 invert opacity-90">
+                            KrupuKruzzz
+                        </h5>
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+                            <i class="bi bi-geo-alt mr-1"></i> Dusun Garas RT 001 RW 001 Desa Palembon<br>
+                            Kecamatan Kanor, Kabupaten Bojonegoro,<br>
+                            Jawa Timur, Indonesia
                         </p>
                     </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="mb-2">
-                            <i class="bi bi-telephone"></i> 0816-1550-0168<br>
-                            <i class="bi bi-envelope"></i> krupukruzzz@gmail.com
-                        </p>
-                        <p class="mb-0 small">
-                            &copy; {{ date('Y') }} KrupuKruzz. Kerupuk Berkualitas Harga Terjangkau
-                        </p>
+                    
+                    <!-- Links -->
+                    <div class="md:col-span-3">
+                        <h5 class="text-emerald-400 font-bold mb-4">Navigasi</h5>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="{{ route('products.index') }}" class="hover:text-emerald-400 transition flex items-center gap-2"><i class="bi bi-chevron-right text-[10px]"></i> Produk</a></li>
+                            <li><a href="{{ route('categories.index') }}" class="hover:text-emerald-400 transition flex items-center gap-2"><i class="bi bi-chevron-right text-[10px]"></i> Kategori</a></li>
+                            <li><a href="{{ route('tracking.index') }}" class="hover:text-emerald-400 transition flex items-center gap-2"><i class="bi bi-chevron-right text-[10px]"></i> Lacak Resi</a></li>
+                        </ul>
                     </div>
+                    
+                    <!-- Contact -->
+                    <div class="md:col-span-4">
+                        <h5 class="text-emerald-400 font-bold mb-4">Hubungi Kami</h5>
+                        <ul class="space-y-3 text-sm text-slate-400">
+                            <li class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><i class="bi bi-whatsapp"></i></div>
+                                0816-1550-0168
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-emerald-400"><i class="bi bi-envelope"></i></div>
+                                krupukruzzz@gmail.com
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-slate-800 mt-12 pt-8 text-center text-sm text-slate-500">
+                    &copy; {{ date('Y') }} KrupuKruzzz. Kerupuk Berkualitas Harga Terjangkau.
                 </div>
             </div>
         </footer>
     </div>
 
-    {{-- BOTTOM NAVIGATION (Mobile) --}}
-    <div class="bottom-nav">
-        {{-- 1. Cart (Was Home) --}}
-        <a href="{{ route('cart.index') }}" class="bottom-nav-item {{ Request::routeIs('cart.*') ? 'active' : '' }}">
-            <div class="position-relative">
-                <i class="bi bi-cart3"></i>
+    {{-- BOTTOM NAVIGATION — Mobile --}}
+    <div class="lg:hidden fixed bottom-0 left-0 w-full h-[68px] bg-white/90 backdrop-blur-lg border-t border-slate-100 z-50 flex justify-around items-center px-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+        
+        {{-- 1. Home --}}
+        <a href="{{ route('products.index') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('products.index') ? 'text-emerald-500' : '' }}">
+            @if(Request::routeIs('products.index'))
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+            @endif
+            <i class="bi bi-house{{ Request::routeIs('products.index') ? '-fill -translate-y-0.5' : '' }} text-2xl transition-transform"></i>
+            <span class="text-[10px] font-semibold mt-1">Beranda</span>
+        </a>
+        
+        {{-- 2. Kategori --}}
+        <a href="{{ route('categories.index') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('categories.*') ? 'text-emerald-500' : '' }}">
+            @if(Request::routeIs('categories.*'))
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+            @endif
+            <i class="bi bi-grid{{ Request::routeIs('categories.*') ? '-fill -translate-y-0.5' : '' }} text-2xl transition-transform"></i>
+            <span class="text-[10px] font-semibold mt-1">Kategori</span>
+        </a>
+        
+        {{-- 3. Cart --}}
+        <a href="{{ route('cart.index') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('cart.*') ? 'text-emerald-500' : '' }}">
+            @if(Request::routeIs('cart.*'))
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+            @endif
+            <div class="relative">
+                <i class="bi bi-bag{{ Request::routeIs('cart.*') ? '-fill -translate-y-0.5' : '' }} text-2xl transition-transform block"></i>
                 @if(session('cart') && count(session('cart')) > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem; padding: 2px 4px;">
+                    <span class="absolute -top-1 -right-2 bg-amber-500 text-amber-950 text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-sm">
                         {{ count(session('cart')) }}
                     </span>
                 @endif
             </div>
+            <span class="text-[10px] font-semibold mt-1">Keranjang</span>
         </a>
         
-        {{-- 2. Kategori (Matches Desktop 'Kategori') --}}
-        <a href="{{ route('categories.index') }}" class="bottom-nav-item {{ Request::routeIs('categories.*') ? 'active' : '' }}">
-            <i class="bi bi-tags{{ Request::routeIs('categories.*') ? '-fill' : '' }}"></i>
+        {{-- 4. Tracking --}}
+        <a href="{{ route('tracking.index') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('tracking.*') ? 'text-emerald-500' : '' }}">
+            @if(Request::routeIs('tracking.*'))
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+            @endif
+            <i class="bi bi-truck{{ Request::routeIs('tracking.*') ? '-front-fill -translate-y-0.5' : '' }} text-2xl transition-transform"></i>
+            <span class="text-[10px] font-semibold mt-1">Lacak</span>
         </a>
         
-        {{-- 3. Center FAB (Produk) --}}
-        <div class="nav-center-wrapper">
-            <svg class="curve-svg" viewBox="0 0 120 40" preserveAspectRatio="none">
-                 <path d="M0,40 L0,40 Q0,40 20,40 Q40,40 40,20 Q60,-20 80,20 Q80,40 100,40 Q120,40 120,40 L120,40 Z" fill="none"/>
-                 <!-- Simplified Curve Approximation via CSS preferred or SVG path if needed precise -->
-                 <!-- Using simple CSS radial cut out via mask is cleaner, but let's stick to the FAB 'border' hack for now which is robust -->
-            </svg>
-            <a href="{{ route('products.index') }}" class="center-fab">
-                <i class="bi bi-shop"></i>
-            </a>
-        </div>
-        
-        {{-- 4. Tracking (Was Cart) --}}
-        <a href="{{ route('tracking.index') }}" class="bottom-nav-item {{ Request::routeIs('tracking.*') ? 'active' : '' }}">
-            <i class="bi bi-truck{{ Request::routeIs('tracking.*') ? '-front-fill' : '' }}"></i>
-        </a>
-        
-        {{-- 5. Profile / Account --}}
+        {{-- 5. Profile --}}
         @auth
-            <a href="{{ Route::has('profile.edit') ? route('profile.edit') : route('orders.index') }}" class="bottom-nav-item {{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? 'active' : '' }}">
-                <i class="bi bi-person{{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? '-fill' : '' }}"></i>
+            <a href="{{ Route::has('profile.edit') ? route('profile.edit') : route('orders.index') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? 'text-emerald-500' : '' }}">
+                @if(Request::routeIs('profile.*') || Request::routeIs('orders.*'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+                @endif
+                <i class="bi bi-person{{ Request::routeIs('profile.*') || Request::routeIs('orders.*') ? '-fill -translate-y-0.5' : '' }} text-2xl transition-transform"></i>
+                <span class="text-[10px] font-semibold mt-1">Profil</span>
             </a>
         @else
-            <a href="{{ route('login') }}" class="bottom-nav-item {{ Request::routeIs('login') ? 'active' : '' }}">
-                <i class="bi bi-person"></i>
+            <a href="{{ route('login') }}" class="flex flex-col items-center justify-center flex-1 h-full relative text-slate-400 hover:text-emerald-500 transition-colors {{ Request::routeIs('login') ? 'text-emerald-500' : '' }}">
+                @if(Request::routeIs('login'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-emerald-500 rounded-b-full"></div>
+                @endif
+                <i class="bi bi-person{{ Request::routeIs('login') ? '-fill -translate-y-0.5' : '' }} text-2xl transition-transform"></i>
+                <span class="text-[10px] font-semibold mt-1">Masuk</span>
             </a>
         @endauth
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         // Preloader Logic
@@ -681,47 +311,23 @@
             if (preloader) {
                 setTimeout(() => {
                     preloader.classList.add('preloader-hidden');
+                    setTimeout(() => preloader.remove(), 400);
                 }, 300);
             }
         });
 
-        // Auto-dismiss alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                var alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    var bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                });
-            }, 5000);
-
-            // Button Loading State Logic
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    const btn = this.querySelector('button[type="submit"]');
-                    if (btn && !btn.classList.contains('no-loader')) {
-                        btn.classList.add('btn-loading');
-                        // Prevent multiple clicks
-                        setTimeout(() => {
-                            if (btn) btn.disabled = true;
-                        }, 50);
-                    }
-                });
-            });
-
-            // Global Focus Reset for Mobile (Kill Sticky Hover/Focus)
-            document.addEventListener('touchstart', function() {}, {passive: true}); 
-
-            // More aggressive reset on click and touch
-            const resetFocus = () => {
-                if (document.activeElement && (document.activeElement.tagName === 'BUTTON' || document.activeElement.tagName === 'A')) {
-                    document.activeElement.blur();
+        // Global Form Submission Loading State
+        document.addEventListener('submit', function(e) {
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn && !btn.hasAttribute('data-no-loader')) {
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                const originalHtml = btn.innerHTML;
+                if(!btn.innerHTML.includes('spinner-border')) {
+                    // Simple tailwind spinner
+                    btn.innerHTML += `<svg class="animate-spin ml-2 h-4 w-4 text-current inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
                 }
-            };
-
-            document.addEventListener('mouseup', resetFocus);
-            document.addEventListener('touchend', () => setTimeout(resetFocus, 100), {passive: true});
+                setTimeout(() => { btn.disabled = true; }, 50);
+            }
         });
     </script>
 </body>
